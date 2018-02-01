@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  © 2018 Akretion (Alexis de Lattre <alexis.delattre@akretion.com>)
+  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+-->
+
+<openerp>
+<data>
+
+<record id="yousign_request_remind_form" model="ir.ui.view">
+    <field name="name">yousign_request_remind.form</field>
+    <field name="model">yousign.request.remind</field>
+    <field name="arch"  type="xml">
+        <form string="Yousign Request Remind">
+            <p>This wizard will ask YouSign to send a reminder to all the selected requests.</p>
+            <footer>
+                <button type="object" name="run" string="Send Reminder" class="oe_highlight"/>
+                <button special="cancel" string="Cancel" class="oe_link"/>
+            </footer>
+        </form>
+    </field>
+</record>
+
+<act_window id="yousign_request_remind_action"
+            multi="True"
+            key2="client_action_multi"
+            name="Send Reminder"
+            res_model="yousign.request.remind"
+            src_model="yousign.request"
+            view_mode="form"
+            target="new" />
+
+</data>
+</openerp>

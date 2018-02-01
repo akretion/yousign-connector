@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_yousign_request_template_full,Full access on yousign.request.template to settings group,model_yousign_request_template,base.group_system,1,1,1,1
+access_yousign_request_template_signatory_full,Full access on yousign.request.template.signatory to settings group,model_yousign_request_template_signatory,base.group_system,1,1,1,1
+access_yousign_request_full,Full access on yousign.request to settings group,model_yousign_request,base.group_system,1,1,1,1
+access_yousign_request_signatory_full,Full access on yousign.request.signatory to settings group,model_yousign_request_signatory,base.group_system,1,1,1,1

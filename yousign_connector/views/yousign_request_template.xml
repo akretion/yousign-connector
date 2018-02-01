@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  © 2018 Akretion (Alexis de Lattre <alexis.delattre@akretion.com>)
+  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+-->
+
+<openerp>
+<data>
+
+<record id="yousign_request_template_form" model="ir.ui.view">
+    <field name="model">yousign.request.template</field>
+    <field name="arch" type="xml">
+        <form string="Yousign Request Template">
+            <div class="oe_right oe_button_box" name="buttons">
+                <field name="ir_act_window_id" invisible="1"/>
+                <button class="oe_inline oe_stat_button" name="create_button" type="object"
+                    attrs="{'invisible': [('ir_act_window_id', '!=', False)]}" icon="fa-plus"
+                    help="Display an option on related documents to open a composition wizard with this template">
+                    <div>Add Action</div>
+                </button>
+                <button name="unlink_button" type="object"
+                    class="oe_stat_button" icon="fa-minus"
+                    attrs="{'invisible': [('ir_act_window_id', '=', False)]}"
+                    help="Remove the contextual action to use this template on related documents" widget="statinfo">
+                    <div>Remove Action</div>
+                </button>
+            </div>
+            <group name="main">
+                <field name="name"/>
+                <field name="model_id"/>
+                <field name="model" invisible="1"/>
+                <field name="lang"/>
+                <field name="title"/>
+                <field name="message"/>
+                <field name="report_id" domain="[('model','=', model)]"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </group>
+            <group name="signatories" string="Signatories">
+                <field name="signatory_ids" nolabel="1">
+                </field>
+            </group>
+        </form>
+    </field>
+</record>
+
+<record id="yousign_request_template_tree" model="ir.ui.view">
+    <field name="model">yousign.request.template</field>
+    <field name="arch" type="xml">
+        <tree string="Yousign Request Templates">
+            <field name="name"/>
+            <field name="model_id"/>
+            <field name="report_id"/>
+        </tree>
+    </field>
+</record>
+
+<record id="yousign_request_template_signatory_form" model="ir.ui.view">
+    <field name="model">yousign.request.template.signatory</field>
+    <field name="arch" type="xml">
+        <form string="Yousign Request Template Signatory">
+            <group name="main">
+                <field name="parent_id" invisible="not context.get('yousign_request_template_signatory_main_view')"/>
+                <field name="partner_type" widget="radio"/>
+                <field name="partner_id" attrs="{'invisible': [('partner_type', '=', 'dynamic')]}"/>
+                <field name="partner_tmpl" attrs="{'invisible': [('partner_type', '=', 'static')]}"/>
+                <field name="proof_level"/>
+                <field name="auth_mode"/>
+                <field name="auth_value" attrs="{'invisible': [('auth_mode', '!=', 'manual')]}"/>
+            </group>
+        </form>
+    </field>
+</record>
+
+<record id="yousign_request_template_signatory_tree" model="ir.ui.view">
+    <field name="model">yousign.request.template.signatory</field>
+    <field name="arch" type="xml">
+        <tree string="Yousign Request Template Signatory">
+            <field name="parent_id" invisible="not context.get('yousign_request_template_signatory_main_view')"/>
+            <field name="sequence" invisible="1"/>
+            <field name="partner_type"/>
+            <field name="partner_id"/>
+            <field name="partner_tmpl"/>
+            <field name="proof_level"/>
+            <field name="auth_mode"/>
+        </tree>
+    </field>
+</record>
+
+
+<record id="yousign_request_template_action" model="ir.actions.act_window">
+    <field name="name">Request Templates</field>
+    <field name="res_model">yousign.request.template</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<menuitem id="yousign_root_config" name="Yousign" parent="base.menu_custom" sequence="200"/>
+
+<menuitem id="yousign_request_template_menu" parent="yousign_root_config" action="yousign_request_template_action" sequence="20"/>
+
+</data>
+</openerp>

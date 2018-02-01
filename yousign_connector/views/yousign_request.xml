@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  © 2018 Akretion (Alexis de Lattre <alexis.delattre@akretion.com>)
+  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+-->
+
+<openerp>
+<data>
+
+<record id="yousign_request_form" model="ir.ui.view">
+    <field name="model">yousign.request</field>
+    <field name="arch" type="xml">
+        <form string="Yousign Request">
+            <header>
+                <button name="send" states="draft" string="Send to Yousign" type="object" class="oe_highlight"/>
+                <button name="cancel" states="draft" string="Cancel" type="object"/>
+                <button name="remind" states="sent" string="Send Reminder" type="object" help="Ask Yousign to send reminder to signatories"/>
+                <button name="update_status" states="sent" string="Update" type="object" help="Check if signatories have signed the documents"/>
+                <button name="archive" states="signed" string="Archive" type="object" help="Download signed files from Yousign and add them as attachments."/>
+                <field name="state" widget="statusbar" statusbar_colors="{'draft': 'blue'}"/>
+            </header>
+            <sheet>
+                <group name="main">
+                    <field name="name" readonly="1"/>
+                    <field name="ys_identifier" states="sent,signed,cancel"/>
+                    <field name="res_name"/>
+                    <field name="model" invisible="0"/>
+                    <field name="res_id" invisible="0"/>
+                    <field name="lang"/>
+                    <field name="title" required="1"/>
+                    <field name="message" required="1"/>
+                    <field name="attachment_ids" widget="many2many_binary"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </group>
+                <group name="signatories" string="Signatories">
+                    <field name="signatory_ids" nolabel="1"/>
+                </group>
+            </sheet>
+            <div class="oe_chatter">
+                <field name="message_follower_ids" widget="mail_followers"/>
+                <field name="message_ids" widget="mail_thread"/>
+            </div>
+        </form>
+    </field>
+</record>
+
+<record id="new_yousign_request_form" model="ir.ui.view">
+    <field name="model">yousign.request</field>
+    <field name="priority">100</field>
+    <field name="arch" type="xml">
+        <form string="New Yousign Request">
+            <group name="main">
+                <field name="name" readonly="1" invisible="1"/>
+                <field name="ys_identifier" invisible="1"/>
+                <field name="res_name" invisible="1"/>
+                <field name="model" invisible="1"/>
+                <field name="res_id" invisible="1"/>
+                <field name="state" invisible="1"/>
+                <field name="company_id" groups="base.group_multi_company" invisible="1"/>
+                <field name="lang"/>
+                <field name="title" required="1"/>
+                <field name="message" required="1"/>
+                <field name="attachment_ids" widget="many2many_binary"/>
+            </group>
+            <group name="signatories" string="Signatories">
+                <field name="signatory_ids" nolabel="1"/>
+            </group>
+            <footer>
+                <button name="send" states="draft" string="Send to Yousign" type="object" class="oe_highlight"/>
+                <button special="cancel" string="Cancel" class="oe_link"/>
+            </footer>
+        </form>
+    </field>
+</record>
+
+
+<record id="yousign_request_tree" model="ir.ui.view">
+    <field name="model">yousign.request</field>
+    <field name="arch" type="xml">
+        <tree string="Yousign Requests" colors="blue:state == 'draft';red:state == 'sent';gray:state == 'cancel'">
+            <field name="name"/>
+            <field name="res_name"/>
+            <field name="title"/>
+            <field name="ys_identifier"/>
+            <field name="state"/>
+        </tree>
+    </field>
+</record>
+
+<record id="yousign_request_search" model="ir.ui.view">
+    <field name="model">yousign.request</field>
+    <field name="arch" type="xml">
+        <search string="Search Yousign Requests">
+            <field name="name" filter_domain="['|', '|', ('name', 'ilike', self), ('res_name', 'ilike', self), ('title', 'ilike', self)]" string="Name, Document Name or Title"/>
+            <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]" />
+            <filter name="sent" string="Sent" domain="[('state', '=', 'sent')]" />
+            <filter name="signed" string="Signed" domain="[('state', '=', 'signed')]" />
+            <filter name="archived" string="Archived" domain="[('state', '=', 'archived')]" />
+            <group string="Group By" name="groupby">
+                <filter name="state_groupby" string="State" context="{'group_by': 'state'}"/>
+                <filter name="object_groupby" string="Object" context="{'group_by': 'model'}"/>
+            </group>
+        </search>
+    </field>
+</record>
+
+
+<record id="yousign_request_signatory_form" model="ir.ui.view">
+    <field name="model">yousign.request.signatory</field>
+    <field name="arch" type="xml">
+        <form string="Yousign Request Signatory">
+            <group name="main">
+                <field name="parent_id" invisible="not context.get('yousign_request_signatory_main_view')"/>
+                <field name="partner_id"/>
+                <field name="firstname"/>
+                <field name="lastname" required="1"/>
+                <field name="email" required="1"/>
+                <field name="mobile" widget="phone" attrs="{'required': [('auth_mode', '=', 'sms')]}"/>
+                <field name="proof_level"/>
+                <field name="auth_mode"/>
+                <field name="auth_value" attrs="{'invisible': [('auth_mode', '!=', 'manual')], 'required': [('auth_mode', '=', 'manual')]}"/>
+                <field name="ys_identifier" states="pending,partially_signed,signed"/>
+                <field name="state" invisible="1"/>
+            </group>
+        </form>
+    </field>
+</record>
+
+<record id="yousign_request_signatory_tree" model="ir.ui.view">
+    <field name="model">yousign.request.signatory</field>
+    <field name="arch" type="xml">
+        <tree string="Yousign Request Signatory">
+            <field name="parent_id" invisible="not context.get('yousign_request_signatory_main_view')"/>
+            <field name="sequence" invisible="1"/>
+            <field name="firstname"/>
+            <field name="lastname"/>
+            <field name="email"/>
+            <field name="mobile" widget="phone"/>
+            <field name="proof_level"/>
+            <field name="auth_mode"/>
+            <field name="state"/>
+        </tree>
+    </field>
+</record>
+
+<record id="new_yousign_request_action" model="ir.actions.act_window">
+    <field name="name">Signature Request</field>
+    <field name="res_model">yousign.request</field>
+    <field name="view_mode">form</field>
+    <field name="view_id" ref="new_yousign_request_form"/>
+    <field name="target">new</field>
+</record>
+
+<record id="yousign_request_action" model="ir.actions.act_window">
+    <field name="name">Signature Requests</field>
+    <field name="res_model">yousign.request</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<menuitem id="yousign_request_menu" parent="yousign_root_config" action="yousign_request_action" sequence="10"/>
+
+</data>
+</openerp>
