@@ -1,0 +1,46 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* yousign_sale
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-02-05 17:42+0000\n"
+"PO-Revision-Date: 2018-02-05 17:42+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: yousign_sale
+#: model:yousign.request.template,title:yousign_sale.sale_sign_template
+msgid "${object.company_id.name} - Sign request for quotation ${object.name}"
+msgstr "${object.company_id.name} - Requête de signature pour le devis ${object.name}"
+
+#. module: yousign_sale
+#: model:yousign.request.template,message:yousign_sale.sale_sign_template
+msgid "Hello ${object.partner_id.name},\n"
+"\n"
+"We have prepared a quotation ${object.name} for a total amount of ${object.amount_untaxed} ${object.currency_id.name} without taxes (${object.amount_total} ${object.currency_id.name} with taxes).\n"
+"\n"
+"Regards,\n"
+"\n"
+"${object.company_id.name}\n"
+""
+msgstr "Bonjour ${object.partner_id.name},\n"
+"\n"
+"Nous avons préparé un devis ${object.name} pour un montant total de ${object.amount_untaxed} ${object.currency_id.name} HT (${object.amount_total} ${object.currency_id.name} TTC).\n"
+"\n"
+"Cordialement,\n"
+"\n"
+"${object.company_id.name}\n"
+""
+
+#. module: yousign_sale
+#: view:sale.order:yousign_sale.view_order_form
+msgid "Send Yousign Request"
+msgstr "Envoyer une requête Yousign"
+

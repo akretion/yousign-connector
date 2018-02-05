@@ -14,7 +14,7 @@
     <field name="inherit_id" ref="sale.view_order_form"/>
     <field name="arch" type="xml">
         <button name="action_quotation_send" position="after">
-            <button name="%(yousign_connector.new_yousign_request_action)d" type="action" states="draft,sent" string="Send YouSign Request" context="{'yousign_template_xmlid': 'yousign_sale.sale_sign_template'}"/>
+            <button name="%(yousign_connector.new_yousign_request_action)d" type="action" states="draft,sent" string="Send Yousign Request" context="{'yousign_template_xmlid': 'yousign_sale.sale_sign_template'}"/>
         </button>
     </field>
 </record>
