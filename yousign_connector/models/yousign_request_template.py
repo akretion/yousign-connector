@@ -103,7 +103,7 @@ class YousignRequestTemplateSignatory(models.Model):
         ], string='Proof Level', default='low',
         help="Proof level of the signer. In HIGH mode, signer(s) must upload "
         "ID cards to launch the signature (it will be checked immediately "
-        "after the upload")
+        "after the upload)")
     auth_mode = fields.Selection([
         ('sms', 'SMS'),
         ('mail', 'Mail'),
