@@ -166,8 +166,11 @@ class YousignRequest(models.Model):
                 }
             attach = iao.create(attach_vals)
             default_attachment_ids.append((6, 0, [attach.id]))
+        lang = eto.render_template_batch(
+            template.lang, model, [res_id])[res_id]
+        if lang:
+            template = template.with_context(lang=lang)
         dyn_fields = {
-            'lang': template.lang,
             'title': template.title,
             'message': template.message,
             }
@@ -179,6 +182,7 @@ class YousignRequest(models.Model):
             'name': source_obj.display_name,
             'model': model,
             'res_id': res_id,
+            'lang': lang,
             'signatory_ids': default_signatory_ids,
             'attachment_ids': default_attachment_ids,
             })
