@@ -10,7 +10,7 @@ This module uses the Odoo - `Yousign <https://yousign.com/>`_ connector (module 
 
 This module should be considered as an example of how to add signature requests anywhere in Odoo via signature request templates.
 
-The development of this connector has been sponsored by `Akuit <https://www.akuit.com/>`_.
+The development of this connector has been sponsored by `Akuit <https://www.akuit.com/>`_, a French umbrella company located in Paris.
 
 Installation
 ============
