@@ -10,7 +10,12 @@
     'summary': 'Odoo generates signature requests on YouSign',
     'author': 'Akretion',
     'website': 'http://www.akretion.com',
-    'depends': ['report', 'base_phone', 'mail'],
+    'depends': [
+        'report',
+        'mail',
+        'base_phone',
+        'base_suspend_security',
+        ],
     'external_dependencies': {'python': ['ysApi', 'unidecode', 'PyPDF2']},
     'data': [
         'data/yousign_seq.xml',

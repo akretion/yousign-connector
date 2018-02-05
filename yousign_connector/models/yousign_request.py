@@ -205,6 +205,14 @@ class YousignRequest(models.Model):
         else:
             return None
 
+    def get_source_object_with_chatter(self):
+        self.ensure_one()
+        src_obj = self.get_source_object()
+        if src_obj and hasattr(src_obj, 'message_post'):
+            return src_obj
+        else:
+            return None
+
     @api.model
     def yousign_init(self):
         username = tools.config.get('yousign_user', False)
@@ -252,8 +260,10 @@ class YousignRequest(models.Model):
         # urx=upper right x coordinate,
         # ury = upper right y coordinate
         rank2position = {
-            1: '56,392,296,464',
-            2: '298,392,539,465',
+            1: '70,600,285,690',  # width = 215 - height = 90
+            2: '310,600,525,690',
+            3: '70,460,285,550',
+            4: '310,460,525,550',
             }
         if signatory_rank not in rank2position:
             logger.warning(
@@ -380,10 +390,10 @@ class YousignRequest(models.Model):
             'ys_identifier': ys_identifier,
             })
         self.signatory_ids.write({'state': 'pending'})
-        src_obj = self.get_source_object()
+        src_obj = self.get_source_object_with_chatter()
         if src_obj:
             # for v10, add link to request in message
-            src_obj.message_post(_(
+            src_obj.suspend_security().message_post(_(
                 "YouSign request <b>%s</b> generated with %d signatories")
                 % (self.name, len(self.signatory_ids)))
         return
@@ -415,7 +425,7 @@ class YousignRequest(models.Model):
                 logger.error(
                     'getInfosFromSignatureDemand request failed on YS req '
                     'ID %d. Error: %s', req.id, err_msg)
-                req.message_post(_(
+                req.suspend_security().message_post(_(
                     "<b>Failed to update status</b>. <br/>"
                     "Technical error: %s") % err_msg)
                 continue
@@ -460,10 +470,10 @@ class YousignRequest(models.Model):
                 req.state = 'signed'
                 logger.info(
                     'Yousign request %s switched to signed state', req.name)
-                src_obj = req.get_source_object()
+                src_obj = req.get_source_object_with_chatter()
                 if src_obj:
                     # for v10, add link to request in message
-                    src_obj.message_post(_(
+                    src_obj.suspend_security().message_post(_(
                         "YouSign request <b>%s</b> has been signed by all "
                         "signatories") % req.name)
 
@@ -499,13 +509,14 @@ class YousignRequest(models.Model):
                 logger.debug(
                     'Successful request alertSigners on YS req ID %d '
                     'result %s', req.id, res)
-                req.message_post(_("Reminder sent to late signatories"))
+                req.suspend_security().message_post(_(
+                    "Reminder sent to late signatories"))
             except Exception, e:
                 err_msg = str(e).decode('utf-8')
                 logger.error(
                     'alertSigners request failed on YS req. ID %d '
                     'with error %s', req.id, err_msg)
-                req.message_post(_(
+                req.suspend_security().message_post(_(
                     "<b>Failed to send reminder to late signatories</b>. <br/>"
                     "Technical error: %s") % err_msg)
 
@@ -543,7 +554,7 @@ class YousignRequest(models.Model):
                 logger.error(
                     "getSignedFilesFromDemand request failed on YS "
                     "req. ID %d with error %s", req.id, err_msg)
-                req.message_post(_(
+                req.suspend_security().message_post(_(
                     "<b>Failed to archive signed documents.</b><br/>"
                     "Technical error: %s") % err_msg)
             if res:
@@ -567,7 +578,7 @@ class YousignRequest(models.Model):
                             'File %s attached on Yousign request %s ID %d',
                             filename, req.name, req.id)
                 if attach_created == docs_to_sign_count:
-                    req.message_post(_(
+                    req.suspend_security().message_post(_(
                         "%d signed document(s) have been added as attachment")
                         % attach_created)
                     req.state = 'archived'
