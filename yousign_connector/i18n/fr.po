@@ -1,0 +1,757 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* yousign_connector
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-02-05 16:38+0000\n"
+"PO-Revision-Date: 2018-02-05 16:38+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: yousign_connector
+#: code:addons/yousign_connector/models/yousign_request.py:581
+#, python-format
+msgid "%d signed document(s) have been added as attachment"
+msgstr "%d documents signés ont été ajoutés en pièce jointe"
+
+#. module: yousign_connector
+#: code:addons/yousign_connector/models/yousign_request.py:557
+#, python-format
+msgid "<b>Failed to archive signed documents.</b><br/>Technical error: %s"
+msgstr "<b>Échec de l'archivage des documents signés.</b><br/>Erreur technique : %s"
+
+#. module: yousign_connector
+#: code:addons/yousign_connector/models/yousign_request.py:519
+#, python-format
+msgid "<b>Failed to send reminder to late signatories.</b> <br/>Technical error: %s"
+msgstr "<b>Échec de l'envoi de la relance aux signataires retardataires.</b> <br/>Erreur technique : %s"
+
+#. module: yousign_connector
+#: code:addons/yousign_connector/models/yousign_request.py:428
+#, python-format
+msgid "<b>Failed to update status</b>. <br/>Technical error: %s"
+msgstr "<b>Échec de la mise à jour du statut.</b> <br/>Erreur technique : %s"
+
+#. module: yousign_connector
+#: view:yousign.request.template:yousign_connector.yousign_request_template_form
+msgid "Add Action"
+msgstr "Ajouter une action"
+
+#. module: yousign_connector
+#: field:yousign.request.template,model_id:0
+msgid "Applies to"
+msgstr "S'applique à"
+
+#. module: yousign_connector
+#: view:yousign.request:yousign_connector.yousign_request_form
+msgid "Archive"
+msgstr "Archiver"
+
+#. module: yousign_connector
+#: view:yousign.request:yousign_connector.yousign_request_search
+#: selection:yousign.request,state:0
+msgid "Archived"
+msgstr "Archivé"
+
+#. module: yousign_connector
+#: view:yousign.request:yousign_connector.yousign_request_form
+msgid "Ask Yousign to send reminder to signatories"
+msgstr "Demander à Yousign d'envoyer une relance aux signataires retardataires"
+
+#. module: yousign_connector
+#: field:yousign.request.signatory,auth_value:0
+msgid "Auth value"
+msgstr "Valeur d'auth."
+
+#. module: yousign_connector
+#: field:yousign.request.signatory,auth_mode:0
+#: field:yousign.request.template.signatory,auth_mode:0
+msgid "Authentication Mode"
+msgstr "Mode d'authentification"
+
+#. module: yousign_connector
+#: field:yousign.request.template.signatory,auth_value:0
+msgid "Authentication Value"
+msgstr "Valeur d'authentification"
+
+#. module: yousign_connector
+#: help:yousign.request.signatory,auth_mode:0
+#: help:yousign.request.template.signatory,auth_mode:0
+msgid "Authentication mode used for the signer"
+msgstr "Mode d'authentification utilisé pour le signataire"
+
+#. module: yousign_connector
+#: view:yousign.request:yousign_connector.new_yousign_request_form
+#: view:yousign.request:yousign_connector.yousign_request_form
+#: view:yousign.request.remind:yousign_connector.yousign_request_remind_form
+msgid "Cancel"
+msgstr "Annuler"
+
+#. module: yousign_connector
+#: selection:yousign.request,state:0
+msgid "Cancelled"
+msgstr "Annulé"
+
+#. module: yousign_connector
+#: view:yousign.request:yousign_connector.yousign_request_form
+msgid "Check if signatories have signed the documents"
+msgstr "Vérifie si les signataires ont signé les documents"
+
+#. module: yousign_connector
+#: field:yousign.request,company_id:0
+#: field:yousign.request.template,company_id:0
+msgid "Company"
+msgstr "Société"
+
+#. module: yousign_connector
+#: help:yousign.request.template,message:0
+msgid "Corresponding field in Yousign API : message"
+msgstr "Champ correspondant dans l'API Yousign : message"
+
+#. module: yousign_connector
+#: help:yousign.request.template,title:0
+msgid "Corresponding field in Yousign API : title"
+msgstr "Champ correspondant dans l'API Yousign : title"
+
+#. module: yousign_connector
+#: field:yousign.request,create_uid:0
+#: field:yousign.request.remind,create_uid:0
+#: field:yousign.request.signatory,create_uid:0
+#: field:yousign.request.template,create_uid:0
+#: field:yousign.request.template.signatory,create_uid:0
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: yousign_connector
+#: field:yousign.request,create_date:0
+#: field:yousign.request.remind,create_date:0
+#: field:yousign.request.signatory,create_date:0
+#: field:yousign.request.template,create_date:0
+#: field:yousign.request.template.signatory,create_date:0
+msgid "Created on"
+msgstr "Créé le"
+
+#. module: yousign_connector
+#: help:yousign.request,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr "Date of the last message posted on the record."
+
+#. module: yousign_connector
+#: field:yousign.request.template,report_id:0
+msgid "Default Report to Sign"
+msgstr "Rapport à signer par défaut"
+
+#. module: yousign_connector
+#: view:yousign.request.template:yousign_connector.yousign_request_template_form
+msgid "Display an option on related documents to open a composition wizard with this template"
+msgstr "Display an option on related documents to open a composition wizard with this template"
+
+#. module: yousign_connector
+#: field:yousign.request,attachment_ids:0
+msgid "Documents to Sign"
+msgstr "Documents à signer"
+
+#. module: yousign_connector
+#: view:yousign.request:yousign_connector.yousign_request_form
+msgid "Download signed files from Yousign and add them as attachments."
+msgstr "Télécharge les documents signés et les ajoute en pièce jointe."
+
+#. module: yousign_connector
+#: view:yousign.request:yousign_connector.yousign_request_search
+#: selection:yousign.request,state:0
+#: selection:yousign.request.signatory,state:0
+msgid "Draft"
+msgstr "Brouillon"
+
+#. module: yousign_connector
+#: selection:yousign.request.template.signatory,partner_type:0
+msgid "Dynamic"
+msgstr "Dynamique"
+
+#. module: yousign_connector
+#: field:yousign.request.template.signatory,partner_tmpl:0
+msgid "Dynamic Partner"
+msgstr "Partenaire dynamique"
+
+#. module: yousign_connector
+#: code:addons/yousign_connector/models/yousign_request_template.py:141
+#, python-format
+msgid "Dynamic Partner is required when Partner Type is set to 'Dynamic'"
+msgstr "Un partenaire dynamique est requis quand le type de partenaire est 'Dynamique'"
+
+#. module: yousign_connector
+#: field:yousign.request.signatory,email:0
+msgid "E-mail"
+msgstr "E-mail"
+
+#. module: yousign_connector
+#: code:addons/yousign_connector/models/yousign_request.py:239
+#, python-format
+msgid "Failed to initialize connection to Yousign with username %s on environment %s. \n"
+"\n"
+"Technical error message: %s"
+msgstr "Échec de l'initialisation de la connexion vers Yousign avec le login %s sur l'environnement %s. \n"
+"\n"
+"Message d'erreur technique : %s"
+
+#. module: yousign_connector
+#: code:addons/yousign_connector/models/yousign_request.py:384
+#, python-format
+msgid "Failure when sending the signing request %s to Yousign.\n"
+"\n"
+"Error: %s"
+msgstr "Échec de l'envoi de la requête de signature %s à Yousign.\n"
+"\n"
+"Erreur: %s"
+
+#. module: yousign_connector
+#: code:addons/yousign_connector/models/yousign_request.py:344
+#, python-format
+msgid "File to sign '%s' is not a valid PDF file. You must convert it to PDF before including it in a Yousign request."
+msgstr "Le fichier à signer '%s' n'est pas un fichier PDF valide. Vous devez le convertir en PDF avant de l'inclure dans une requête Yousign."
+
+#. module: yousign_connector
+#: field:yousign.request.signatory,firstname:0
+msgid "Firstname"
+msgstr "Prénom"
+
+#. module: yousign_connector
+#: field:yousign.request.template.signatory,partner_id:0
+msgid "Fixed Partner"
+msgstr "Partenaire fixe"
+
+#. module: yousign_connector
+#: code:addons/yousign_connector/models/yousign_request_template.py:135
+#, python-format
+msgid "Fixed Partner is required when Partner Type is set to 'Static'"
+msgstr "Un partenaire fixe est requis quand le type de partenaire est 'Statique'"
+
+#. module: yousign_connector
+#: field:yousign.request,message_follower_ids:0
+msgid "Followers"
+msgstr "Followers"
+
+#. module: yousign_connector
+#: view:yousign.request:yousign_connector.yousign_request_search
+msgid "Group By"
+msgstr "Grouper par"
+
+#. module: yousign_connector
+#: selection:yousign.request.signatory,proof_level:0
+#: selection:yousign.request.template.signatory,proof_level:0
+msgid "High"
+msgstr "Élevé"
+
+#. module: yousign_connector
+#: help:yousign.request,message_summary:0
+msgid "Holds the Chatter summary (number of messages, ...). This summary is directly in html format in order to be inserted in kanban views."
+msgstr "Holds the Chatter summary (number of messages, ...). This summary is directly in html format in order to be inserted in kanban views."
+
+#. module: yousign_connector
+#: field:yousign.request,id:0
+#: field:yousign.request.remind,id:0
+#: field:yousign.request.signatory,id:0
+#: field:yousign.request.template,id:0
+#: field:yousign.request.template.signatory,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: yousign_connector
+#: help:yousign.request,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "If checked new messages require your attention."
+
+#. module: yousign_connector
+#: field:yousign.request,message_is_follower:0
+msgid "Is a Follower"
+msgstr "Is a Follower"
+
+#. module: yousign_connector
+#: field:yousign.request,lang:0
+#: field:yousign.request.template,lang:0
+msgid "Language"
+msgstr "Langue"
+
+#. module: yousign_connector
+#: field:yousign.request,message_last_post:0
+msgid "Last Message Date"
+msgstr "Last Message Date"
+
+#. module: yousign_connector
+#: field:yousign.request,write_uid:0
+#: field:yousign.request.remind,write_uid:0
+#: field:yousign.request.signatory,write_uid:0
+#: field:yousign.request.template,write_uid:0
+#: field:yousign.request.template.signatory,write_uid:0
+msgid "Last Updated by"
+msgstr "Last Updated by"
+
+#. module: yousign_connector
+#: field:yousign.request,write_date:0
+#: field:yousign.request.remind,write_date:0
+#: field:yousign.request.signatory,write_date:0
+#: field:yousign.request.template,write_date:0
+#: field:yousign.request.template.signatory,write_date:0
+msgid "Last Updated on"
+msgstr "Last Updated on"
+
+#. module: yousign_connector
+#: field:yousign.request.signatory,lastname:0
+msgid "Lastname"
+msgstr "Nom de famille"
+
+#. module: yousign_connector
+#: selection:yousign.request.signatory,proof_level:0
+#: selection:yousign.request.template.signatory,proof_level:0
+msgid "Low"
+msgstr "Faible"
+
+#. module: yousign_connector
+#: selection:yousign.request.signatory,auth_mode:0
+#: selection:yousign.request.template.signatory,auth_mode:0
+msgid "Mail"
+msgstr "Mail"
+
+#. module: yousign_connector
+#: selection:yousign.request.signatory,auth_mode:0
+#: selection:yousign.request.template.signatory,auth_mode:0
+msgid "Manual"
+msgstr "Manuel"
+
+#. module: yousign_connector
+#: selection:yousign.request.signatory,auth_mode:0
+#: selection:yousign.request.template.signatory,auth_mode:0
+msgid "Mass"
+msgstr "En masse"
+
+#. module: yousign_connector
+#: field:yousign.request,message:0
+#: field:yousign.request.template,message:0
+msgid "Message"
+msgstr "Message"
+
+#. module: yousign_connector
+#: field:yousign.request,message_ids:0
+msgid "Messages"
+msgstr "Messages"
+
+#. module: yousign_connector
+#: help:yousign.request,message_ids:0
+msgid "Messages and communication history"
+msgstr "Messages and communication history"
+
+#. module: yousign_connector
+#: code:addons/yousign_connector/models/yousign_request.py:304
+#, python-format
+msgid "Missing email on the signatory '%s'"
+msgstr "E-mail manquant pour le signataire '%s'"
+
+#. module: yousign_connector
+#: code:addons/yousign_connector/models/yousign_request.py:300
+#, python-format
+msgid "Missing lastname on one of the signatories of request %s"
+msgstr "Nom de famille manquant sur l'un des signataires de la requête %s"
+
+#. module: yousign_connector
+#: code:addons/yousign_connector/models/yousign_request.py:291
+#, python-format
+msgid "Missing message on request %s."
+msgstr "Message manquant sur la requête %s."
+
+#. module: yousign_connector
+#: code:addons/yousign_connector/models/yousign_request.py:307
+#, python-format
+msgid "Missing mobile phone number on signatory '%s' whose authentication mode is SMS"
+msgstr "Numéro de téléphone portable manquant sur le signataire '%s' dont le mode d'authentification est SMS"
+
+#. module: yousign_connector
+#: code:addons/yousign_connector/models/yousign_request.py:288
+#, python-format
+msgid "Missing title on request %s."
+msgstr "Titre manquant sur la requête %s."
+
+#. module: yousign_connector
+#: field:yousign.request.signatory,mobile:0
+msgid "Mobile"
+msgstr "Tél. portable"
+
+#. module: yousign_connector
+#: field:yousign.request.template,model:0
+msgid "Model"
+msgstr "Objet"
+
+#. module: yousign_connector
+#: field:yousign.request,name:0
+#: field:yousign.request.template,name:0
+msgid "Name"
+msgstr "Nom"
+
+#. module: yousign_connector
+#: view:yousign.request:yousign_connector.yousign_request_search
+msgid "Name, Document Name or Title"
+msgstr "Nom, nom du document ou titre"
+
+#. module: yousign_connector
+#: view:yousign.request:yousign_connector.new_yousign_request_form
+msgid "New Yousign Request"
+msgstr "Nouvelle requête Yousign"
+
+#. module: yousign_connector
+#: code:addons/yousign_connector/models/yousign_request.py:131
+#, python-format
+msgid "No Yousign Request Template for model %s"
+msgstr "Aucun modèle de requête Yousign pour l'objet %s"
+
+#. module: yousign_connector
+#: view:yousign.request:yousign_connector.yousign_request_search
+msgid "Object"
+msgstr "Objet"
+
+#. module: yousign_connector
+#: code:addons/yousign_connector/models/yousign_request.py:223
+#, python-format
+msgid "One of the Yousign config parameters is missing in the Odoo server config file."
+msgstr "Un des paramètres de configuration Yousign est manquant dans le fichier de configuration du serveur Odoo."
+
+#. module: yousign_connector
+#: selection:yousign.request.signatory,state:0
+msgid "Partially Signed"
+msgstr "Partiellement signé"
+
+#. module: yousign_connector
+#: field:yousign.request.signatory,partner_id:0
+msgid "Partner"
+msgstr "Partenaire"
+
+#. module: yousign_connector
+#: field:yousign.request.template.signatory,partner_type:0
+msgid "Partner Type"
+msgstr "Type de partenaire"
+
+#. module: yousign_connector
+#: selection:yousign.request.signatory,state:0
+msgid "Pending"
+msgstr "En attente"
+
+#. module: yousign_connector
+#: selection:yousign.request.signatory,auth_mode:0
+#: selection:yousign.request.template.signatory,auth_mode:0
+msgid "Photo"
+msgstr "Photo"
+
+#. module: yousign_connector
+#: field:yousign.request.signatory,proof_level:0
+#: field:yousign.request.template.signatory,proof_level:0
+msgid "Proof Level"
+msgstr "Niveau de preuve"
+
+#. module: yousign_connector
+#: help:yousign.request.signatory,proof_level:0
+#: help:yousign.request.template.signatory,proof_level:0
+msgid "Proof level of the signer. In HIGH mode, signer(s) must upload ID cards to launch the signature (it will be checked immediately after the upload)"
+msgstr "Niveau de preuve du signataire. En mode élevé, les signataires doivent déposer une copie d'une pièce d'identité (elle sera vérifiée juste après le dépôt)"
+
+#. module: yousign_connector
+#: field:yousign.request,res_id:0
+msgid "Related Document ID"
+msgstr "ID du document associé"
+
+#. module: yousign_connector
+#: field:yousign.request,model:0
+msgid "Related Document Model"
+msgstr "Objet du document associé"
+
+#. module: yousign_connector
+#: field:yousign.request,res_name:0
+msgid "Related Document Name"
+msgstr "Nom du document associé"
+
+#. module: yousign_connector
+#: model:ir.model,name:yousign_connector.model_yousign_request_remind
+msgid "Remind several Yousign requests"
+msgstr "Relance sur plusieurs requêtes Yousign"
+
+#. module: yousign_connector
+#: code:addons/yousign_connector/models/yousign_request.py:512
+#, python-format
+msgid "Reminder sent to late signatories"
+msgstr "Relance envoyée aux signataires retardataires"
+
+#. module: yousign_connector
+#: view:yousign.request.template:yousign_connector.yousign_request_template_form
+msgid "Remove Action"
+msgstr "Retirer l'action"
+
+#. module: yousign_connector
+#: view:yousign.request.template:yousign_connector.yousign_request_template_form
+msgid "Remove the contextual action to use this template on related documents"
+msgstr "Retire l'action contextuelle liée à ce modèle sur les documents associés"
+
+#. module: yousign_connector
+#: field:yousign.request.signatory,parent_id:0
+msgid "Request"
+msgstr "Requête"
+
+#. module: yousign_connector
+#: model:ir.actions.act_window,name:yousign_connector.yousign_request_template_action
+#: model:ir.ui.menu,name:yousign_connector.yousign_request_template_menu
+msgid "Request Templates"
+msgstr "Modèles de requêtes"
+
+#. module: yousign_connector
+#: selection:yousign.request.signatory,auth_mode:0
+#: selection:yousign.request.template.signatory,auth_mode:0
+msgid "SMS"
+msgstr "SMS"
+
+#. module: yousign_connector
+#: view:yousign.request:yousign_connector.yousign_request_search
+msgid "Search Yousign Requests"
+msgstr "Search Yousign Requests"
+
+#. module: yousign_connector
+#: model:ir.actions.act_window,name:yousign_connector.yousign_request_remind_action
+#: view:yousign.request:yousign_connector.yousign_request_form
+#: view:yousign.request.remind:yousign_connector.yousign_request_remind_form
+msgid "Send Reminder"
+msgstr "Envoyer une relance"
+
+#. module: yousign_connector
+#: view:yousign.request:yousign_connector.new_yousign_request_form
+#: view:yousign.request:yousign_connector.yousign_request_form
+msgid "Send to Yousign"
+msgstr "Envoyer à Yousign"
+
+#. module: yousign_connector
+#: view:yousign.request:yousign_connector.yousign_request_search
+#: selection:yousign.request,state:0
+msgid "Sent"
+msgstr "Envoyé"
+
+#. module: yousign_connector
+#: field:yousign.request.signatory,sequence:0
+#: field:yousign.request.template.signatory,sequence:0
+msgid "Sequence"
+msgstr "Séquence"
+
+#. module: yousign_connector
+#: field:yousign.request.template,ir_act_window_id:0
+msgid "Sidebar Action"
+msgstr "Sidebar Action"
+
+#. module: yousign_connector
+#: field:yousign.request.template,ir_value_id:0
+msgid "Sidebar Button"
+msgstr "Sidebar Button"
+
+#. module: yousign_connector
+#: help:yousign.request.template,ir_act_window_id:0
+msgid "Sidebar action to make this template available on records of the related document model"
+msgstr "Sidebar action to make this template available on records of the related document model"
+
+#. module: yousign_connector
+#: help:yousign.request.template,ir_value_id:0
+msgid "Sidebar button to open the sidebar action"
+msgstr "Sidebar button to open the sidebar action"
+
+#. module: yousign_connector
+#: view:yousign.request:yousign_connector.new_yousign_request_form
+#: view:yousign.request:yousign_connector.yousign_request_form
+#: field:yousign.request,signatory_ids:0
+#: view:yousign.request.template:yousign_connector.yousign_request_template_form
+#: field:yousign.request.template,signatory_ids:0
+msgid "Signatories"
+msgstr "Signataires"
+
+#. module: yousign_connector
+#: model:ir.model,name:yousign_connector.model_yousign_request_template_signatory
+msgid "Signatories of Yousign Request Template"
+msgstr "Signataires du modèle de requête Yousign"
+
+#. module: yousign_connector
+#: model:ir.actions.act_window,name:yousign_connector.new_yousign_request_action
+msgid "Signature Request"
+msgstr "Requête de signature"
+
+#. module: yousign_connector
+#: model:ir.actions.act_window,name:yousign_connector.yousign_request_action
+#: model:ir.ui.menu,name:yousign_connector.yousign_request_menu
+msgid "Signature Requests"
+msgstr "Requêtes de signature"
+
+#. module: yousign_connector
+#: field:yousign.request.signatory,state:0
+msgid "Signature Status"
+msgstr "État des signatures"
+
+#. module: yousign_connector
+#: view:yousign.request:yousign_connector.yousign_request_search
+#: selection:yousign.request,state:0
+#: selection:yousign.request.signatory,state:0
+msgid "Signed"
+msgstr "Signé"
+
+#. module: yousign_connector
+#: view:yousign.request:yousign_connector.yousign_request_search
+#: field:yousign.request,state:0
+msgid "State"
+msgstr "État"
+
+#. module: yousign_connector
+#: selection:yousign.request.template.signatory,partner_type:0
+msgid "Static"
+msgstr "Statique"
+
+#. module: yousign_connector
+#: field:yousign.request,message_summary:0
+msgid "Summary"
+msgstr "Summary"
+
+#. module: yousign_connector
+#: field:yousign.request.template.signatory,parent_id:0
+msgid "Template"
+msgstr "Modèle"
+
+#. module: yousign_connector
+#: code:addons/yousign_connector/models/yousign_request.py:284
+#, python-format
+msgid "There are no documents to sign on request %s!"
+msgstr "Il n'y a aucun document à signer sur la requête %s !"
+
+#. module: yousign_connector
+#: code:addons/yousign_connector/models/yousign_request.py:281
+#, python-format
+msgid "There are no signatories on request %s!"
+msgstr "Il n'y a aucun signataire sur la requête %s !"
+
+#. module: yousign_connector
+#: view:yousign.request.remind:yousign_connector.yousign_request_remind_form
+msgid "This wizard will ask YouSign to send a reminder to all the selected requests."
+msgstr "Cet assistant demandera à YouSign d'envoyer une relance à toutes les requêtes sélectionnées."
+
+#. module: yousign_connector
+#: field:yousign.request,title:0
+#: field:yousign.request.template,title:0
+msgid "Title"
+msgstr "Titre"
+
+#. module: yousign_connector
+#: help:yousign.request.signatory,auth_value:0
+#: help:yousign.request.template.signatory,auth_value:0
+msgid "To be set only when Authentication Mode is Manual"
+msgstr "À renseigner uniquement quand le mode d'authentification est 'manuel'"
+
+#. module: yousign_connector
+#: field:yousign.request,message_unread:0
+msgid "Unread Messages"
+msgstr "Unread Messages"
+
+#. module: yousign_connector
+#: code:addons/yousign_connector/models/yousign_request_template.py:157
+#, python-format
+msgid "Unsupported partner type"
+msgstr "Type de partenaire non supporté"
+
+#. module: yousign_connector
+#: view:yousign.request:yousign_connector.yousign_request_form
+msgid "Update"
+msgstr "Mettre à jour"
+
+#. module: yousign_connector
+#: code:addons/yousign_connector/models/yousign_request.py:135
+#, python-format
+msgid "Wrong active_model (%s should be %s)"
+msgstr "Wrong active_model (%s should be %s)"
+
+#. module: yousign_connector
+#: code:addons/yousign_connector/models/yousign_request.py:312
+#, python-format
+msgid "You have selected 'manual' as authentication mode for the signatory %s, so you must set the authentication value for this signatory."
+msgstr "Vous avez sélectionné le mode d'authentification 'manuel' pour le signataire %s, donc vous devez entrer une valeur d'authentification pour ce signataire."
+
+#. module: yousign_connector
+#: field:yousign.request,ys_lang:0
+msgid "Yousign Lang"
+msgstr "Langue Yousign"
+
+#. module: yousign_connector
+#: code:addons/yousign_connector/models/yousign_request.py:396
+#, python-format
+msgid "Yousign request <b>%s</b> generated with %d signatories"
+msgstr "Requête Yousign <b>%s</b> générée avec %d signataires"
+
+#. module: yousign_connector
+#: code:addons/yousign_connector/models/yousign_request.py:476
+#, python-format
+msgid "Yousign request <b>%s</b> has been signed by all signatories"
+msgstr "La requête Yousign <b>%s</b> a été signée par tous les signataires"
+
+#. module: yousign_connector
+#: model:ir.ui.menu,name:yousign_connector.yousign_root_config
+msgid "Yousign"
+msgstr "Yousign"
+
+#. module: yousign_connector
+#: field:yousign.request,ys_identifier:0
+#: field:yousign.request.signatory,ys_identifier:0
+msgid "Yousign ID"
+msgstr "ID Yousign"
+
+#. module: yousign_connector
+#: model:ir.model,name:yousign_connector.model_yousign_request
+#: view:yousign.request:yousign_connector.yousign_request_form
+msgid "Yousign Request"
+msgstr "Requête Yousign"
+
+#. module: yousign_connector
+#: code:addons/yousign_connector/models/yousign_request_template.py:51
+#, python-format
+msgid "Yousign Request (%s)"
+msgstr "Requête Yousign (%s)"
+
+#. module: yousign_connector
+#: view:yousign.request.remind:yousign_connector.yousign_request_remind_form
+msgid "Yousign Request Remind"
+msgstr "Yousign Request Remind"
+
+#. module: yousign_connector
+#: view:yousign.request.signatory:yousign_connector.yousign_request_signatory_form
+#: view:yousign.request.signatory:yousign_connector.yousign_request_signatory_tree
+msgid "Yousign Request Signatory"
+msgstr "Signataire d'une requête"
+
+#. module: yousign_connector
+#: model:ir.model,name:yousign_connector.model_yousign_request_template
+#: view:yousign.request.template:yousign_connector.yousign_request_template_form
+msgid "Yousign Request Template"
+msgstr "Modèle de requête Yousign"
+
+#. module: yousign_connector
+#: view:yousign.request.template.signatory:yousign_connector.yousign_request_template_signatory_form
+#: view:yousign.request.template.signatory:yousign_connector.yousign_request_template_signatory_tree
+msgid "Yousign Request Template Signatory"
+msgstr "Signataire d'un modèle de requête Yousign"
+
+#. module: yousign_connector
+#: view:yousign.request.template:yousign_connector.yousign_request_template_tree
+msgid "Yousign Request Templates"
+msgstr "Modèles de requête Yousign"
+
+#. module: yousign_connector
+#: view:yousign.request:yousign_connector.yousign_request_tree
+msgid "Yousign Requests"
+msgstr "Requêtes Yousign"
+
+#. module: yousign_connector
+#: code:addons/yousign_connector/models/yousign_request_template.py:152
+#, python-format
+msgid "dynamic_partner_id is a required argument when partner_type is dynamic"
+msgstr "dynamic_partner_id is a required argument when partner_type is dynamic"
+

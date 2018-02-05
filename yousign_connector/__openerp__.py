@@ -3,11 +3,11 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 {
-    'name': 'YouSign Connector',
+    'name': 'Yousign Connector',
     'version': '8.0.1.0.0',
     'category': 'Signature',
     'license': 'AGPL-3',
-    'summary': 'Odoo generates signature requests on YouSign',
+    'summary': 'Odoo generates signature requests on Yousign',
     'author': 'Akretion',
     'website': 'http://www.akretion.com',
     'depends': [

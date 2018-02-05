@@ -12,7 +12,7 @@
     <field name="model">yousign.request.remind</field>
     <field name="arch"  type="xml">
         <form string="Yousign Request Remind">
-            <p>This wizard will ask YouSign to send a reminder to all the selected requests.</p>
+            <p>This wizard will ask Yousign to send a reminder to all the selected requests.</p>
             <footer>
                 <button type="object" name="run" string="Send Reminder" class="oe_highlight"/>
                 <button special="cancel" string="Cancel" class="oe_link"/>

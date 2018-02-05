@@ -44,7 +44,7 @@ class YousignRequest(models.Model):
         readonly=True, states={'draft': [('readonly', False)]},
         track_visibility='onchange')
     ys_lang = fields.Char(
-        compute='compute_ys_lang', string='YouSign Lang', readonly=True,
+        compute='compute_ys_lang', string='Yousign Lang', readonly=True,
         store=True)
     attachment_ids = fields.Many2many(
         'ir.attachment', string='Documents to Sign',
@@ -129,7 +129,7 @@ class YousignRequest(models.Model):
                 template = templates[0]
         if not template:
             raise UserError(_(
-                "No YouSign Request Template for model %s") % model)
+                "No Yousign Request Template for model %s") % model)
         # print "model=%s, res_id=%s" % (model, res_id)
         if model != template.model:
             raise UserError(_(
@@ -382,7 +382,7 @@ class YousignRequest(models.Model):
                 'YS initSign failed on req ID %d with error %s',
                 self.id, err_msg)
             raise UserError(_(
-                "Failure when trying to send the signing request %s to "
+                "Failure when sending the signing request %s to "
                 "Yousign.\n\n"
                 "Error: %s") % (self.display_name, err_msg))
         self.write({
@@ -394,7 +394,7 @@ class YousignRequest(models.Model):
         if src_obj:
             # for v10, add link to request in message
             src_obj.suspend_security().message_post(_(
-                "YouSign request <b>%s</b> generated with %d signatories")
+                "Yousign request <b>%s</b> generated with %d signatories")
                 % (self.name, len(self.signatory_ids)))
         return
 
@@ -425,8 +425,8 @@ class YousignRequest(models.Model):
                 logger.error(
                     'getInfosFromSignatureDemand request failed on YS req '
                     'ID %d. Error: %s', req.id, err_msg)
-                req.suspend_security().message_post(_(
-                    "<b>Failed to update status</b>. <br/>"
+                req.message_post(_(
+                    "<b>Failed to update status.</b> <br/>"
                     "Technical error: %s") % err_msg)
                 continue
             mail2obj = {}
@@ -474,7 +474,7 @@ class YousignRequest(models.Model):
                 if src_obj:
                     # for v10, add link to request in message
                     src_obj.suspend_security().message_post(_(
-                        "YouSign request <b>%s</b> has been signed by all "
+                        "Yousign request <b>%s</b> has been signed by all "
                         "signatories") % req.name)
 
     @api.model
@@ -509,15 +509,14 @@ class YousignRequest(models.Model):
                 logger.debug(
                     'Successful request alertSigners on YS req ID %d '
                     'result %s', req.id, res)
-                req.suspend_security().message_post(_(
-                    "Reminder sent to late signatories"))
+                req.message_post(_("Reminder sent to late signatories"))
             except Exception, e:
                 err_msg = str(e).decode('utf-8')
                 logger.error(
                     'alertSigners request failed on YS req. ID %d '
                     'with error %s', req.id, err_msg)
-                req.suspend_security().message_post(_(
-                    "<b>Failed to send reminder to late signatories</b>. <br/>"
+                req.message_post(_(
+                    "<b>Failed to send reminder to late signatories.</b> <br/>"
                     "Technical error: %s") % err_msg)
 
     @api.multi
@@ -525,7 +524,7 @@ class YousignRequest(models.Model):
         conn = False
         for req in self:
             logger.info(
-                "Getting signed files on YouSign request %s ID %s",
+                "Getting signed files on Yousign request %s ID %s",
                 req.name, req.id)
             if req.state != 'signed':
                 logger.info(
@@ -554,7 +553,7 @@ class YousignRequest(models.Model):
                 logger.error(
                     "getSignedFilesFromDemand request failed on YS "
                     "req. ID %d with error %s", req.id, err_msg)
-                req.suspend_security().message_post(_(
+                req.message_post(_(
                     "<b>Failed to archive signed documents.</b><br/>"
                     "Technical error: %s") % err_msg)
             if res:
@@ -578,7 +577,7 @@ class YousignRequest(models.Model):
                             'File %s attached on Yousign request %s ID %d',
                             filename, req.name, req.id)
                 if attach_created == docs_to_sign_count:
-                    req.suspend_security().message_post(_(
+                    req.message_post(_(
                         "%d signed document(s) have been added as attachment")
                         % attach_created)
                     req.state = 'archived'
