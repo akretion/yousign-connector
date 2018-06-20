@@ -7,15 +7,19 @@
     <field name="name">Quotation</field>
     <field name="model_id" ref="sale.model_sale_order"/>
     <field name="lang">${object.partner_id.lang}</field>
-    <field name="title">${object.company_id.name} - Sign request for quotation ${object.name}</field>
-    <field name="message">Hello ${object.partner_id.name},
+    <field name="init_mail_subject">${object.company_id.name} - Sign request for quotation ${object.name}</field>
+    <field name="init_mail_body"><![CDATA[
+    <p>Hello ${object.partner_id.name},</p>
 
-We have prepared a quotation ${object.name} for a total amount of ${object.amount_untaxed} ${object.currency_id.name} without taxes (${object.amount_total} ${object.currency_id.name} with taxes).
+<p>We have prepared a quotation ${object.name} for a total amount of ${object.amount_untaxed} ${object.currency_id.name} without taxes (${object.amount_total} ${object.currency_id.name} with taxes).</p>
 
-Regards,
+<p>Regards,</p>
 
+<code>
+-- <br/>
 ${object.company_id.name}
-</field>
+</code>
+]]></field>
     <field name="report_id" ref="sale.report_sale_order"/>
 </record>
 
