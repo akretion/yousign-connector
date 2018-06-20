@@ -35,10 +35,12 @@ class YousignRequest(models.Model):
     res_id = fields.Integer(
         string='Related Document ID', select=True, readonly=True,
         track_visibility='onchange')
-    title = fields.Char(
-        'Title', readonly=True, states={'draft': [('readonly', False)]})
-    message = fields.Text(
-        readonly=True, states={'draft': [('readonly', False)]})
+    init_mail_subject = fields.Char(
+        'Init Mail Subject', readonly=True,
+        states={'draft': [('readonly', False)]})
+    init_mail_body = fields.Html(
+        'Init Mail Body', readonly=True,
+        states={'draft': [('readonly', False)]})
     lang = fields.Selection(
         '_lang_get', string='Language',
         readonly=True, states={'draft': [('readonly', False)]},
@@ -171,8 +173,8 @@ class YousignRequest(models.Model):
         if lang:
             template = template.with_context(lang=lang)
         dyn_fields = {
-            'title': template.title,
-            'message': template.message,
+            'init_mail_subject': template.init_mail_subject,
+            'init_mail_body': template.init_mail_body,
             }
         for field_name, field_content in dyn_fields.iteritems():
             dyn_fields[field_name] = eto.render_template_batch(
@@ -284,12 +286,13 @@ class YousignRequest(models.Model):
             raise UserError(_(
                 "There are no documents to sign on request %s!")
                 % self.display_name)
-        if not self.title:
+        if not self.init_mail_subject:
             raise UserError(_(
-                "Missing title on request %s.") % self.display_name)
-        if not self.message:
+                "Missing init mail subject on request %s.")
+                % self.display_name)
+        if not self.init_mail_body:
             raise UserError(_(
-                "Missing message on request %s.") % self.display_name)
+                "Missing init mail body on request %s.") % self.display_name)
         listSignersInfos = []
         listSignedFile = []
         options = []
@@ -364,10 +367,10 @@ class YousignRequest(models.Model):
             res = conn.initSign(
                 listSignedFile,
                 listSignersInfos,
-                self.message,
-                self.title,
-                '',  # initMailSubject,
-                '',  # initMail,
+                '',  # message
+                '',  # title
+                self.init_mail_subject,  # initMailSubject,
+                self.init_mail_body,  # initMail,
                 '',  # endMailSubject,
                 '',  # endMail,
                 self.ys_lang,
