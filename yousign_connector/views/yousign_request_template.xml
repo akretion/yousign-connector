@@ -30,8 +30,8 @@
                 <field name="model_id"/>
                 <field name="model" invisible="1"/>
                 <field name="lang"/>
-                <field name="title"/>
-                <field name="message"/>
+                <field name="init_mail_subject"/>
+                <field name="init_mail_body"/>
                 <field name="report_id" domain="[('model','=', model)]"/>
                 <field name="company_id" groups="base.group_multi_company"/>
             </group>
@@ -49,10 +49,24 @@
         <tree string="Yousign Request Templates">
             <field name="name"/>
             <field name="model_id"/>
+            <field name="init_mail_subject"/>
             <field name="report_id"/>
         </tree>
     </field>
 </record>
+
+<record id="yousign_request_template_search" model="ir.ui.view">
+    <field name="model">yousign.request.template</field>
+    <field name="arch" type="xml">
+        <search string="Search Yousign Request Templates">
+            <field name="name" filter_domain="['|', ('name', 'ilike', self), ('init_mail_subject', 'ilike', self)]" string="Name or Mail Subject"/>
+            <group string="Group By" name="groupby">
+                <filter name="object_groupby" string="Object" context="{'group_by': 'model_id'}"/>
+            </group>
+        </search>
+    </field>
+</record>
+
 
 <record id="yousign_request_template_signatory_form" model="ir.ui.view">
     <field name="model">yousign.request.template.signatory</field>
@@ -85,7 +99,6 @@
         </tree>
     </field>
 </record>
-
 
 <record id="yousign_request_template_action" model="ir.actions.act_window">
     <field name="name">Request Templates</field>

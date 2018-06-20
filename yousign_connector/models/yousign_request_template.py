@@ -18,12 +18,14 @@ class YousignRequestTemplate(models.Model):
         'ir.model', string='Applies to', required=True)
     model = fields.Char(related='model_id.model', readonly=True, store=True)
     lang = fields.Char('Language')
-    title = fields.Char(
-        'Title', translate=True,
-        help="Corresponding field in Yousign API : title")
-    message = fields.Text(
-        'Message', translate=True,
-        help="Corresponding field in Yousign API : message")
+    init_mail_subject = fields.Char(
+        'Init Mail Subject', translate=True,
+        help="Corresponding field in Yousign API: initMailSubject")
+    init_mail_body = fields.Html(
+        'Init Mail Body', translate=True,
+        help="You must insert '{yousignUrl}' in the body where you want to "
+        "insert the URL to access Yousign. Corresponding field in Yousign "
+        "API: initMail")
     report_id = fields.Many2one(
         'ir.actions.report.xml', string='Default Report to Sign')
     company_id = fields.Many2one(

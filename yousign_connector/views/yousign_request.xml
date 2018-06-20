@@ -27,8 +27,8 @@
                     <field name="model" invisible="0"/>
                     <field name="res_id" invisible="0"/>
                     <field name="lang"/>
-                    <field name="title" required="1"/>
-                    <field name="message" required="1"/>
+                    <field name="init_mail_subject" required="1"/>
+                    <field name="init_mail_body" required="1"/>
                     <field name="attachment_ids" widget="many2many_binary"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </group>
@@ -58,8 +58,8 @@
                 <field name="state" invisible="1"/>
                 <field name="company_id" groups="base.group_multi_company" invisible="1"/>
                 <field name="lang"/>
-                <field name="title" required="1"/>
-                <field name="message" required="1"/>
+                <field name="init_mail_subject" required="1"/>
+                <field name="init_mail_body" required="1"/>
                 <field name="attachment_ids" widget="many2many_binary"/>
             </group>
             <group name="signatories" string="Signatories">
@@ -80,7 +80,7 @@
         <tree string="Yousign Requests" colors="blue:state == 'draft';red:state == 'sent';gray:state == 'cancel'">
             <field name="name"/>
             <field name="res_name"/>
-            <field name="title"/>
+            <field name="init_mail_subject"/>
             <field name="ys_identifier"/>
             <field name="state"/>
         </tree>
@@ -91,7 +91,7 @@
     <field name="model">yousign.request</field>
     <field name="arch" type="xml">
         <search string="Search Yousign Requests">
-            <field name="name" filter_domain="['|', '|', ('name', 'ilike', self), ('res_name', 'ilike', self), ('title', 'ilike', self)]" string="Name, Document Name or Title"/>
+            <field name="name" filter_domain="['|', '|', ('name', 'ilike', self), ('res_name', 'ilike', self), ('init_mail_subject', 'ilike', self)]" string="Name, Document Name or Mail Subject"/>
             <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]" />
             <filter name="sent" string="Sent" domain="[('state', '=', 'sent')]" />
             <filter name="signed" string="Signed" domain="[('state', '=', 'signed')]" />
