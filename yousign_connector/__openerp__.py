@@ -23,6 +23,7 @@
         'views/yousign_request_template.xml',
         'views/yousign_request.xml',
         'security/ir.model.access.csv',
+        'security/yousign_security.xml',
         'wizard/yousign_request_remind_view.xml',
     ],
     'installable': True,
