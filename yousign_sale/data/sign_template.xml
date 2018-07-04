@@ -13,6 +13,8 @@
 
 <p>We have prepared a quotation ${object.name} for a total amount of ${object.amount_untaxed} ${object.currency_id.name} without taxes (${object.amount_total} ${object.currency_id.name} with taxes).</p>
 
+<p>To approve this quotation, you should sign it by following the signature process on Yousign: {yousignUrl}.</p>
+
 <p>Regards,</p>
 
 <code>

@@ -30,6 +30,7 @@
                     <field name="init_mail_subject" required="1"/>
                     <field name="init_mail_body" required="1"/>
                     <field name="attachment_ids" widget="many2many_binary"/>
+                    <field name="signed_attachment_ids" widget="many2many_binary" states="archived,cancel"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </group>
                 <group name="signatories" string="Signatories">

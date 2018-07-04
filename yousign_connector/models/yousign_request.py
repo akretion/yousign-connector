@@ -51,6 +51,9 @@ class YousignRequest(models.Model):
     attachment_ids = fields.Many2many(
         'ir.attachment', string='Documents to Sign',
         readonly=True, states={'draft': [('readonly', False)]})
+    signed_attachment_ids = fields.Many2many(
+        'ir.attachment', 'yousign_request_signed_attachment_rel',
+        'request_id', 'attachment_id', readonly=True)
     signatory_ids = fields.One2many(
         'yousign.request.signatory', 'parent_id',
         'Signatories', readonly=True, states={'draft': [('readonly', False)]})
@@ -560,7 +563,14 @@ class YousignRequest(models.Model):
                     "<b>Failed to archive signed documents.</b><br/>"
                     "Technical error: %s") % err_msg)
             if res:
-                attach_created = 0
+                if req.res_id and req.model:
+                    res_model = req.model
+                    res_id = req.res_id
+                else:
+                    res_model = self._name
+                    res_id = req.id
+                signed_filenames = [
+                    att.datas_fname for att in req.signed_attachment_ids]
                 for signed_file in res:
                     logger.debug(
                         "signed_file.filename=%s", signed_file.fileName)
@@ -568,22 +578,29 @@ class YousignRequest(models.Model):
                         filename = signed_file.fileName
                         if filename[-4:] and filename[-4:].lower() == '.pdf':
                             filename = '%s_signed.pdf' % filename[:-4]
-                        self.env['ir.attachment'].create({
+                        if filename in signed_filenames:
+                            logger.debug(
+                                'File %s is already attached as '
+                                'signed_attachment_ids', filename)
+                            continue
+                        attach = self.env['ir.attachment'].create({
                             'name': filename,
-                            'res_id': req.id,
-                            'res_model': self._name,
+                            'res_id': res_id,
+                            'res_model': res_model,
                             'datas': signed_file.file,
                             'datas_fname': filename,
                             })
-                        attach_created += 1
+                        req.signed_attachment_ids = [(4, attach.id)]
+                        signed_filenames.append(filename)
                         logger.info(
-                            'File %s attached on Yousign request %s ID %d',
-                            filename, req.name, req.id)
-                if attach_created == docs_to_sign_count:
-                    req.message_post(_(
-                        "%d signed document(s) have been added as attachment")
-                        % attach_created)
+                            'Signed file %s attached on %s ID %d',
+                            filename, res_model, res_id)
+                if len(signed_filenames) == docs_to_sign_count:
                     req.state = 'archived'
+                    req.message_post(_(
+                        "%d signed document(s) are now attached. "
+                        "Request %s is archived")
+                        % (len(signed_filenames), req.name))
         return
 
 
