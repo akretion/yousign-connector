@@ -154,7 +154,7 @@ class YousignRequest(models.Model):
         default_attachment_ids = []
         if template.report_id:
             report_data_bin, filename_ext = iarxo.render_report(
-                [res_id], template.report_id.report_name, False)
+                [res_id], template.report_id.report_name, {})
 
             filename = 'report'
             if source_obj.display_name:
