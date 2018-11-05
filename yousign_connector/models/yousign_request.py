@@ -407,6 +407,22 @@ class YousignRequest(models.Model):
 
     @api.multi
     def cancel(self):
+        conn = self.yousign_init()
+        for req in self:
+            if req.state == 'sent' and req.ys_identifier:
+                try:
+                    res = conn.cancelSignatureDemand(req.ys_identifier)
+                    logger.info(
+                        'Result of cancelSignatureDemand on YS req '
+                        'ID %d: %s', req.id, res)
+                    req.message_post(_(
+                        "Request successfully cancelled via Yousign "
+                        "webservices."))
+                except Exception, e:
+                    err_msg = str(e).decode('utf-8')
+                    raise UserError(_(
+                        "Failed to cancel Yousign request %s. "
+                        "Error message: %s.") % (req.name, err_msg))
         self.write({'state': 'cancel'})
 
     @api.multi
