@@ -13,7 +13,7 @@
         <form string="Yousign Request">
             <header>
                 <button name="send" states="draft" string="Send to Yousign" type="object" class="oe_highlight"/>
-                <button name="cancel" states="draft" string="Cancel" type="object"/>
+                <button name="cancel" states="draft,sent" string="Cancel" type="object"/>
                 <button name="remind" states="sent" string="Send Reminder" type="object" help="Ask Yousign to send reminder to signatories"/>
                 <button name="update_status" states="sent" string="Update" type="object" help="Check if signatories have signed the documents"/>
                 <button name="archive" states="signed" string="Archive" type="object" help="Download signed files from Yousign and add them as attachments."/>
