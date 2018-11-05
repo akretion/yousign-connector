@@ -353,13 +353,14 @@ class YousignRequest(models.Model):
                     "Yousign request.") % filename)
             num_pages = pdf.getNumPages()
             logger.info('PDF %s has %d pages', filename, num_pages)
+            foptions = []
             # add visibleSignaturePage on all options
             for yoption in options:
-                yoption['visibleSignaturePage'] = num_pages
+                foptions.append(dict(yoption, visibleSignaturePage=num_pages))
             yfiletosign = {
                 'name': filename,
                 'content': attach.datas,
-                'visibleOptions': options,
+                'visibleOptions': foptions,
                 'pdfPassword': '',
                 }
             listSignedFile.append(yfiletosign)
