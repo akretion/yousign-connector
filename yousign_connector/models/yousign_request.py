@@ -628,6 +628,7 @@ class YousignRequestSignatory(models.Model):
     _phone_fields = ['mobile']
     _partner_field = 'partner_id'
     _country_field = None
+    _rec_name = 'lastname'
 
     parent_id = fields.Many2one(
         'yousign.request', string='Request', ondelete='cascade')
