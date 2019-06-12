@@ -499,6 +499,13 @@ class YousignRequest(models.Model):
                     src_obj.suspend_security().message_post(_(
                         "Yousign request <b>%s</b> has been signed by all "
                         "signatories") % req.name)
+                    req.signed_hook(src_obj)
+
+    @api.multi
+    def signed_hook(self, source_recordset):
+        '''Designed to be inherited by custom modules'''
+        self.ensure_one()
+        return
 
     @api.model
     def cron_update(self):
