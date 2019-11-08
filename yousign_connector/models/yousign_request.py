@@ -469,19 +469,28 @@ class YousignRequest(models.Model):
 
             # get status
             ysid2status = {}
+            ysid2date = {}
             for fileinfo in res.fileInfos:
                 for signstat in fileinfo.cosignersWithStatus:
                     if signstat.id in ysid2status:
                         ysid2status[signstat.id].append(signstat.status)
+                        if ysid2date.get(signstat.id) and ysid2date[signstat.id] < signstat.signatureDate:
+                            ysid2date[signstat.id] = signstat.signatureDate
                     else:
                         ysid2status[signstat.id] = [signstat.status]
+                        # signstat.signatureDate is a datetime python obj
+                        if signstat.signatureDate:
+                            ysid2date[signstat.id] = signstat.signatureDate
             all_signed = True
             for signer in req.signatory_ids:
                 if signer.ys_identifier in ysid2status:
                     if all([
                             state == 'COSIGNATURE_FILE_SIGNED' for state
                             in ysid2status[signer.ys_identifier]]):
-                        signer.state = 'signed'
+                        signer.write({
+                            'state': 'signed',
+                            'signature_date': ysid2date.get(signer.ys_identifier),
+                            })
                     elif (
                             'COSIGNATURE_FILE_SIGNED' in
                             ysid2status[signer.ys_identifier]):
@@ -669,6 +678,7 @@ class YousignRequestSignatory(models.Model):
         ('partially_signed', 'Partially Signed'),
         ('signed', 'Signed'),
         ], string='Signature Status', readonly=True, default='draft')
+    signature_date = fields.Date(string='Signature Date', readonly=True)
 
     def create(self, cr, uid, vals, context=None):
         vals_reformated = self._generic_reformat_phonenumbers(
