@@ -120,6 +120,7 @@
                 <field name="proof_level"/>
                 <field name="auth_mode"/>
                 <field name="auth_value" attrs="{'invisible': [('auth_mode', '!=', 'manual')], 'required': [('auth_mode', '=', 'manual')]}"/>
+                <field name="signature_date"/>
                 <field name="ys_identifier" states="pending,partially_signed,signed"/>
                 <field name="state" invisible="1"/>
             </group>
@@ -140,6 +141,7 @@
             <field name="proof_level"/>
             <field name="auth_mode"/>
             <field name="state"/>
+            <field name="signature_date"/>
         </tree>
     </field>
 </record>
