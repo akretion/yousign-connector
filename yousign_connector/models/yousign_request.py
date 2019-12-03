@@ -468,19 +468,23 @@ class YousignRequest(models.Model):
                     ysid2obj[signerinfo.id] = signer
 
             # get status
-            ysid2status = {}
-            ysid2date = {}
+            ysid2status = {}  # key = YS ID, value = [state_doc1, state_doc2]
+            ysid2date = {}  # key = YS ID, value = [date_doc1, date_doc2]
             for fileinfo in res.fileInfos:
                 for signstat in fileinfo.cosignersWithStatus:
                     if signstat.id in ysid2status:
                         ysid2status[signstat.id].append(signstat.status)
-                        if ysid2date.get(signstat.id) and ysid2date[signstat.id] < signstat.signatureDate:
-                            ysid2date[signstat.id] = signstat.signatureDate
                     else:
                         ysid2status[signstat.id] = [signstat.status]
                         # signstat.signatureDate is a datetime python obj
-                        if signstat.signatureDate:
-                            ysid2date[signstat.id] = signstat.signatureDate
+                    if (
+                            signstat.status == 'COSIGNATURE_FILE_SIGNED' and
+                            signstat.signatureDate):
+                        if signstat.id in ysid2date:
+                            ysid2date[signstat.id].append(
+                                signstat.signatureDate)
+                        else:
+                            ysid2date[signstat.id] = [signstat.signatureDate]
             all_signed = True
             for signer in req.signatory_ids:
                 if signer.ys_identifier in ysid2status:
@@ -489,7 +493,8 @@ class YousignRequest(models.Model):
                             in ysid2status[signer.ys_identifier]]):
                         signer.write({
                             'state': 'signed',
-                            'signature_date': ysid2date.get(signer.ys_identifier),
+                            'signature_date': max(
+                                ysid2date.get(signer.ys_identifier, [False])),
                             })
                     elif (
                             'COSIGNATURE_FILE_SIGNED' in
