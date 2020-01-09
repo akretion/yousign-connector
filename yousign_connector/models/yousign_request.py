@@ -4,6 +4,7 @@
 
 from openerp import api, fields, models, tools, _
 from openerp.exceptions import Warning as UserError
+from openerp.addons.email_template import email_template
 from unidecode import unidecode
 from StringIO import StringIO
 import logging
@@ -153,15 +154,25 @@ class YousignRequest(models.Model):
             default_signatory_ids.append((0, 0, signatory_vals))
         default_attachment_ids = []
         if template.report_id:
+            report = template.report_id
             report_data_bin, filename_ext = iarxo.render_report(
-                [res_id], template.report_id.report_name, {})
+                [res_id], report.report_name, {})
 
-            filename = 'report'
-            if source_obj.display_name:
+            full_filename = 'document_to_sign.%s' % filename_ext
+            if report.download_filename:
+                full_filename = email_template.mako_template_env\
+                    .from_string(report.download_filename)\
+                    .render({
+                        'objects': source_obj,
+                        'o': source_obj,
+                        'object': source_obj,
+                        'ext': report.report_type.replace('qweb-', ''),
+                    })
+            elif source_obj.display_name:
                 tmp_filename = source_obj.display_name[:50]
                 tmp_filename = tmp_filename.replace(' ', '_')
-                filename = unidecode(tmp_filename)
-            full_filename = '%s.%s' % (filename, filename_ext)
+                tmp_filename = unidecode(tmp_filename)
+                full_filename = '%s.%s' % (tmp_filename, filename_ext)
             attach_vals = {
                 'name': full_filename,
                 # 'res_id': Signature request is not created yet
