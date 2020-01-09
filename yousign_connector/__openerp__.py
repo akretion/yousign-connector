@@ -13,6 +13,7 @@
     'depends': [
         'report',
         'mail',
+        'report_custom_filename',
         'base_phone',
         'base_suspend_security',
         ],
