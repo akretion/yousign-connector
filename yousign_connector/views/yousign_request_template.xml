@@ -29,16 +29,35 @@
                 <field name="name"/>
                 <field name="model_id"/>
                 <field name="model" invisible="1"/>
+                <field name="ordered"/>
                 <field name="lang"/>
-                <field name="init_mail_subject"/>
-                <field name="init_mail_body"/>
                 <field name="report_id" domain="[('model','=', model)]"/>
+                <field name="remind_auto"/>
                 <field name="company_id" groups="base.group_multi_company"/>
             </group>
             <group name="signatories" string="Signatories">
                 <field name="signatory_ids" nolabel="1">
                 </field>
             </group>
+            <notebook>
+                <page name="init_mail" string="Email">
+                    <group name="init_mail">
+                        <field name="init_mail_subject"/>
+                        <field name="init_mail_body"/>
+                    </group>
+                </page>
+                <page name="remind" string="Auto-Remind Setup" attrs="{'invisible': [('remind_auto', '=', False)]}">
+                    <group name="remind">
+                        <label for="remind_interval"/>
+                        <div name="remind_interval">
+                            <field name="remind_interval" class="oe_inline"/> days
+                        </div>
+                        <field name="remind_limit"/>
+                        <field name="remind_mail_subject"/>
+                        <field name="remind_mail_body"/>
+                    </group>
+                </page>
+            </notebook>
         </form>
     </field>
 </record>
@@ -77,9 +96,9 @@
                 <field name="partner_type" widget="radio"/>
                 <field name="partner_id" attrs="{'invisible': [('partner_type', '=', 'dynamic')]}"/>
                 <field name="partner_tmpl" attrs="{'invisible': [('partner_type', '=', 'static')]}"/>
-                <field name="proof_level"/>
                 <field name="auth_mode"/>
-                <field name="auth_value" attrs="{'invisible': [('auth_mode', '!=', 'manual')]}"/>
+                <field name="mention_top"/>
+                <field name="mention_bottom"/>
             </group>
         </form>
     </field>
@@ -94,7 +113,6 @@
             <field name="partner_type"/>
             <field name="partner_id"/>
             <field name="partner_tmpl"/>
-            <field name="proof_level"/>
             <field name="auth_mode"/>
         </tree>
     </field>

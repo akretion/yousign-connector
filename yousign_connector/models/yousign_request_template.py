@@ -18,14 +18,22 @@ class YousignRequestTemplate(models.Model):
         'ir.model', string='Applies to', required=True)
     model = fields.Char(related='model_id.model', readonly=True, store=True)
     lang = fields.Char('Language')
+    ordered = fields.Boolean(string='Sign one after the other')
     init_mail_subject = fields.Char(
-        'Init Mail Subject', translate=True,
-        help="Corresponding field in Yousign API: initMailSubject")
+        'Init Mail Subject', translate=True)
     init_mail_body = fields.Html(
         'Init Mail Body', translate=True,
         help="You must insert '{yousignUrl}' in the body where you want to "
-        "insert the URL to access Yousign. Corresponding field in Yousign "
-        "API: initMail")
+        "insert the URL to access Yousign.")
+    remind_auto = fields.Boolean(string='Automatic Reminder')
+    remind_mail_subject = fields.Char(
+        'Reminder Mail Subject', translate=True)
+    remind_mail_body = fields.Html(
+        'Reminder Mail Body', translate=True)
+    remind_interval = fields.Integer(
+        string='Remind Interval', default=3,
+        help="Number of days between 2 auto-reminders by email.")
+    remind_limit = fields.Integer(string='Remind Limit', default=10)
     report_id = fields.Many2one(
         'ir.actions.report.xml', string='Default Report to Sign')
     company_id = fields.Many2one(
@@ -42,6 +50,17 @@ class YousignRequestTemplate(models.Model):
     ir_value_id = fields.Many2one(
         'ir.values', string='Sidebar Button', readonly=True, copy=False,
         help="Sidebar button to open the sidebar action")
+
+    _sql_constraints = [
+        (
+            'remind_interval_positive',
+            'CHECK(remind_interval >= 0)',
+            'The Remind Interval must be positive or null.'),
+        (
+            'remind_limit_positive',
+            'CHECK(remind_limit >= 0)',
+            'The Remind Limit must be positive or null.'),
+        ]
 
     @api.multi
     def create_button(self):
@@ -83,6 +102,17 @@ class YousignRequestTemplate(models.Model):
                 template.ir_value_id.sudo().unlink()
         return
 
+    @api.multi
+    def prepare_template2request(self):
+        self.ensure_one()
+        res = {
+            'ordered': self.ordered,
+            'remind_auto': self.remind_auto,
+            'remind_interval': self.remind_interval,
+            'remind_limit': self.remind_limit,
+            }
+        return res
+
 
 class YousignRequestTemplateSignatory(models.Model):
     _name = 'yousign.request.template.signatory'
@@ -99,29 +129,13 @@ class YousignRequestTemplateSignatory(models.Model):
     partner_id = fields.Many2one(
         'res.partner', string='Fixed Partner', ondelete='restrict')
     partner_tmpl = fields.Char(string='Dynamic Partner')
-    proof_level = fields.Selection([
-        ('low', 'Low'),
-        ('high', 'High'),
-        ], string='Proof Level', default='low',
-        help="Proof level of the signer. In HIGH mode, signer(s) must upload "
-        "ID cards to launch the signature (it will be checked immediately "
-        "after the upload)")
     auth_mode = fields.Selection([
         ('sms', 'SMS'),
-        ('mail', 'Mail'),
-        ('mass', 'Mass'),
-        ('manual', 'Manual'),
-        ('photo', 'Photo'),
+        ('email', 'E-Mail'),
         ], default='sms', string='Authentication Mode', required=True,
         help='Authentication mode used for the signer')
-    auth_value = fields.Char(
-        string='Authentication Value',
-        help="To be set only when Authentication Mode is Manual")
-
-    @api.onchange('auth_mode')
-    def auth_mode_change(self):
-        if self.auth_mode != 'manual':
-            self.auth_value = False
+    mention_top = fields.Char(string='Top Mention')
+    mention_bottom = fields.Char(string='Bottom Mention')
 
     @api.onchange('partner_type')
     def partner_type_change(self):
@@ -162,9 +176,9 @@ class YousignRequestTemplateSignatory(models.Model):
             'email': partner.email,
             'lastname': partner.name,
             'mobile': partner.mobile,
-            'proof_level': self.proof_level,
             'auth_mode': self.auth_mode,
-            'auth_value': self.auth_value,
+            'mention_top': self.mention_top,
+            'mention_bottom': self.mention_bottom,
         }
         if (
                 hasattr(partner, 'firstname') and

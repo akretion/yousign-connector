@@ -17,20 +17,20 @@ To install this module, you need several Python librairies:
 
 * PyPDF2 (available on `pypi <https://pypi.python.org/pypi/PyPDF2>`_ or as Debian/Ubuntu package *python-pypdf2*)
 * unidecode (available on `pypi <https://pypi.python.org/pypi/Unidecode>`_ or as Debian/Ubuntu package *python-unidecode*)
-* ysAPI, which is only available on this `Github repository <https://github.com/Yousign/yousign-api-client-python>`_.
+* requests (available on `pypi <https://pypi.org/project/requests/>`_) or as Debian/Ubuntu package *python-requests*).
 
 This modules depends on 2 OCA modules:
 
 * `base_phone <https://github.com/OCA/connector-telephony/tree/8.0/base_phone>`_ from the `connector-telephony <https://github.com/OCA/connector-telephony>`_ OCA project,
 * `base_suspend_security <https://github.com/OCA/server-tools/tree/8.0/base_suspend_security>`_ from the `server-tools <https://github.com/OCA/server-tools/>`_ OCA project.
 
+The installation of the OCA module `partner_firstname <https://github.com/OCA/partner-contact/tree/8.0/partner_firstname>`_ is recommended, but not required.
+
 Configuration
 =============
 
 You must edit the Odoo server configuration file and add the following keys:
 
-* yousign_user = Yousign login
-* yousign_password = Yousign password
 * yousign_apikey = Yousign API key
 * yousign_envir = demo or prod
 

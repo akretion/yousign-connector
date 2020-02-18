@@ -13,7 +13,7 @@
 
 <p>We have prepared a quotation ${object.name} for a total amount of ${object.amount_untaxed} ${object.currency_id.name} without taxes (${object.amount_total} ${object.currency_id.name} with taxes).</p>
 
-<p>To approve this quotation, you should sign it by following the signature process on Yousign: {yousignUrl}.</p>
+<p>To approve this quotation, you should sign it by following the signature process on Yousign: {yousignUrl|Access to quotation}.</p>
 
 <p>Regards,</p>
 
@@ -23,6 +23,24 @@ ${object.company_id.name}
 </code>
 ]]></field>
     <field name="report_id" ref="sale.report_sale_order"/>
+    <field name="remind_auto">1</field>
+    <field name="remind_interval">1</field>
+    <field name="remind_limit">10</field>
+    <field name="remind_mail_subject">Reminder - Sign request for quotation ${object.name}</field>
+    <field name="remind_mail_body"><![CDATA[
+    <p>Hello ${object.partner_id.name},</p>
+
+<p>We recently sent you a quotation a quotation ${object.name} for a total amount of ${object.amount_untaxed} ${object.currency_id.name} without taxes (${object.amount_total} ${object.currency_id.name} with taxes).</p>
+
+<p>We remind you that, in order to approve this quotation, you should sign it by following the signature process on Yousign: {yousignUrl|Access to quotation}.</p>
+
+<p>Regards,</p>
+
+<code>
+-- <br/>
+${object.company_id.name}
+</code>
+]]></field>
 </record>
 
 <record id="sale_sign_template_signatory_customer" model="yousign.request.template.signatory">
