@@ -4,7 +4,7 @@
 
 {
     'name': 'Yousign Connector',
-    'version': '8.0.1.0.0',
+    'version': '8.0.2.0.0',
     'category': 'Signature',
     'license': 'AGPL-3',
     'summary': 'Odoo generates signature requests on Yousign',
@@ -17,7 +17,7 @@
         'base_phone',
         'base_suspend_security',
         ],
-    'external_dependencies': {'python': ['ysApi', 'unidecode', 'PyPDF2']},
+    'external_dependencies': {'python': ['requests', 'unidecode', 'PyPDF2']},
     'data': [
         'data/yousign_seq.xml',
         'data/cron.xml',

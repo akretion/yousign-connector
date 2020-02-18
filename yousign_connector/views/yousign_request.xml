@@ -14,7 +14,6 @@
             <header>
                 <button name="send" states="draft" string="Send to Yousign" type="object" class="oe_highlight"/>
                 <button name="cancel" states="draft,sent" string="Cancel" type="object"/>
-                <button name="remind" states="sent" string="Send Reminder" type="object" help="Ask Yousign to send reminder to signatories"/>
                 <button name="update_status" states="sent" string="Update" type="object" help="Check if signatories have signed the documents"/>
                 <button name="archive" states="signed" string="Archive" type="object" help="Download signed files from Yousign and add them as attachments."/>
                 <field name="state" widget="statusbar" statusbar_colors="{'draft': 'blue'}" statusbar_visible="draft,sent,signed,archived"/>
@@ -23,19 +22,39 @@
                 <group name="main">
                     <field name="name" readonly="1"/>
                     <field name="ys_identifier" states="sent,signed,cancel"/>
+                    <field name="last_update"/>
                     <field name="res_name"/>
                     <field name="model" invisible="0"/>
                     <field name="res_id" invisible="0"/>
-                    <field name="lang"/>
-                    <field name="init_mail_subject" required="1"/>
-                    <field name="init_mail_body" required="1"/>
+                    <field name="ordered"/>
                     <field name="attachment_ids" widget="many2many_binary"/>
                     <field name="signed_attachment_ids" widget="many2many_binary" states="archived,cancel"/>
+                    <field name="remind_auto"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </group>
                 <group name="signatories" string="Signatories">
                     <field name="signatory_ids" nolabel="1"/>
                 </group>
+                <notebook>
+                    <page name="init_mail" string="Email">
+                        <group name="init_mail">
+                            <field name="lang"/>
+                            <field name="init_mail_subject"/>
+                            <field name="init_mail_body"/>
+                        </group>
+                    </page>
+                    <page name="remind" string="Auto-Remind Setup" attrs="{'invisible': [('remind_auto', '=', False)]}">
+                        <group name="remind">
+                            <label for="remind_interval"/>
+                            <div name="remind_interval">
+                                <field name="remind_interval" class="oe_inline" attrs="{'required': [('remind_auto', '=', True)]}"/> days
+                            </div>
+                            <field name="remind_limit" attrs="{'required': [('remind_auto', '=', True)]}"/>
+                            <field name="remind_mail_subject" attrs="{'required': [('remind_auto', '=', True)]}"/>
+                            <field name="remind_mail_body" attrs="{'required': [('remind_auto', '=', True)]}"/>
+                        </group>
+                    </page>
+                </notebook>
             </sheet>
             <div class="oe_chatter">
                 <field name="message_follower_ids" widget="mail_followers"/>
@@ -58,14 +77,32 @@
                 <field name="res_id" invisible="1"/>
                 <field name="state" invisible="1"/>
                 <field name="company_id" groups="base.group_multi_company" invisible="1"/>
-                <field name="lang"/>
-                <field name="init_mail_subject" required="1"/>
-                <field name="init_mail_body" required="1"/>
                 <field name="attachment_ids" widget="many2many_binary"/>
+                <field name="remind_auto"/>
+                <field name="ordered"/>
             </group>
             <group name="signatories" string="Signatories">
                 <field name="signatory_ids" nolabel="1"/>
             </group>
+            <notebook>
+                <page name="init_mail" string="Email">
+                    <group name="init_mail">
+                        <field name="init_mail_subject"/>
+                        <field name="init_mail_body"/>
+                    </group>
+                </page>
+                <page name="remind" string="Auto-Remind Setup" attrs="{'invisible': [('remind_auto', '=', False)]}">
+                    <group name="remind">
+                        <label for="remind_interval"/>
+                        <div name="remind_interval">
+                            <field name="remind_interval" class="oe_inline" attrs="{'required': [('remind_auto', '=', True)]}"/> days
+                        </div>
+                        <field name="remind_limit" attrs="{'required': [('remind_auto', '=', True)]}"/>
+                        <field name="remind_mail_subject" attrs="{'required': [('remind_auto', '=', True)]}"/>
+                        <field name="remind_mail_body" attrs="{'required': [('remind_auto', '=', True)]}"/>
+                    </group>
+                </page>
+            </notebook>
             <footer>
                 <button name="send" states="draft" string="Send to Yousign" type="object" class="oe_highlight"/>
                 <button special="cancel" string="Cancel" class="oe_link"/>
@@ -110,6 +147,9 @@
     <field name="model">yousign.request.signatory</field>
     <field name="arch" type="xml">
         <form string="Yousign Request Signatory">
+            <header>
+                <field name="state" widget="statusbar"/>
+            </header>
             <group name="main">
                 <field name="parent_id" invisible="not context.get('yousign_request_signatory_main_view')"/>
                 <field name="partner_id"/>
@@ -117,12 +157,12 @@
                 <field name="lastname" required="1"/>
                 <field name="email" required="1"/>
                 <field name="mobile" widget="phone" attrs="{'required': [('auth_mode', '=', 'sms')]}"/>
-                <field name="proof_level"/>
                 <field name="auth_mode"/>
-                <field name="auth_value" attrs="{'invisible': [('auth_mode', '!=', 'manual')], 'required': [('auth_mode', '=', 'manual')]}"/>
+                <field name="mention_top"/>
+                <field name="mention_bottom"/>
                 <field name="signature_date"/>
-                <field name="ys_identifier" states="pending,partially_signed,signed"/>
-                <field name="state" invisible="1"/>
+                <field name="comment" states="refused"/>
+                <field name="ys_identifier" states="pending,signed,refused"/>
             </group>
         </form>
     </field>
@@ -131,14 +171,13 @@
 <record id="yousign_request_signatory_tree" model="ir.ui.view">
     <field name="model">yousign.request.signatory</field>
     <field name="arch" type="xml">
-        <tree string="Yousign Request Signatory">
+        <tree string="Yousign Request Signatory" colors="red:state =='refused'" >
             <field name="parent_id" invisible="not context.get('yousign_request_signatory_main_view')"/>
             <field name="sequence" invisible="1"/>
             <field name="firstname"/>
             <field name="lastname"/>
             <field name="email"/>
             <field name="mobile" widget="phone"/>
-            <field name="proof_level"/>
             <field name="auth_mode"/>
             <field name="state"/>
             <field name="signature_date"/>
