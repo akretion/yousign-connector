@@ -237,8 +237,6 @@ class YousignRequest(models.Model):
             'signatory_ids': default_signatory_ids,
             'attachment_ids': default_attachment_ids,
             })
-        # from pprint import pprint
-        # pprint(res)
         return res
 
     @api.model
@@ -297,7 +295,10 @@ class YousignRequest(models.Model):
         res = requests.request(method, full_url, headers=headers, json=json)
         if res.status_code != expected_status_code:
             logger.error('Status code received: %s.', res.status_code)
-            res_json = res.json()
+            try:
+                res_json = res.json()
+            except Exception:
+                res_json = {}
             raise UserError(_(
                 "The HTTP %s request on Yousign webservice %s returned status "
                 "code %d whereas %d was expected. Error message: %s (%s).")
@@ -398,17 +399,19 @@ class YousignRequest(models.Model):
             if not self.remind_mail_body:
                 raise UserError(_("Missing Remind Mail Body"))
             remind_mail_body = self.include_url_tag(self.remind_mail_body)
-            data['config']['reminders'] = {
+            data['config']['reminders'] = [{
                 'interval': self.remind_interval,
                 'limit': self.remind_limit,
                 'config': {
-                    'reminder.executed': [{
-                        'subject': self.remind_mail_subject,
-                        'message': remind_mail_body,
-                        'to': ["@members.auto"],
-                        }],
+                    'email': {
+                        'reminder.executed': [{
+                            'subject': self.remind_mail_subject,
+                            'message': remind_mail_body,
+                            'to': ["@members.auto"],
+                            }],
+                        },
                     },
-                }
+                }]
         rproc_res = self.yousign_request('POST', '/procedures', json=data)
         if rproc_res.get('status') != 'draft':
             raise UserError(_('Wrong status, should be draft'))
