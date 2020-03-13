@@ -616,9 +616,13 @@ class YousignRequest(models.Model):
 
     @api.model
     def cron_update(self):
-        requests_to_update = self.search([('state', '=', 'sent')])
+        # Filter-out the YS requests of the old-API plateform
+        domain_base = [('ys_identifier', '=like', '/procedures/%')]
+        requests_to_update = self.search(
+            domain_base + [('state', '=', 'sent')])
         requests_to_update.update_status()
-        requests_to_archive = self.search([('state', '=', 'signed')])
+        requests_to_archive = self.search(
+            domain_base + [('state', '=', 'signed')])
         requests_to_archive.archive()
 
     @api.multi
