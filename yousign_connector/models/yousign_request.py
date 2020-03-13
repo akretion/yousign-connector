@@ -342,6 +342,12 @@ class YousignRequest(models.Model):
         return rank2position.get(signatory_rank, '56,392,296,464')
 
     @api.model
+    def simple_html2txt(self, html):
+        reg = re.compile('<.*?>')
+        text = re.sub(reg, '', html)
+        return text
+
+    @api.model
     def include_url_tag(self, mail_body):
         regexp = '{yousignUrl\|.+}'
         match = re.search(regexp, mail_body, re.IGNORECASE)
@@ -352,9 +358,10 @@ class YousignRequest(models.Model):
                 "the button with the label 'Access to documents'."))
         found = match.group(0)
         button_label = found.split('|')[1][:-1].strip()
+        button_label_txt = self.simple_html2txt(button_label)
         html_button = '<tag data-tag-type="button" data-tag-name="url" '\
-                      'data-tag-title="%s">%s</tag>' % (button_label,
-                                                        button_label)
+                      'data-tag-title="%s">%s</tag>' % (button_label_txt,
+                                                        button_label_txt)
         new_mail_body = re.sub(regexp, html_button, mail_body)
         return new_mail_body
 
