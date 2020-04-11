@@ -36,15 +36,17 @@
                 <field name="company_id" groups="base.group_multi_company"/>
             </group>
             <group name="signatories" string="Signatories">
-                <field name="signatory_ids" nolabel="1">
-                </field>
+                <field name="signatory_ids" nolabel="1"/>
             </group>
             <notebook>
-                <page name="init_mail" string="Email">
+                <page name="init_mail" string="Init E-mail">
                     <group name="init_mail">
-                        <field name="init_mail_subject"/>
-                        <field name="init_mail_body"/>
+                        <field name="init_mail_subject" string="Subject"/>
+                        <field name="init_mail_body" string="Body"/>
                     </group>
+                </page>
+                <page name="other_mail" string="E-mail Notifications">
+                    <field name="notification_ids" nolabel="1"/>
                 </page>
                 <page name="remind" string="Auto-Remind Setup" attrs="{'invisible': [('remind_auto', '=', False)]}">
                     <group name="remind">
@@ -123,6 +125,39 @@
     <field name="res_model">yousign.request.template</field>
     <field name="view_mode">tree,form</field>
 </record>
+
+<record id="yousign_request_template_notification_form" model="ir.ui.view">
+    <field name="model">yousign.request.template.notification</field>
+    <field name="arch" type="xml">
+        <form>
+            <group name="main">
+                <field name="parent_id" invisible="not context.get('yousign_request_template_notification_main_view')"/>
+                <field name="notif_type" widget="radio"/>
+                <field name="creator"/>
+                <field name="members"/>
+                <field name="subscribers"/>
+                <field name="partner_ids" widget="many2many_tags"/>
+                <field name="subject"/>
+                <field name="body"/>
+            </group>
+        </form>
+    </field>
+</record>
+
+<record id="yousign_request_template_notification_tree" model="ir.ui.view">
+    <field name="model">yousign.request.template.notification</field>
+    <field name="arch" type="xml">
+        <tree>
+            <field name="parent_id" invisible="not context.get('yousign_request_template_notification_main_view')"/>
+            <field name="notif_type"/>
+            <field name="subject"/>
+            <field name="creator"/>
+            <field name="members"/>
+            <field name="subscribers"/>
+        </tree>
+    </field>
+</record>
+
 
 <menuitem id="yousign_root_config" name="Yousign" parent="base.menu_custom" sequence="200"/>
 

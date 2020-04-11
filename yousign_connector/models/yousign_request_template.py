@@ -42,7 +42,10 @@ class YousignRequestTemplate(models.Model):
             'yousign.request.template'))
     signatory_ids = fields.One2many(
         'yousign.request.template.signatory', 'parent_id',
-        'Signatories')
+        string='Signatories')
+    notification_ids = fields.One2many(
+        'yousign.request.template.notification', 'parent_id',
+        string='E-mail Notifications')
     ir_act_window_id = fields.Many2one(
         'ir.actions.act_window', string='Sidebar Action', readonly=True,
         copy=False, help="Sidebar action to make this template available on "
@@ -159,15 +162,15 @@ class YousignRequestTemplateSignatory(models.Model):
                     "to 'Dynamic'"))
 
     @api.multi
-    def prepare_template2request(self, dynamic_partner_id=None):
+    def prepare_template2request(self, model, res_id):
         self.ensure_one()
+        eto = self.env['email.template']
         if self.partner_type == 'static':
             partner = self.partner_id
         elif self.partner_type == 'dynamic':
-            if not dynamic_partner_id:
-                raise UserError(_(
-                    "dynamic_partner_id is a required argument when "
-                    "partner_type is dynamic"))
+            dynamic_partner_str = eto.render_template_batch(
+                self.partner_tmpl, model, [res_id])[res_id]
+            dynamic_partner_id = int(dynamic_partner_str)
             partner = self.env['res.partner'].browse(dynamic_partner_id)
         else:
             raise UserError(_('Unsupported partner type'))
@@ -187,4 +190,60 @@ class YousignRequestTemplateSignatory(models.Model):
                 'firstname': partner.firstname,
                 'lastname': partner.lastname,
                 })
+        return vals
+
+
+class YousignRequestTemplateNotification(models.Model):
+    _name = 'yousign.request.template.notification'
+    _description = 'Notifications of Yousign Request Template'
+
+    parent_id = fields.Many2one(
+        'yousign.request.template', string='Template', ondelete='cascade')
+    notif_type = fields.Selection([
+        ('procedure.started', 'Procedure created'),
+        ('procedure.finished', 'Procedure finished'),
+        ('procedure.refused', 'Procedure refused'),
+        ('procedure.expired', 'Procedure expired'),
+        ('member.finished', 'Member has signed'),
+        ('comment.created', 'Someone commented'),
+        ], string='Notification Type', required=True)
+    creator = fields.Boolean(string='Notify Creator')
+    members = fields.Boolean(string='Notify Members')
+    subscribers = fields.Boolean(string='Notify Subscribers')
+    partner_ids = fields.Many2many(
+        'res.partner', string='Partners to Notify',
+        domain=[('email', '!=', False)])
+    subject = fields.Char(required=True, translate=True)
+    body = fields.Html(required=True, translate=True)
+
+    _sql_constraints = [(
+        'parent_type_uniq',
+        'unique(parent_id, notif_type)',
+        'This notification type already exists for this Yousign request template!')]
+
+    @api.constrains('creator', 'members', 'subscribers', 'partner_ids')
+    def _notif_check(self):
+        for notif in self:
+            if (
+                    not notif.creator and
+                    not notif.members and
+                    not notif.subscribers and
+                    not notif.partner_ids):
+                raise ValidationError(_(
+                    "You must select who should be notified."))
+
+    @api.multi
+    def prepare_template2request(self, model, res_id):
+        self.ensure_one()
+        eto = self.env['email.template']
+        vals = {
+            'notif_type': self.notif_type,
+            'creator': self.creator,
+            'members': self.members,
+            'subscribers': self.subscribers,
+            'partner_ids': [(6, 0, self.partner_ids.ids)],
+            }
+        for dyn_field in ['subject', 'body']:
+            vals[dyn_field] = eto.render_template_batch(
+                self[dyn_field], model, [res_id])[res_id]
         return vals

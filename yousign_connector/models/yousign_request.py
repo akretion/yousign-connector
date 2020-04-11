@@ -5,6 +5,7 @@
 
 from openerp import api, fields, models, tools, _
 from openerp.exceptions import Warning as UserError
+from openerp.exceptions import ValidationError
 from openerp.addons.email_template import email_template
 from unidecode import unidecode
 from StringIO import StringIO
@@ -68,7 +69,12 @@ class YousignRequest(models.Model):
         readonly=True)
     signatory_ids = fields.One2many(
         'yousign.request.signatory', 'parent_id',
-        'Signatories', readonly=True, states={'draft': [('readonly', False)]})
+        string='Signatories',
+        readonly=True, states={'draft': [('readonly', False)]})
+    notification_ids = fields.One2many(
+        'yousign.request.notification', 'parent_id',
+        string='E-mail Notifications',
+        readonly=True, states={'draft': [('readonly', False)]})
     state = fields.Selection([
         ('draft', 'Draft'),
         ('sent', 'Sent'),
@@ -174,17 +180,16 @@ class YousignRequest(models.Model):
                 "Wrong active_model (%s should be %s)")
                 % (self._context.get('active_model'), template.model))
         source_obj = self.env[model].browse(int(res_id))
-        default_signatory_ids = []
+        signatory_ids = []
         for signatory in template.signatory_ids:
-            dynamic_partner_id = None
-            if signatory.partner_type == 'dynamic':
-                dynamic_partner_str = eto.render_template_batch(
-                    signatory.partner_tmpl, model, [res_id])[res_id]
-                dynamic_partner_id = int(dynamic_partner_str)
             signatory_vals = signatory.prepare_template2request(
-                dynamic_partner_id=dynamic_partner_id)
-            default_signatory_ids.append((0, 0, signatory_vals))
-        default_attachment_ids = []
+                model, res_id)
+            signatory_ids.append((0, 0, signatory_vals))
+        notification_ids = []
+        for notif in template.notification_ids:
+            notif_vals = notif.prepare_template2request(model, res_id)
+            notification_ids.append((0, 0, notif_vals))
+        attachment_ids = []
         if template.report_id:
             report = template.report_id
             report_data_bin, filename_ext = iarxo.render_report(
@@ -213,7 +218,7 @@ class YousignRequest(models.Model):
                 'datas_fname': full_filename,
                 }
             attach = iao.create(attach_vals)
-            default_attachment_ids.append((6, 0, [attach.id]))
+            attachment_ids.append((6, 0, [attach.id]))
         lang = eto.render_template_batch(
             template.lang, model, [res_id])[res_id]
         if lang:
@@ -234,8 +239,9 @@ class YousignRequest(models.Model):
             'model': model,
             'res_id': res_id,
             'lang': lang,
-            'signatory_ids': default_signatory_ids,
-            'attachment_ids': default_attachment_ids,
+            'signatory_ids': signatory_ids,
+            'notification_ids': notification_ids,
+            'attachment_ids': attachment_ids,
             })
         return res
 
@@ -400,6 +406,21 @@ class YousignRequest(models.Model):
                     }
                 }
             }
+        for notif in self.notification_ids:
+            to = []
+            if notif.creator:
+                to.append('@creator')
+            if notif.members:
+                to.append('@members')
+            if notif.subscribers:
+                to.append('@subscribers')
+            for p in notif.partner_ids.filtered(lambda x: x.email):
+                to.append(p.email)
+            data['config']['email'][notif.notif_type] = [{
+                'subject': notif.subject,
+                'message': notif.body,
+                'to': to,
+                }]
         if self.remind_auto:
             if not self.remind_mail_subject:
                 raise UserError(_("Missing Remind Mail Subject"))
@@ -759,3 +780,43 @@ class YousignRequestSignatory(models.Model):
             else:
                 self.firstname = False
                 self.lastname = self.partner_id.name
+
+
+class YousignRequestNotification(models.Model):
+    _name = 'yousign.request.notification'
+    _description = 'Notifications of Yousign Request'
+
+    parent_id = fields.Many2one(
+        'yousign.request', string='Request', ondelete='cascade')
+    notif_type = fields.Selection([
+        ('procedure.started', 'Procedure created'),
+        ('procedure.finished', 'Procedure finished'),
+        ('procedure.refused', 'Procedure refused'),
+        ('procedure.expired', 'Procedure expired'),
+        ('member.finished', 'Member has signed'),
+        ('comment.created', 'Someone commented'),
+        ], string='Notification Type', required=True)
+    creator = fields.Boolean(string='Notify Creator')
+    members = fields.Boolean(string='Notify Members')
+    subscribers = fields.Boolean(string='Notify Subscribers')
+    partner_ids = fields.Many2many(
+        'res.partner', string='Partners to Notify',
+        domain=[('email', '!=', False)])
+    subject = fields.Char(required=True)
+    body = fields.Html(required=True)
+
+    _sql_constraints = [(
+        'parent_type_uniq',
+        'unique(parent_id, notif_type)',
+        'This notification type already exists for this Yousign request!')]
+
+    @api.constrains('creator', 'members', 'subscribers', 'partner_ids')
+    def _notif_check(self):
+        for notif in self:
+            if (
+                    not notif.creator and
+                    not notif.members and
+                    not notif.subscribers and
+                    not notif.partner_ids):
+                raise ValidationError(_(
+                    "You must select who should be notified."))
