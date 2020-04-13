@@ -64,9 +64,11 @@ ${object.company_id.name}
     <field name="body"><![CDATA[
     <p>Hello ${object.partner_id.name},</p>
 
-<p>The quotation ${object.name} for a total amount of ${object.amount_untaxed} ${object.currency_id.name} without taxes (${object.amount_total} ${object.currency_id.name} with taxes) has been signed by all parties.</p>
+<p>The quotation ${object.name} for a total amount of ${object.amount_untaxed} ${object.currency_id.name} without taxes (${object.amount_total} ${object.currency_id.name} with taxes) has been signed by all parties. Therefore, this quotation has been automatically confirmed and converted to a sale order.</p>
 
-<p>Therefore, this quotation has been automatically confirmed and converted to a sale order. Thanks for your cooperation in this online signature process!</p>
+<p>You can now download the signed document: {yousignUrl|Access to signed document}.</p>
+
+<p>Thanks for your cooperation in this online signature process!</p>
 
 <p>Regards,</p>
 
