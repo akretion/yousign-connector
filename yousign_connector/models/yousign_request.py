@@ -418,7 +418,7 @@ class YousignRequest(models.Model):
                 to.append(p.email)
             data['config']['email'][notif.notif_type] = [{
                 'subject': notif.subject,
-                'message': notif.body,
+                'message': self.include_url_tag(notif.body),
                 'to': to,
                 }]
         if self.remind_auto:
