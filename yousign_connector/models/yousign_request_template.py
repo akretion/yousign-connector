@@ -199,14 +199,8 @@ class YousignRequestTemplateNotification(models.Model):
 
     parent_id = fields.Many2one(
         'yousign.request.template', string='Template', ondelete='cascade')
-    notif_type = fields.Selection([
-        ('procedure.started', 'Procedure created'),
-        ('procedure.finished', 'Procedure finished'),
-        ('procedure.refused', 'Procedure refused'),
-        ('procedure.expired', 'Procedure expired'),
-        ('member.finished', 'Member has signed'),
-        ('comment.created', 'Someone commented'),
-        ], string='Notification Type', required=True)
+    notif_type = fields.Selection(
+        '_notif_type_selection', string='Notification Type', required=True)
     creator = fields.Boolean(string='Notify Creator')
     members = fields.Boolean(string='Notify Members')
     subscribers = fields.Boolean(string='Notify Subscribers')
@@ -219,7 +213,12 @@ class YousignRequestTemplateNotification(models.Model):
     _sql_constraints = [(
         'parent_type_uniq',
         'unique(parent_id, notif_type)',
-        'This notification type already exists for this Yousign request template!')]
+        "This notification type already exists for this Yousign request "
+        "template!")]
+
+    @api.model
+    def _notif_type_selection(self):
+        return self.env['yousign.request.notification']._notif_type_selection()
 
     @api.constrains('creator', 'members', 'subscribers', 'partner_ids')
     def _notif_check(self):

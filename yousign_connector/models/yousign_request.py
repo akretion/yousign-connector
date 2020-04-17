@@ -142,7 +142,6 @@ class YousignRequest(models.Model):
         iarxo = self.env['ir.actions.report.xml']
         iao = self.env['ir.attachment']
         yrto = self.env['yousign.request.template']
-        # print "self._context=", self._context
         model = self._context.get('active_model')
         res_id = self._context.get('active_id')
         if not model or not res_id:
@@ -354,14 +353,27 @@ class YousignRequest(models.Model):
         return text
 
     @api.model
-    def include_url_tag(self, mail_body):
+    def include_url_tag(self, mail_body, mail_name, raise_if_not_found=False):
+        if not mail_body:
+            raise UserError(_(
+                "Mail body of %s is empty.") % mail_name)
         regexp = '{yousignUrl\|.+}'
         match = re.search(regexp, mail_body, re.IGNORECASE)
         if not match:
-            raise UserError(_(
-                "Missing special tag {yousignUrl|Access to documents} "
-                "in the mail body. The special tag will be replaced by "
-                "the button with the label 'Access to documents'."))
+            if raise_if_not_found:
+                raise UserError(_(
+                    "Missing special tag {yousignUrl|Access to documents} "
+                    "in the mail body of %s. The special tag will be replaced "
+                    "by the button with the label "
+                    "'Access to documents'.") % mail_name)
+            elif 'yousignUrl' in mail_body:
+                raise UserError(_(
+                    "In mail body of %s, it seems you tried to "
+                    "include the yousign URL, but the regular expression "
+                    "didn't match. Please check the special expression "
+                    "for the yousign URL.") % mail_name)
+            else:
+                return mail_body
         found = match.group(0)
         button_label = found.split('|')[1][:-1].strip()
         button_label_txt = self.simple_html2txt(button_label)
@@ -390,7 +402,8 @@ class YousignRequest(models.Model):
             raise UserError(_(
                 "Missing init mail body on request %s.") % self.display_name)
         rank = 0
-        init_mail_body = self.include_url_tag(self.init_mail_body)
+        init_mail_body = self.include_url_tag(
+            self.init_mail_body, 'init', raise_if_not_found=True)
         data = {
             'name': self.name,
             'description': 'Created by Odoo connector',
@@ -418,7 +431,7 @@ class YousignRequest(models.Model):
                 to.append(p.email)
             data['config']['email'][notif.notif_type] = [{
                 'subject': notif.subject,
-                'message': self.include_url_tag(notif.body),
+                'message': self.include_url_tag(notif.body, notif.notif_type),
                 'to': to,
                 }]
         if self.remind_auto:
@@ -426,7 +439,8 @@ class YousignRequest(models.Model):
                 raise UserError(_("Missing Remind Mail Subject"))
             if not self.remind_mail_body:
                 raise UserError(_("Missing Remind Mail Body"))
-            remind_mail_body = self.include_url_tag(self.remind_mail_body)
+            remind_mail_body = self.include_url_tag(
+                self.remind_mail_body, 'reminder', raise_if_not_found=True)
             data['config']['reminders'] = [{
                 'interval': self.remind_interval,
                 'limit': self.remind_limit,
@@ -788,14 +802,8 @@ class YousignRequestNotification(models.Model):
 
     parent_id = fields.Many2one(
         'yousign.request', string='Request', ondelete='cascade')
-    notif_type = fields.Selection([
-        ('procedure.started', 'Procedure created'),
-        ('procedure.finished', 'Procedure finished'),
-        ('procedure.refused', 'Procedure refused'),
-        ('procedure.expired', 'Procedure expired'),
-        ('member.finished', 'Member has signed'),
-        ('comment.created', 'Someone commented'),
-        ], string='Notification Type', required=True)
+    notif_type = fields.Selection(
+        '_notif_type_selection', string='Notification Type', required=True)
     creator = fields.Boolean(string='Notify Creator')
     members = fields.Boolean(string='Notify Members')
     subscribers = fields.Boolean(string='Notify Subscribers')
@@ -809,6 +817,17 @@ class YousignRequestNotification(models.Model):
         'parent_type_uniq',
         'unique(parent_id, notif_type)',
         'This notification type already exists for this Yousign request!')]
+
+    @api.model
+    def _notif_type_selection(self):
+        return [
+            ('procedure.started', 'Procedure created'),
+            ('procedure.finished', 'Procedure finished'),
+            ('procedure.refused', 'Procedure refused'),
+            ('procedure.expired', 'Procedure expired'),
+            ('member.finished', 'Member has signed'),
+            ('comment.created', 'Someone commented'),
+        ]
 
     @api.constrains('creator', 'members', 'subscribers', 'partner_ids')
     def _notif_check(self):
