@@ -674,13 +674,15 @@ class YousignRequest(models.Model):
             logger.info(
                 "Getting signed files on Yousign request %s ID %s",
                 req.name, req.id)
+            import pdb
+            pdb.set_trace()
             docs_to_sign_count = len(req.attachment_ids)
             if not docs_to_sign_count:
                 logger.warning(
                     "Skip Yousign request %s ID %s: no documents to sign, "
                     "so nothing to archive", req.name, req.id)
 
-            res = self.yousign_request('GET', self.ys_identifier, 200)
+            res = self.yousign_request('GET', req.ys_identifier, 200)
             if not res.get('files'):
                 continue
             signed_filenames = [
