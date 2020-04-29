@@ -674,8 +674,6 @@ class YousignRequest(models.Model):
             logger.info(
                 "Getting signed files on Yousign request %s ID %s",
                 req.name, req.id)
-            import pdb
-            pdb.set_trace()
             docs_to_sign_count = len(req.attachment_ids)
             if not docs_to_sign_count:
                 logger.warning(
