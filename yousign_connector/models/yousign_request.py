@@ -23,6 +23,8 @@ try:
 except ImportError:
     logger.debug('Cannot import PyPDF2')
 
+TIMEOUT = 30
+
 # ROADMAP:
 # POST /consent_processes + POST /consent_process_values
 
@@ -290,26 +292,55 @@ class YousignRequest(models.Model):
     @api.model
     def yousign_request(
             self, method, url, expected_status_code=201,
-            json=None, return_raw=False):
+            json=None, return_raw=False, raise_if_ko=True):
         url_base, headers = self.yousign_init()
         full_url = url_base + url
         logger.info(
             'Sending %s request on %s. Expecting status code %d.',
             method, full_url, expected_status_code)
         logger.debug('JSON data sent: %s', json)
-        res = requests.request(method, full_url, headers=headers, json=json)
+        try:
+            res = requests.request(
+                method, full_url, headers=headers, json=json, timeout=TIMEOUT)
+        except requests.exceptions.ConnectionError as e:
+            logger.error("Connection to %s failed. Error: %s", full_url, e)
+            if raise_if_ko:
+                raise UserError(
+                    _(
+                        "Connection to %s failed. "
+                        "Check the Internet connection of the Odoo server.\n\n"
+                        "Error details: %s"
+                    ) % (full_url, e))
+            return None
+        except requests.exceptions.RequestException as e:
+            logger.error("%s request %s failed. Error: %s", method, full_url, e)
+            if raise_if_ko:
+                raise UserError(
+                    _(
+                        "Technical failure when trying to connect to Yousign.\n\n"
+                        "Error details: URL %s method %s. Error: %s"
+                    )
+                    % (full_url, method, e))
+            return None
         if res.status_code != expected_status_code:
             logger.error('Status code received: %s.', res.status_code)
             try:
                 res_json = res.json()
             except Exception:
                 res_json = {}
-            raise UserError(_(
-                "The HTTP %s request on Yousign webservice %s returned status "
-                "code %d whereas %d was expected. Error message: %s (%s).")
-                % (method, full_url, res.status_code,
-                   expected_status_code, res_json.get('title'),
-                   res_json.get('detail', _('no detail'))))
+            logger.error(
+                "HTTP %s request on %s returned HTTP Code %s (%s was expected). "
+                "Error message: %s (%s).", method, full_url, res.status_code,
+                expected_status_code, res_json.get('title'),
+                res_json.get('detail', 'no detail'))
+            if raise_if_ko:
+                raise UserError(_(
+                    "The HTTP %s request on Yousign webservice %s returned status "
+                    "code %d whereas %d was expected. Error message: %s (%s).")
+                    % (method, full_url, res.status_code,
+                       expected_status_code, res_json.get('title'),
+                        res_json.get('detail', _('no detail'))))
+            return None
         if return_raw:
             return res
         res_json = res.json()
@@ -597,7 +628,7 @@ class YousignRequest(models.Model):
         self.write({'state': 'cancel'})
 
     @api.multi
-    def update_status(self):
+    def update_status(self, raise_if_ko=True):
         now = fields.Datetime.now()
         ystate2ostate = {
             'pending': 'pending',
@@ -616,7 +647,11 @@ class YousignRequest(models.Model):
                     logger.warning(
                         'Signer ID %s has no YS identifier', signer.id)
                     continue
-                res = self.yousign_request('GET', signer.ys_identifier, 200)
+                res = self.yousign_request(
+                    'GET', signer.ys_identifier, 200, raise_if_ko=raise_if_ko)
+                if res is None:
+                    logger.warning('Skipping YS req %s ID %d', req.name, req.id)
+                    continue
                 ystate = res.get('status')
                 if ystate not in ystate2ostate:
                     logger.warning(
@@ -662,13 +697,13 @@ class YousignRequest(models.Model):
         domain_base = [('ys_identifier', '=like', '/procedures/%')]
         requests_to_update = self.search(
             domain_base + [('state', '=', 'sent')])
-        requests_to_update.update_status()
+        requests_to_update.update_status(raise_if_ko=False)
         requests_to_archive = self.search(
             domain_base + [('state', '=', 'signed')])
-        requests_to_archive.archive()
+        requests_to_archive.archive(raise_if_ko=False)
 
     @api.multi
-    def archive(self):
+    def archive(self, raise_if_ko=True):
         for req in self.filtered(
                 lambda x: x.state == 'signed' and x.ys_identifier):
             logger.info(
@@ -680,7 +715,11 @@ class YousignRequest(models.Model):
                     "Skip Yousign request %s ID %s: no documents to sign, "
                     "so nothing to archive", req.name, req.id)
 
-            res = self.yousign_request('GET', req.ys_identifier, 200)
+            res = self.yousign_request(
+                'GET', req.ys_identifier, 200, raise_if_ko=raise_if_ko)
+            if res is None:
+                logger.warning("Skipping Yousign request %s ID %s", req.name, req.id)
+                continue
             if not res.get('files'):
                 continue
             signed_filenames = [
@@ -696,7 +735,13 @@ class YousignRequest(models.Model):
                 file_id = sfile.get('id')
                 if file_id:
                     dl = self.yousign_request(
-                        'GET', file_id + '/download', 200, return_raw=True)
+                        'GET', file_id + '/download', 200, return_raw=True,
+                        raise_if_ko=raise_if_ko)
+                    if dl is None:
+                        logger.warning(
+                            "Skipping Yousign request %s ID %s due to download failure",
+                            req.name, req.id)
+                        continue
                     original_filename = sfile.get('name')
                     logger.debug(
                         "original_filename=%s", original_filename)
