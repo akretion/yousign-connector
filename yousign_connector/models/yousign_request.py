@@ -528,7 +528,7 @@ class YousignRequest(models.Model):
                 raise UserError(_(
                     "Missing email on the signatory '%s'") % signat.lastname)
 
-            if not signat.mobile:
+            if not signat.mobile and signat.auth_mode == 'sms':
                 raise UserError(_(
                     "Missing mobile phone number on signatory '%s'.")
                     % signat.lastname)
