@@ -26,6 +26,7 @@
                     <field name="res_name"/>
                     <field name="model" invisible="0"/>
                     <field name="res_id" invisible="0"/>
+                    <field name="sign_position"/>
                     <field name="ordered"/>
                     <field name="attachment_ids" widget="many2many_binary"/>
                     <field name="signed_attachment_ids" widget="many2many_binary" states="archived,cancel"/>
