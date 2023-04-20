@@ -85,6 +85,9 @@ class YousignRequest(models.Model):
         ('cancel', 'Cancelled'),
         ], string='State', default='draft', readonly=True,
         track_visibility='onchange')
+    sign_position = fields.Selection(
+        [('top', 'Top'), ('bottom', 'Bottom')],
+        string='Sign position', default='top')
     company_id = fields.Many2one(
         'res.company', string='Company', ondelete='cascade',
         readonly=True, states={'draft': [('readonly', False)]},
@@ -358,23 +361,40 @@ class YousignRequest(models.Model):
         return res
 
     @api.model
-    def signature_position(self, signatory_rank):
-        # llx,lly,urx,ury".
+    def signature_position(self, sign_position, signatory_rank):
+        # sign_position is passed as parameter because this method
+        # is decorated by api.model
+
+        # return "llx,lly,urx,ury".
         # llx=left lower x coordinate,
         # lly=left lower y coordinate,
         # urx=upper right x coordinate,
         # ury = upper right y coordinate
-        rank2position = {
+        TOPRANK2POSITION = {
             1: '70,600,285,690',  # width = 215 - height = 90
             2: '310,600,525,690',
             3: '70,460,285,550',
             4: '310,460,525,550',
-            }
+        }
+        BOTTOMRANK2POSITION = {
+            1: '95,195,245,245', # width = 150 - height = 50
+            2: '330,195,480,245',
+            3: '95,150,245,200',
+            4: '330,145,480,195',
+        }
+        rank2position = (
+            TOPRANK2POSITION
+            if sign_position == 'top'
+            else BOTTOMRANK2POSITION
+        )
+
         if signatory_rank not in rank2position:
             logger.warning(
                 'Requesting signature position for undeclared '
                 'signatory_rank %d',
-                signatory_rank)
+                signatory_rank
+            )
+
         return rank2position.get(signatory_rank, '56,392,296,464')
 
     @api.model
@@ -581,7 +601,8 @@ class YousignRequest(models.Model):
                     'file': attach_vals['ys_attach_id'],
                     'member': ys_member_id,
                     'page': attach_vals['num_pages'],
-                    'position': self.signature_position(member_vals['rank']),
+                    'position': self.signature_position(
+                        self.sign_position, member_vals['rank']),
                     'mention': member_vals.get('mention'),
                     'mention2': member_vals.get('mention2'),
                     # 'reason': ,

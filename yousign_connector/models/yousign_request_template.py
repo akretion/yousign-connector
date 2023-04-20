@@ -53,6 +53,9 @@ class YousignRequestTemplate(models.Model):
     ir_value_id = fields.Many2one(
         'ir.values', string='Sidebar Button', readonly=True, copy=False,
         help="Sidebar button to open the sidebar action")
+    sign_position = fields.Selection(
+        [('top', 'Top'), ('bottom', 'Bottom')],
+        string='Sign position', default='top')
 
     _sql_constraints = [
         (
@@ -113,6 +116,7 @@ class YousignRequestTemplate(models.Model):
             'remind_auto': self.remind_auto,
             'remind_interval': self.remind_interval,
             'remind_limit': self.remind_limit,
+            'sign_position': self.sign_position,
             }
         return res
 
