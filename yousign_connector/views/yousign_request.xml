@@ -79,6 +79,7 @@
                 <field name="res_name" invisible="1"/>
                 <field name="model" invisible="1"/>
                 <field name="res_id" invisible="1"/>
+                <field name="sign_position"/>
                 <field name="state" invisible="1"/>
                 <field name="company_id" groups="base.group_multi_company" invisible="1"/>
                 <field name="attachment_ids" widget="many2many_binary"/>
