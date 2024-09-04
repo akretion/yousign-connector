@@ -1,9 +1,9 @@
-# -*- coding: utf-8 -*-
-# © 2018 Akretion (Alexis de Lattre <alexis.delattre@akretion.com>)
+# Copyright 2018-2024 Akretion France (https://www.akretion.com/)
+# @author: Alexis de Lattre <alexis.delattre@akretion.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp import api, fields, models, _
-from openerp.exceptions import Warning as UserError, ValidationError
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError, ValidationError
 import logging
 logger = logging.getLogger(__name__)
 
@@ -15,8 +15,8 @@ class YousignRequestTemplate(models.Model):
 
     name = fields.Char(required=True)
     model_id = fields.Many2one(
-        'ir.model', string='Applies to', required=True)
-    model = fields.Char(related='model_id.model', readonly=True, store=True)
+        'ir.model', string='Applies to')
+    model = fields.Char(related='model_id.model', store=True)
     lang = fields.Char('Language')
     ordered = fields.Boolean(string='Sign one after the other')
     init_mail_subject = fields.Char(
@@ -35,11 +35,10 @@ class YousignRequestTemplate(models.Model):
         help="Number of days between 2 auto-reminders by email.")
     remind_limit = fields.Integer(string='Remind Limit', default=10)
     report_id = fields.Many2one(
-        'ir.actions.report.xml', string='Default Report to Sign')
+        'ir.actions.report', string='Default Report to Sign')
     company_id = fields.Many2one(
         'res.company', string='Company', ondelete='cascade',
-        default=lambda self: self.env['res.company']._company_default_get(
-            'yousign.request.template'))
+        default=lambda self: self.env.company)
     signatory_ids = fields.One2many(
         'yousign.request.template.signatory', 'parent_id',
         string='Signatories')
@@ -50,9 +49,6 @@ class YousignRequestTemplate(models.Model):
         'ir.actions.act_window', string='Sidebar Action', readonly=True,
         copy=False, help="Sidebar action to make this template available on "
         "records of the related document model")
-    ir_value_id = fields.Many2one(
-        'ir.values', string='Sidebar Button', readonly=True, copy=False,
-        help="Sidebar button to open the sidebar action")
     sign_position = fields.Selection(
         [('top', 'Top'), ('bottom', 'Bottom')],
         string='Sign position', default='top')
@@ -68,10 +64,8 @@ class YousignRequestTemplate(models.Model):
             'The Remind Limit must be positive or null.'),
         ]
 
-    @api.multi
     def create_button(self):
         iaao = self.env['ir.actions.act_window']
-        ivo = self.env['ir.values']
         for template in self:
             src_obj = template.model_id.model
             view = self.env.ref('yousign_connector.new_yousign_request_form')
@@ -84,32 +78,22 @@ class YousignRequestTemplate(models.Model):
                 'view_mode': 'form',
                 'view_id': view.id,
                 'target': 'new',
-                'context': "{'yousign_template_id': %d}" % template.id,
-                })
-            ir_value = ivo.sudo().create({
-                'name': button_name,
-                'model': src_obj,
-                'key2': 'client_action_multi',
-                'value': "ir.actions.act_window,%d" % action.id,
+                'context': f"{{'yousign_template_id': {template.id}}}",
+                'binding_model_id': src_obj.id,
                 })
 
             template.write({
                 'ir_act_window_id': action.id,
-                'ir_value_id': ir_value.id,
                 })
         return
 
-    @api.multi
     def unlink_button(self):
         for template in self:
             if template.ir_act_window_id:
                 template.ir_act_window_id.sudo().unlink()
-            if template.ir_value_id:
-                template.ir_value_id.sudo().unlink()
         return
 
-    @api.multi
-    def prepare_template2request(self):
+    def _prepare_template2request(self):
         self.ensure_one()
         res = {
             'ordered': self.ordered,
@@ -124,7 +108,8 @@ class YousignRequestTemplate(models.Model):
 class YousignRequestTemplateSignatory(models.Model):
     _name = 'yousign.request.template.signatory'
     _description = 'Signatories of Yousign Request Template'
-    _order = 'parent_id, sequence'
+    _order = 'parent_id, sequence, id'
+    _inherit = ['mail.render.mixin']
 
     parent_id = fields.Many2one(
         'yousign.request.template', string='Template', ondelete='cascade')
@@ -157,27 +142,25 @@ class YousignRequestTemplateSignatory(models.Model):
             if signatory.partner_type == 'static' and not signatory.partner_id:
                 raise ValidationError(_(
                     "Fixed Partner is required when Partner Type is set "
-                    "to 'Static'"))
+                    "to 'Static'."))
             elif (
                     signatory.partner_type == 'dynamic' and
                     not signatory.partner_tmpl):
                 raise ValidationError(_(
                     "Dynamic Partner is required when Partner Type is set "
-                    "to 'Dynamic'"))
+                    "to 'Dynamic'."))
 
-    @api.multi
-    def prepare_template2request(self, model, res_id):
+    def _prepare_template2request(self, model, res_id):
         self.ensure_one()
-        eto = self.env['email.template']
         if self.partner_type == 'static':
             partner = self.partner_id
         elif self.partner_type == 'dynamic':
-            dynamic_partner_str = eto.render_template_batch(
+            dynamic_partner_str = self._render_template(
                 self.partner_tmpl, model, [res_id])[res_id]
             dynamic_partner_id = int(dynamic_partner_str)
             partner = self.env['res.partner'].browse(dynamic_partner_id)
         else:
-            raise UserError(_('Unsupported partner type'))
+            raise UserError(_("Unsupported partner type '%s'.") % self.partner_type)
         vals = {
             'partner_id': partner.id,
             'email': partner.email,
@@ -200,6 +183,7 @@ class YousignRequestTemplateSignatory(models.Model):
 class YousignRequestTemplateNotification(models.Model):
     _name = 'yousign.request.template.notification'
     _description = 'Notifications of Yousign Request Template'
+    _inherit = ['mail.render.mixin']
 
     parent_id = fields.Many2one(
         'yousign.request.template', string='Template', ondelete='cascade')
@@ -235,10 +219,8 @@ class YousignRequestTemplateNotification(models.Model):
                 raise ValidationError(_(
                     "You must select who should be notified."))
 
-    @api.multi
-    def prepare_template2request(self, model, res_id):
+    def _prepare_template2request(self, model, res_id):
         self.ensure_one()
-        eto = self.env['email.template']
         vals = {
             'notif_type': self.notif_type,
             'creator': self.creator,
@@ -247,6 +229,6 @@ class YousignRequestTemplateNotification(models.Model):
             'partner_ids': [(6, 0, self.partner_ids.ids)],
             }
         for dyn_field in ['subject', 'body']:
-            vals[dyn_field] = eto.render_template_batch(
+            vals[dyn_field] = self._render_template(
                 self[dyn_field], model, [res_id])[res_id]
         return vals

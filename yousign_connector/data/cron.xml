@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  © 2018 Akretion (Alexis de Lattre <alexis.delattre@akretion.com>)
+  Copyright 2018-2024 Akretion France (https://www.akretion.com/)
+  @author: Alexis de Lattre <alexis.delattre@akretion.com>
   License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 -->
 
-<openerp>
-<data noupdate="1">
+<odoo noupdate="1">
 
 <record id="cron_yousign_update" model="ir.cron">
     <field name="name">Yousign Requests Update</field>
@@ -14,10 +14,9 @@
     <field name="interval_number">1</field>
     <field name="interval_type">days</field>
     <field name="numbercall">-1</field> <!-- don't limit the number of calls -->
-    <field name="model">yousign.request</field>
-    <field name="function">cron_update</field>
-    <field name="args">()</field>
+    <field name="model_id" ref="model_yousign_request"/>
+    <field name="state">code</field>
+    <field name="code">model.cron_update()</field>
 </record>
 
-</data>
-</openerp>
+</odoo>

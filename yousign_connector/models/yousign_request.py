@@ -1,14 +1,13 @@
-# -*- coding: utf-8 -*-
-# Copyright 2018-2020 Akretion France (http://www.akretion.com/)
+# Copyright 2018-2024 Akretion France (http://www.akretion.com/)
 # @author: Alexis de Lattre <alexis.delattre@akretion.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp import api, fields, models, tools, _
-from openerp.exceptions import Warning as UserError
-from openerp.exceptions import ValidationError
-from openerp.addons.email_template import email_template
+from odoo import api, fields, models, tools, _
+from odoo.exceptions import UserError, ValidationError
+from odoo.addons.phone_validation.tools import phone_validation
+from odoo.tools.safe_eval import safe_eval, time
 from unidecode import unidecode
-from StringIO import StringIO
+from io import BytesIO
 # from pprint import pprint
 import re
 import logging
@@ -16,12 +15,14 @@ logger = logging.getLogger(__name__)
 
 try:
     import requests
-except ImportError:
+except (ImportError, IOError) as err:
     logger.debug('Cannot import requests')
+    logger.debug(err)
 try:
-    import PyPDF2
-except ImportError:
-    logger.debug('Cannot import PyPDF2')
+    import pypdf
+except (ImportError, IOError) as err:
+    logger.debug('Cannot import pypdf')
+    logger.debug(err)
 
 TIMEOUT = 30
 
@@ -39,19 +40,20 @@ class YousignRequest(models.Model):
     _name = 'yousign.request'
     _description = 'Yousign Request'
     _order = 'id desc'
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'mail.render.mixin']
 
-    name = fields.Char()
+    name = fields.Char(default=lambda self: _('New'))
     res_name = fields.Char(
-        compute='_compute_res_name', string="Related Document Name",
-        store=True, readonly=True)
+        compute='_compute_res_name', string="Related Document Name", store=True)
     model = fields.Char(
-        string='Related Document Model', select=True, readonly=True,
-        track_visibility='onchange')
+        string='Related Document Model', index=True, readonly=True,
+        tracking=True)
     res_id = fields.Integer(
-        string='Related Document ID', select=True, readonly=True,
-        track_visibility='onchange')
-    ordered = fields.Boolean(string='Sign one after the other')
+        string='Related Document ID', index=True, readonly=True,
+        tracking=True)
+    ordered = fields.Boolean(
+        string='Sign One after the Other',
+        readonly=True, states={'draft': [('readonly', False)]})
     init_mail_subject = fields.Char(
         'Init Mail Subject', readonly=True,
         states={'draft': [('readonly', False)]})
@@ -61,7 +63,7 @@ class YousignRequest(models.Model):
     lang = fields.Selection(
         '_lang_get', string='Language',
         readonly=True, states={'draft': [('readonly', False)]},
-        track_visibility='onchange')
+        tracking=True)
     attachment_ids = fields.Many2many(
         'ir.attachment', string='Documents to Sign',
         readonly=True, states={'draft': [('readonly', False)]})
@@ -84,27 +86,27 @@ class YousignRequest(models.Model):
         ('archived', 'Archived'),
         ('cancel', 'Cancelled'),
         ], string='State', default='draft', readonly=True,
-        track_visibility='onchange')
+        tracking=True)
     sign_position = fields.Selection(
         [('top', 'Top'), ('bottom', 'Bottom')],
-        string='Sign position', default='top')
+        string='Sign Position', default='top',
+        readonly=True, states={'draft': [('readonly', False)]})
     company_id = fields.Many2one(
         'res.company', string='Company', ondelete='cascade',
         readonly=True, states={'draft': [('readonly', False)]},
-        track_visibility='onchange',
-        default=lambda self: self.env['res.company']._company_default_get(
-            'yousign.request'))
+        tracking=True,
+        default=lambda self: self.env.company)
     ys_identifier = fields.Char(
-        'Yousign ID', readonly=True, track_visibility='onchange')
+        string='Yousign ID', readonly=True, tracking=True)
     last_update = fields.Datetime(string='Last Status Update', readonly=True)
     remind_auto = fields.Boolean(
         string='Automatic Reminder',
         readonly=True, states={'draft': [('readonly', False)]})
     remind_mail_subject = fields.Char(
-        'Reminder Mail Subject',
+        string='Reminder Mail Subject',
         readonly=True, states={'draft': [('readonly', False)]})
     remind_mail_body = fields.Html(
-        'Reminder Mail Body',
+        string='Reminder Mail Body',
         readonly=True, states={'draft': [('readonly', False)]})
     remind_interval = fields.Integer(
         string='Remind Interval', default=3,
@@ -125,7 +127,6 @@ class YousignRequest(models.Model):
             'The Remind Limit must be positive or null.'),
         ]
 
-    @api.multi
     @api.depends('model', 'res_id')
     def _compute_res_name(self):
         for req in self:
@@ -137,14 +138,12 @@ class YousignRequest(models.Model):
 
     @api.model
     def _lang_get(self):
-        langs = self.env['res.lang'].search([])
-        return [(lang.code, lang.name) for lang in langs]
+        res = self.env['res.lang'].get_installed()
+        return res
 
     @api.model
     def default_get(self, fields_list):
-        res = super(YousignRequest, self).default_get(fields_list)
-        eto = self.env['email.template']
-        iarxo = self.env['ir.actions.report.xml']
+        res = super().default_get(fields_list)
         iao = self.env['ir.attachment']
         yrto = self.env['yousign.request.template']
         model = self._context.get('active_model')
@@ -177,38 +176,30 @@ class YousignRequest(models.Model):
                 template = templates[0]
         if not template:
             raise UserError(_(
-                "No Yousign Request Template for model %s") % model)
+                "No Yousign Request Template for model '%s'.") % model)
         # print "model=%s, res_id=%s" % (model, res_id)
         if model != template.model:
             raise UserError(_(
-                "Wrong active_model (%s should be %s)")
-                % (self._context.get('active_model'), template.model))
+                "Wrong active_model (%(ctx_model)s should be %(template_model)s)",
+                ctx_model=self._context.get('active_model'), template_model=template.model))
         source_obj = self.env[model].browse(int(res_id))
         signatory_ids = []
         for signatory in template.signatory_ids:
-            signatory_vals = signatory.prepare_template2request(
+            signatory_vals = signatory._prepare_template2request(
                 model, res_id)
             signatory_ids.append((0, 0, signatory_vals))
         notification_ids = []
         for notif in template.notification_ids:
-            notif_vals = notif.prepare_template2request(model, res_id)
+            notif_vals = notif._prepare_template2request(model, res_id)
             notification_ids.append((0, 0, notif_vals))
         attachment_ids = []
         if template.report_id:
             report = template.report_id
-            report_data_bin, filename_ext = iarxo.render_report(
-                [res_id], report.report_name, {})
+            report_data_bin, filename_ext = report._render([res_id])
 
             full_filename = 'document_to_sign.%s' % filename_ext
-            if report.download_filename:
-                full_filename = email_template.mako_template_env\
-                    .from_string(report.download_filename)\
-                    .render({
-                        'objects': source_obj,
-                        'o': source_obj,
-                        'object': source_obj,
-                        'ext': report.report_type.replace('qweb-', ''),
-                    })
+            if report.print_report_name:
+                full_filename = safe_eval(report.print_report_name, {'object': source_obj, 'time': time})
             elif source_obj.display_name:
                 tmp_filename = source_obj.display_name[:50]
                 tmp_filename = tmp_filename.replace(' ', '_')
@@ -218,12 +209,11 @@ class YousignRequest(models.Model):
                 'name': full_filename,
                 # 'res_id': Signature request is not created yet
                 'res_model': self._name,
-                'datas': report_data_bin.encode('base64'),
-                'datas_fname': full_filename,
+                'raw': report_data_bin,
                 }
             attach = iao.create(attach_vals)
             attachment_ids.append((6, 0, [attach.id]))
-        lang = eto.render_template_batch(
+        lang = self._render_template(
             template.lang, model, [res_id])[res_id]
         if lang:
             template = template.with_context(lang=lang)
@@ -233,11 +223,11 @@ class YousignRequest(models.Model):
             'remind_mail_subject': template.remind_mail_subject,
             'remind_mail_body': template.remind_mail_body,
             }
-        for field_name, field_content in dyn_fields.iteritems():
-            dyn_fields[field_name] = eto.render_template_batch(
+        for field_name, field_content in dyn_fields.items():
+            dyn_fields[field_name] = self._render_template(
                 dyn_fields[field_name], model, [res_id])[res_id]
         res.update(dyn_fields)
-        res.update(template.prepare_template2request())
+        res.update(template._prepare_template2request())
         res.update({
             'name': source_obj.display_name,
             'model': model,
@@ -249,12 +239,15 @@ class YousignRequest(models.Model):
             })
         return res
 
-    @api.model
-    def create(self, vals):
-        if vals.get('name', '/') == '/':
-            vals['name'] = self.env['ir.sequence'].next_by_code(
-                'yousign.request')
-        return super(YousignRequest, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if 'company_id' in vals:
+                self = self.with_company(vals['company_id'])
+            if vals.get('name', _('New')) == _('New'):
+                vals['name'] = self.env['ir.sequence'].next_by_code(
+                    'yousign.request') or _('New')
+        return super().create(vals_list)
 
     def get_source_object(self):
         self.ensure_one()
@@ -275,7 +268,7 @@ class YousignRequest(models.Model):
     @api.model
     def yousign_init(self):
         apikey = tools.config.get('yousign_apikey', False)
-        environment = tools.config.get('yousign_envir', 'demo')
+        environment = tools.config.get('running_env', 'test')
         if not apikey or not environment:
             raise UserError(_(
                 "One of the Yousign config parameters is missing in the Odoo "
@@ -334,15 +327,15 @@ class YousignRequest(models.Model):
             logger.error(
                 "HTTP %s request on %s returned HTTP Code %s (%s was expected). "
                 "Error message: %s (%s).", method, full_url, res.status_code,
-                expected_status_code, res_json.get('title'),
-                res_json.get('detail', 'no detail'))
+                expected_status_code, res_json.get('error'),
+                res_json.get('error_description', 'no detail'))
             if raise_if_ko:
                 raise UserError(_(
                     "The HTTP %s request on Yousign webservice %s returned status "
                     "code %d whereas %d was expected. Error message: %s (%s).")
                     % (method, full_url, res.status_code,
-                       expected_status_code, res_json.get('title'),
-                        res_json.get('detail', _('no detail'))))
+                       expected_status_code, res_json.get('error'),
+                        res_json.get('error_description', _('no detail'))))
             return None
         if return_raw:
             return res
@@ -350,13 +343,12 @@ class YousignRequest(models.Model):
         logger.debug('JSON webservice answer: %s', res_json)
         return res_json
 
-    @api.multi
     def name_get(self):
         res = []
         for req in self:
             name = req.name
             if req.res_name:
-                name = u'%s (%s)' % (name, req.res_name)
+                name = f"{name} ({req.res_name})"
             res.append((req.id, name))
         return res
 
@@ -377,7 +369,7 @@ class YousignRequest(models.Model):
             4: '310,460,525,550',
         }
         BOTTOMRANK2POSITION = {
-            1: '95,195,245,245', # width = 150 - height = 50
+            1: '95,195,245,245',  # width = 150 - height = 50
             2: '330,195,480,245',
             3: '95,150,245,200',
             4: '330,145,480,195',
@@ -398,19 +390,13 @@ class YousignRequest(models.Model):
         return rank2position.get(signatory_rank, '56,392,296,464')
 
     @api.model
-    def simple_html2txt(self, html):
-        reg = re.compile('<.*?>')
-        text = re.sub(reg, '', html)
-        return text
-
-    @api.model
     def include_url_tag(self, mail_body, mail_name, raise_if_not_found=False):
         if not mail_body:
             raise UserError(_(
                 "Mail body of %s is empty.") % mail_name)
-        regexp = '{yousignUrl\|.+}'
-        match = re.search(regexp, mail_body, re.IGNORECASE)
-        if not match:
+        regexp = r'{yousignUrl\|.+}'
+        re_match = re.search(regexp, mail_body, re.IGNORECASE)
+        if not re_match:
             if raise_if_not_found:
                 raise UserError(_(
                     "Missing special tag {yousignUrl|Access to documents} "
@@ -425,16 +411,15 @@ class YousignRequest(models.Model):
                     "for the yousign URL.") % mail_name)
             else:
                 return mail_body
-        found = match.group(0)
+        found = re_match.group(0)
         button_label = found.split('|')[1][:-1].strip()
-        button_label_txt = self.simple_html2txt(button_label)
+        button_label_txt = tools.html2plaintext(button_label)
         html_button = '<tag data-tag-type="button" data-tag-name="url" '\
                       'data-tag-title="%s">%s</tag>' % (button_label_txt,
                                                         button_label_txt)
         new_mail_body = re.sub(regexp, html_button, mail_body)
         return new_mail_body
 
-    @api.multi
     def send(self):
         self.ensure_one()
         logger.info('Start to send YS request %s ID %d', self.name, self.id)
@@ -516,16 +501,16 @@ class YousignRequest(models.Model):
         # value = {'pagenum': 4, 'filename': 'tutu.pdf', 'ys_id': 'JLDKSJDKL'}
         for attach in self.attachment_ids:
             # We decide to always add signature on last page
-            filename = attach.datas_fname or attach.name
-            pdf_file = StringIO(attach.datas.decode('base64'))
+            filename = attach.name
+            pdf_file = BytesIO(attach.raw)
             try:
-                pdf = PyPDF2.PdfFileReader(pdf_file)
-            except PyPDF2.utils.PdfReadError:
+                pdf_reader = pypdf.PdfReader(pdf_file)
+            except pypdf.utils.PdfReadError:
                 raise UserError(_(
                     "File to sign '%s' is not a valid PDF file. You "
                     "must convert it to PDF before including it in a "
                     "Yousign request.") % filename)
-            num_pages = pdf.getNumPages()
+            num_pages = len(pdf_reader.pages)
             logger.info('PDF %s has %d pages', filename, num_pages)
             attach_data[attach] = {
                 'filename': filename,
@@ -612,15 +597,14 @@ class YousignRequest(models.Model):
         try:
             logger.debug('Start YS initSign on req ID %d', self.id)
             self.yousign_request('PUT', ys_id, 200, json={'start': True})
-        except Exception as e:
-            err_msg = str(e).decode('utf-8')
+        except Exception as err:
             logger.error(
                 'YS initSign failed on req ID %d with error %s',
-                self.id, err_msg)
+                self.id, err)
             raise UserError(_(
                 "Failure when sending the signing request %s to "
                 "Yousign.\n\n"
-                "Error: %s") % (self.display_name, err_msg))
+                "Error: %s") % (self.display_name, err))
         self.write({
             'state': 'sent',
             'ys_identifier': ys_id,
@@ -629,12 +613,13 @@ class YousignRequest(models.Model):
         src_obj = self.get_source_object_with_chatter()
         if src_obj:
             # for v10, add link to request in message
-            src_obj.suspend_security().message_post(_(
-                "Yousign request <b>%s</b> generated with %d signatories")
-                % (self.name, len(self.signatory_ids)))
+            src_obj.sudo().message_post(body=_(
+                "Yousign request <a href=# data-oe-model=yousign.request "
+                "data-oe-id=%(req_id)s>%(req_name)s</a> "
+                "generated with %(signatory_count)s signatories.",
+                req_id=self.id, req_name=self.name, signatory_count=len(self.signatory_ids)))
         return
 
-    @api.multi
     def cancel(self):
         for req in self:
             if req.state == 'sent' and req.ys_identifier:
@@ -643,12 +628,11 @@ class YousignRequest(models.Model):
                 logger.info(
                     'Yousign request %s ID %s successfully cancelled.',
                     req.name, req.id)
-                req.message_post(_(
+                req.message_post(body=_(
                     "Request successfully cancelled via Yousign "
                     "webservices."))
         self.write({'state': 'cancel'})
 
-    @api.multi
     def update_status(self, raise_if_ko=True):
         now = fields.Datetime.now()
         ystate2ostate = {
@@ -699,15 +683,14 @@ class YousignRequest(models.Model):
                     'Yousign request %s switched to signed state', req.name)
                 src_obj = req.get_source_object_with_chatter()
                 if src_obj:
-                    # for v10, add link to request in message
-                    src_obj.suspend_security().message_post(_(
-                        "Yousign request <b>%s</b> has been signed by all "
-                        "signatories") % req.name)
-                    req.signed_hook(src_obj)
+                    src_obj.sudo().message_post(body=_(
+                        "Yousign request <a href=# data-oe-model=yousign.request "
+                        "data-oe-id=%(req_id)s>%(req_name)s</a> has been signed by all "
+                        "signatories.", req_id=req.id, req_name=req.name))
+                    req._signed_hook(src_obj)
             req.write(vals)
 
-    @api.multi
-    def signed_hook(self, source_recordset):
+    def _signed_hook(self, source_recordset):
         '''Designed to be inherited by custom modules'''
         self.ensure_one()
         return
@@ -723,7 +706,6 @@ class YousignRequest(models.Model):
             domain_base + [('state', '=', 'signed')])
         requests_to_archive.archive(raise_if_ko=False)
 
-    @api.multi
     def archive(self, raise_if_ko=True):
         for req in self.filtered(
                 lambda x: x.state == 'signed' and x.ys_identifier):
@@ -744,7 +726,7 @@ class YousignRequest(models.Model):
             if not res.get('files'):
                 continue
             signed_filenames = [
-                att.datas_fname for att in req.signed_attachment_ids]
+                att.name for att in req.signed_attachment_ids]
             if req.res_id and req.model:
                 res_model = req.model
                 res_id = req.res_id
@@ -784,7 +766,6 @@ class YousignRequest(models.Model):
                             'res_id': res_id,
                             'res_model': res_model,
                             'datas': dl.content,
-                            'datas_fname': signed_filename,
                             })
                         req.signed_attachment_ids = [(4, attach.id)]
                         signed_filenames.append(signed_filename)
@@ -793,21 +774,18 @@ class YousignRequest(models.Model):
                             signed_filename, res_model, res_id)
             if len(signed_filenames) == docs_to_sign_count:
                 req.state = 'archived'
-                req.message_post(_(
-                    "%d signed document(s) are now attached. "
-                    "Request %s is archived")
-                    % (len(signed_filenames), req.name))
+                req.message_post(body=_(
+                    "%(doc_count)d signed document(s) are now attached. "
+                    "Request %(req_name)s is archived.",
+                    doc_count=len(signed_filenames), req_name=req.name))
 
         return
 
 
 class YousignRequestSignatory(models.Model):
     _name = 'yousign.request.signatory'
-    _order = 'parent_id, sequence'
-    _inherit = ['phone.common']
-    _phone_fields = ['mobile']
-    _partner_field = 'partner_id'
-    _country_field = None
+    _order = 'parent_id, sequence, id'
+    _description = "Yousign Signatories"
     _rec_name = 'lastname'
 
     parent_id = fields.Many2one(
@@ -820,7 +798,7 @@ class YousignRequestSignatory(models.Model):
     mobile = fields.Char('Mobile')
     auth_mode = fields.Selection([
         ('sms', 'SMS'),
-        ('email', 'E-Mail'),  # TODO mig script old value : mail
+        ('email', 'E-Mail'),
         ], default='sms', string='Authentication Mode', required=True,
         help='Authentication mode used for the signer')
     mention_top = fields.Char(string='Top Mention')
@@ -835,17 +813,14 @@ class YousignRequestSignatory(models.Model):
     comment = fields.Text(string='Comment')
     signature_date = fields.Date(string='Signature Date', readonly=True)
 
-    def create(self, cr, uid, vals, context=None):
-        vals_reformated = self._generic_reformat_phonenumbers(
-            cr, uid, None, vals, context=context)
-        return super(YousignRequestSignatory, self).create(
-            cr, uid, vals_reformated, context=context)
-
-    def write(self, cr, uid, ids, vals, context=None):
-        vals_reformated = self._generic_reformat_phonenumbers(
-            cr, uid, ids, vals, context=context)
-        return super(YousignRequestSignatory, self).write(
-            cr, uid, ids, vals_reformated, context=context)
+    @api.onchange('mobile', 'partner_id')
+    def _onchange_mobile_validation(self):
+        if self.mobile:
+            country = self.partner_id and self.partner_id.country_id or self.env.company.country_id
+            if country:
+                self.mobile = phone_validation.phone_format(
+                    self.mobile, country.code, country.phone_code,
+                    force_format='INTERNATIONAL', raise_exception=True)
 
     @api.onchange('partner_id')
     def partner_id_change(self):

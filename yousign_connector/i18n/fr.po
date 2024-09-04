@@ -4,122 +4,151 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 8.0\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-20 07:59+0000\n"
-"PO-Revision-Date: 2023-04-20 15:41+0200\n"
-"Last-Translator: <>\n"
+"POT-Creation-Date: 2024-09-04 21:50+0000\n"
+"PO-Revision-Date: 2024-09-04 21:50+0000\n"
+"Last-Translator: \n"
 "Language-Team: \n"
-"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
+"Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
-"X-Generator: Poedit 2.4.2\n"
 
 #. module: yousign_connector
-#: code:addons/yousign_connector/models/yousign_request.py:796
-#, fuzzy, python-format
-#| msgid "%d signed document(s) have been added as attachment"
-msgid "%d signed document(s) are now attached. Request %s is archived"
-msgstr "%d documents signés ont été ajoutés en pièce jointe"
+#: code:addons/yousign_connector/models/yousign_request.py:0
+#, python-format
+msgid ""
+"%(doc_count)d signed document(s) are now attached. Request %(req_name)s is "
+"archived."
+msgstr ""
 
 #. module: yousign_connector
-#: view:yousign.request.template:yousign_connector.yousign_request_template_form
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__message_needaction
+msgid "Action Needed"
+msgstr ""
+
+#. module: yousign_connector
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__activity_ids
+msgid "Activities"
+msgstr ""
+
+#. module: yousign_connector
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr ""
+
+#. module: yousign_connector
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__activity_state
+msgid "Activity State"
+msgstr ""
+
+#. module: yousign_connector
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__activity_type_icon
+msgid "Activity Type Icon"
+msgstr ""
+
+#. module: yousign_connector
+#: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_template_form
 msgid "Add Action"
-msgstr "Ajouter une action"
+msgstr ""
 
 #. module: yousign_connector
-#: field:yousign.request.template,model_id:0
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template__model_id
 msgid "Applies to"
-msgstr "S'applique à"
+msgstr ""
 
 #. module: yousign_connector
-#: view:yousign.request:yousign_connector.yousign_request_form
+#: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_form
 msgid "Archive"
-msgstr "Archiver"
+msgstr ""
 
 #. module: yousign_connector
-#: view:yousign.request:yousign_connector.yousign_request_search
-#: selection:yousign.request,state:0
+#: model:ir.model.fields.selection,name:yousign_connector.selection__yousign_request__state__archived
+#: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_search
 msgid "Archived"
-msgstr "Archivé"
+msgstr ""
 
 #. module: yousign_connector
-#: field:yousign.request.signatory,auth_mode:0
-#: field:yousign.request.template.signatory,auth_mode:0
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__message_attachment_count
+msgid "Attachment Count"
+msgstr ""
+
+#. module: yousign_connector
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_signatory__auth_mode
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_signatory__auth_mode
 msgid "Authentication Mode"
-msgstr "Mode d'authentification"
+msgstr ""
 
 #. module: yousign_connector
-#: help:yousign.request.signatory,auth_mode:0
-#: help:yousign.request.template.signatory,auth_mode:0
+#: model:ir.model.fields,help:yousign_connector.field_yousign_request_signatory__auth_mode
+#: model:ir.model.fields,help:yousign_connector.field_yousign_request_template_signatory__auth_mode
 msgid "Authentication mode used for the signer"
-msgstr "Mode d'authentification utilisé pour le signataire"
+msgstr ""
 
 #. module: yousign_connector
-#: view:yousign.request:yousign_connector.new_yousign_request_form
-#: view:yousign.request:yousign_connector.yousign_request_form
-#: view:yousign.request.template:yousign_connector.yousign_request_template_form
+#: model_terms:ir.ui.view,arch_db:yousign_connector.new_yousign_request_form
+#: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_form
+#: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_template_form
 msgid "Auto-Remind Setup"
 msgstr ""
 
 #. module: yousign_connector
-#: field:yousign.request,remind_auto:0
-#: field:yousign.request.template,remind_auto:0
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__remind_auto
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template__remind_auto
 msgid "Automatic Reminder"
 msgstr ""
 
 #. module: yousign_connector
-#: view:yousign.request:yousign_connector.new_yousign_request_form
-#: field:yousign.request.notification,body:0
-#: view:yousign.request.template:yousign_connector.yousign_request_template_form
-#: field:yousign.request.template.notification,body:0
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_notification__body
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_notification__body
+#: model_terms:ir.ui.view,arch_db:yousign_connector.new_yousign_request_form
+#: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_template_form
 msgid "Body"
 msgstr ""
 
 #. module: yousign_connector
-#: selection:yousign.request,sign_position:0
-#: selection:yousign.request.template,sign_position:0
+#: model:ir.model.fields.selection,name:yousign_connector.selection__yousign_request__sign_position__bottom
+#: model:ir.model.fields.selection,name:yousign_connector.selection__yousign_request_template__sign_position__bottom
 msgid "Bottom"
-msgstr "En bas du document"
+msgstr ""
 
 #. module: yousign_connector
-#: field:yousign.request.signatory,mention_bottom:0
-#: field:yousign.request.template.signatory,mention_bottom:0
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_signatory__mention_bottom
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_signatory__mention_bottom
 msgid "Bottom Mention"
 msgstr ""
 
 #. module: yousign_connector
-#: view:yousign.request:yousign_connector.new_yousign_request_form
-#: view:yousign.request:yousign_connector.yousign_request_form
-#: view:yousign.request.remind:yousign_connector.yousign_request_remind_form
+#: model_terms:ir.ui.view,arch_db:yousign_connector.new_yousign_request_form
+#: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_form
+#: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_remind_form
 msgid "Cancel"
-msgstr "Annuler"
+msgstr ""
 
 #. module: yousign_connector
-#: selection:yousign.request,state:0
+#: model:ir.model.fields.selection,name:yousign_connector.selection__yousign_request__state__cancel
 msgid "Cancelled"
-msgstr "Annulé"
+msgstr ""
 
 #. module: yousign_connector
-#: view:yousign.request:yousign_connector.yousign_request_form
+#: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_form
 msgid "Check if signatories have signed the documents"
-msgstr "Vérifie si les signataires ont signé les documents"
+msgstr ""
 
 #. module: yousign_connector
-#: field:yousign.request.signatory,comment:0
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_signatory__comment
 msgid "Comment"
 msgstr ""
 
 #. module: yousign_connector
-#: field:yousign.request,company_id:0
-#: field:yousign.request.template,company_id:0
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__company_id
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template__company_id
 msgid "Company"
-msgstr "Société"
+msgstr ""
 
 #. module: yousign_connector
-#: code:addons/yousign_connector/models/yousign_request.py:312
+#: code:addons/yousign_connector/models/yousign_request.py:0
 #, python-format
 msgid ""
 "Connection to %s failed. Check the Internet connection of the Odoo server.\n"
@@ -128,123 +157,117 @@ msgid ""
 msgstr ""
 
 #. module: yousign_connector
-#: field:yousign.request,create_uid:0
-#: field:yousign.request.notification,create_uid:0
-#: field:yousign.request.remind,create_uid:0
-#: field:yousign.request.signatory,create_uid:0
-#: field:yousign.request.template,create_uid:0
-#: field:yousign.request.template.notification,create_uid:0
-#: field:yousign.request.template.signatory,create_uid:0
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__create_uid
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_notification__create_uid
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_remind__create_uid
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_signatory__create_uid
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template__create_uid
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_notification__create_uid
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_signatory__create_uid
 msgid "Created by"
-msgstr "Créé par"
+msgstr ""
 
 #. module: yousign_connector
-#: field:yousign.request,create_date:0
-#: field:yousign.request.notification,create_date:0
-#: field:yousign.request.remind,create_date:0
-#: field:yousign.request.signatory,create_date:0
-#: field:yousign.request.template,create_date:0
-#: field:yousign.request.template.notification,create_date:0
-#: field:yousign.request.template.signatory,create_date:0
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__create_date
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_notification__create_date
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_remind__create_date
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_signatory__create_date
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template__create_date
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_notification__create_date
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_signatory__create_date
 msgid "Created on"
-msgstr "Créé le"
+msgstr ""
 
 #. module: yousign_connector
-#: help:yousign.request,message_last_post:0
-msgid "Date of the last message posted on the record."
-msgstr "Date of the last message posted on the record."
-
-#. module: yousign_connector
-#: field:yousign.request.template,report_id:0
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template__report_id
 msgid "Default Report to Sign"
-msgstr "Rapport à signer par défaut"
+msgstr ""
 
 #. module: yousign_connector
-#: field:yousign.request,display_name:0
-#: field:yousign.request.notification,display_name:0
-#: field:yousign.request.remind,display_name:0
-#: field:yousign.request.signatory,display_name:0
-#: field:yousign.request.template,display_name:0
-#: field:yousign.request.template.notification,display_name:0
-#: field:yousign.request.template.signatory,display_name:0
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__null_value
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_notification__null_value
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_signatory__null_value
+msgid "Default Value"
+msgstr ""
+
+#. module: yousign_connector
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__display_name
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_notification__display_name
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_remind__display_name
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_signatory__display_name
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template__display_name
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_notification__display_name
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_signatory__display_name
 msgid "Display Name"
 msgstr ""
 
 #. module: yousign_connector
-#: view:yousign.request.template:yousign_connector.yousign_request_template_form
+#: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_template_form
 msgid ""
 "Display an option on related documents to open a composition wizard with "
 "this template"
 msgstr ""
-"Display an option on related documents to open a composition wizard with "
-"this template"
 
 #. module: yousign_connector
-#: field:yousign.request,attachment_ids:0
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__attachment_ids
 msgid "Documents to Sign"
-msgstr "Documents à signer"
-
-#. module: yousign_connector
-#: view:yousign.request:yousign_connector.yousign_request_form
-msgid "Download signed files from Yousign and add them as attachments."
-msgstr "Télécharge les documents signés et les ajoute en pièce jointe."
-
-#. module: yousign_connector
-#: view:yousign.request:yousign_connector.yousign_request_search
-#: selection:yousign.request,state:0
-#: selection:yousign.request.signatory,state:0
-msgid "Draft"
-msgstr "Brouillon"
-
-#. module: yousign_connector
-#: selection:yousign.request.template.signatory,partner_type:0
-msgid "Dynamic"
-msgstr "Dynamique"
-
-#. module: yousign_connector
-#: field:yousign.request.template.signatory,partner_tmpl:0
-msgid "Dynamic Partner"
-msgstr "Partenaire dynamique"
-
-#. module: yousign_connector
-#: code:addons/yousign_connector/models/yousign_request_template.py:164
-#, python-format
-msgid "Dynamic Partner is required when Partner Type is set to 'Dynamic'"
 msgstr ""
-"Un partenaire dynamique est requis quand le type de partenaire est "
-"'Dynamique'"
 
 #. module: yousign_connector
-#: selection:yousign.request.signatory,auth_mode:0
-#: selection:yousign.request.template.signatory,auth_mode:0
-#, fuzzy
-#| msgid "Mail"
+#: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_form
+msgid "Download signed files from Yousign and add them as attachments."
+msgstr ""
+
+#. module: yousign_connector
+#: model:ir.model.fields.selection,name:yousign_connector.selection__yousign_request__state__draft
+#: model:ir.model.fields.selection,name:yousign_connector.selection__yousign_request_signatory__state__draft
+#: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_search
+msgid "Draft"
+msgstr ""
+
+#. module: yousign_connector
+#: model:ir.model.fields.selection,name:yousign_connector.selection__yousign_request_template_signatory__partner_type__dynamic
+msgid "Dynamic"
+msgstr ""
+
+#. module: yousign_connector
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_signatory__partner_tmpl
+msgid "Dynamic Partner"
+msgstr ""
+
+#. module: yousign_connector
+#: code:addons/yousign_connector/models/yousign_request_template.py:0
+#, python-format
+msgid "Dynamic Partner is required when Partner Type is set to 'Dynamic'."
+msgstr ""
+
+#. module: yousign_connector
+#: model:ir.model.fields.selection,name:yousign_connector.selection__yousign_request_signatory__auth_mode__email
+#: model:ir.model.fields.selection,name:yousign_connector.selection__yousign_request_template_signatory__auth_mode__email
 msgid "E-Mail"
-msgstr "Mail"
+msgstr ""
 
 #. module: yousign_connector
-#: field:yousign.request.signatory,email:0
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_signatory__email
 msgid "E-mail"
-msgstr "E-mail"
+msgstr ""
 
 #. module: yousign_connector
-#: view:yousign.request:yousign_connector.new_yousign_request_form
-#: view:yousign.request:yousign_connector.yousign_request_form
-#: field:yousign.request,notification_ids:0
-#: view:yousign.request.template:yousign_connector.yousign_request_template_form
-#: field:yousign.request.template,notification_ids:0
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__notification_ids
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template__notification_ids
+#: model_terms:ir.ui.view,arch_db:yousign_connector.new_yousign_request_form
+#: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_form
+#: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_template_form
 msgid "E-mail Notifications"
 msgstr ""
 
 #. module: yousign_connector
-#: view:yousign.request:yousign_connector.yousign_request_form
-#, fuzzy
-#| msgid "E-mail"
+#: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_form
 msgid "Email"
-msgstr "E-mail"
+msgstr ""
 
 #. module: yousign_connector
-#: code:addons/yousign_connector/models/yousign_request.py:620
+#: code:addons/yousign_connector/models/yousign_request.py:0
 #, python-format
 msgid ""
 "Failure when sending the signing request %s to Yousign.\n"
@@ -256,330 +279,411 @@ msgstr ""
 "Erreur: %s"
 
 #. module: yousign_connector
-#: code:addons/yousign_connector/models/yousign_request.py:524
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__model_object_field
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_notification__model_object_field
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_signatory__model_object_field
+msgid "Field"
+msgstr ""
+
+#. module: yousign_connector
+#: code:addons/yousign_connector/models/yousign_request.py:0
 #, python-format
 msgid ""
-"File to sign '%s' is not a valid PDF file. You must convert it to PDF before "
-"including it in a Yousign request."
+"File to sign '%s' is not a valid PDF file. You must convert it to PDF before"
+" including it in a Yousign request."
 msgstr ""
 "Le fichier à signer '%s' n'est pas un fichier PDF valide. Vous devez le "
 "convertir en PDF avant de l'inclure dans une requête Yousign."
 
 #. module: yousign_connector
-#: field:yousign.request.signatory,firstname:0
-msgid "Firstname"
-msgstr "Prénom"
-
-#. module: yousign_connector
-#: field:yousign.request.template.signatory,partner_id:0
-msgid "Fixed Partner"
-msgstr "Partenaire fixe"
-
-#. module: yousign_connector
-#: code:addons/yousign_connector/models/yousign_request_template.py:158
-#, python-format
-msgid "Fixed Partner is required when Partner Type is set to 'Static'"
-msgstr ""
-"Un partenaire fixe est requis quand le type de partenaire est 'Statique'"
-
-#. module: yousign_connector
-#: field:yousign.request,message_follower_ids:0
-msgid "Followers"
-msgstr "Followers"
-
-#. module: yousign_connector
-#: view:yousign.request:yousign_connector.yousign_request_search
-#: view:yousign.request.template:yousign_connector.yousign_request_template_search
-msgid "Group By"
-msgstr "Grouper par"
-
-#. module: yousign_connector
-#: help:yousign.request,message_summary:0
+#: model:ir.model.fields,help:yousign_connector.field_yousign_request__copyvalue
+#: model:ir.model.fields,help:yousign_connector.field_yousign_request_template_notification__copyvalue
+#: model:ir.model.fields,help:yousign_connector.field_yousign_request_template_signatory__copyvalue
 msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
+"Final placeholder expression, to be copy-pasted in the desired template "
+"field."
 msgstr ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
 
 #. module: yousign_connector
-#: field:yousign.request,id:0 field:yousign.request.notification,id:0
-#: field:yousign.request.remind,id:0 field:yousign.request.signatory,id:0
-#: field:yousign.request.template,id:0
-#: field:yousign.request.template.notification,id:0
-#: field:yousign.request.template.signatory,id:0
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_signatory__firstname
+msgid "Firstname"
+msgstr ""
+
+#. module: yousign_connector
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_signatory__partner_id
+msgid "Fixed Partner"
+msgstr ""
+
+#. module: yousign_connector
+#: code:addons/yousign_connector/models/yousign_request_template.py:0
+#, python-format
+msgid "Fixed Partner is required when Partner Type is set to 'Static'."
+msgstr ""
+
+#. module: yousign_connector
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__message_follower_ids
+msgid "Followers"
+msgstr ""
+
+#. module: yousign_connector
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__message_channel_ids
+msgid "Followers (Channels)"
+msgstr ""
+
+#. module: yousign_connector
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__message_partner_ids
+msgid "Followers (Partners)"
+msgstr ""
+
+#. module: yousign_connector
+#: model:ir.model.fields,help:yousign_connector.field_yousign_request__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr ""
+
+#. module: yousign_connector
+#: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_search
+#: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_template_search
+msgid "Group By"
+msgstr ""
+
+#. module: yousign_connector
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__id
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_notification__id
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_remind__id
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_signatory__id
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template__id
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_notification__id
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_signatory__id
 msgid "ID"
-msgstr "ID"
+msgstr ""
 
 #. module: yousign_connector
-#: help:yousign.request,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr "If checked new messages require your attention."
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__activity_exception_icon
+msgid "Icon"
+msgstr ""
 
 #. module: yousign_connector
-#: code:addons/yousign_connector/models/yousign_request.py:421
+#: model:ir.model.fields,help:yousign_connector.field_yousign_request__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr ""
+
+#. module: yousign_connector
+#: model:ir.model.fields,help:yousign_connector.field_yousign_request__message_needaction
+#: model:ir.model.fields,help:yousign_connector.field_yousign_request__message_unread
+msgid "If checked, new messages require your attention."
+msgstr ""
+
+#. module: yousign_connector
+#: model:ir.model.fields,help:yousign_connector.field_yousign_request__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: yousign_connector
+#: code:addons/yousign_connector/models/yousign_request.py:0
 #, python-format
 msgid ""
 "In mail body of %s, it seems you tried to include the yousign URL, but the "
-"regular expression didn't match. Please check the special expression for the "
-"yousign URL."
+"regular expression didn't match. Please check the special expression for the"
+" yousign URL."
 msgstr ""
 
 #. module: yousign_connector
-#: view:yousign.request:yousign_connector.new_yousign_request_form
-#: view:yousign.request.template:yousign_connector.yousign_request_template_form
-#, fuzzy
-#| msgid "E-mail"
+#: model_terms:ir.ui.view,arch_db:yousign_connector.new_yousign_request_form
+#: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_template_form
 msgid "Init E-mail"
-msgstr "E-mail"
+msgstr ""
 
 #. module: yousign_connector
-#: field:yousign.request,init_mail_body:0
-#: field:yousign.request.template,init_mail_body:0
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__init_mail_body
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template__init_mail_body
 msgid "Init Mail Body"
 msgstr ""
 
 #. module: yousign_connector
-#: field:yousign.request,init_mail_subject:0
-#: field:yousign.request.template,init_mail_subject:0
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__init_mail_subject
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template__init_mail_subject
 msgid "Init Mail Subject"
 msgstr ""
 
 #. module: yousign_connector
-#: field:yousign.request,message_is_follower:0
-msgid "Is a Follower"
-msgstr "Is a Follower"
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__message_is_follower
+msgid "Is Follower"
+msgstr ""
 
 #. module: yousign_connector
-#: field:yousign.request,lang:0 field:yousign.request.template,lang:0
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__lang
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template__lang
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_notification__lang
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_signatory__lang
 msgid "Language"
-msgstr "Langue"
+msgstr ""
 
 #. module: yousign_connector
-#: field:yousign.request,message_last_post:0
-msgid "Last Message Date"
-msgstr "Last Message Date"
-
-#. module: yousign_connector
-#: field:yousign.request,__last_update:0
-#: field:yousign.request.notification,__last_update:0
-#: field:yousign.request.remind,__last_update:0
-#: field:yousign.request.signatory,__last_update:0
-#: field:yousign.request.template,__last_update:0
-#: field:yousign.request.template.notification,__last_update:0
-#: field:yousign.request.template.signatory,__last_update:0
-#, fuzzy
-#| msgid "Last Updated on"
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request____last_update
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_notification____last_update
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_remind____last_update
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_signatory____last_update
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template____last_update
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_notification____last_update
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_signatory____last_update
 msgid "Last Modified on"
-msgstr "Last Updated on"
+msgstr ""
 
 #. module: yousign_connector
-#: field:yousign.request,last_update:0
-#, fuzzy
-#| msgid "Last Updated by"
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__last_update
 msgid "Last Status Update"
-msgstr "Last Updated by"
+msgstr ""
 
 #. module: yousign_connector
-#: field:yousign.request,write_uid:0
-#: field:yousign.request.notification,write_uid:0
-#: field:yousign.request.remind,write_uid:0
-#: field:yousign.request.signatory,write_uid:0
-#: field:yousign.request.template,write_uid:0
-#: field:yousign.request.template.notification,write_uid:0
-#: field:yousign.request.template.signatory,write_uid:0
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__write_uid
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_notification__write_uid
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_remind__write_uid
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_signatory__write_uid
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template__write_uid
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_notification__write_uid
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_signatory__write_uid
 msgid "Last Updated by"
-msgstr "Last Updated by"
+msgstr ""
 
 #. module: yousign_connector
-#: field:yousign.request,write_date:0
-#: field:yousign.request.notification,write_date:0
-#: field:yousign.request.remind,write_date:0
-#: field:yousign.request.signatory,write_date:0
-#: field:yousign.request.template,write_date:0
-#: field:yousign.request.template.notification,write_date:0
-#: field:yousign.request.template.signatory,write_date:0
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__write_date
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_notification__write_date
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_remind__write_date
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_signatory__write_date
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template__write_date
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_notification__write_date
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_signatory__write_date
 msgid "Last Updated on"
-msgstr "Last Updated on"
+msgstr ""
 
 #. module: yousign_connector
-#: field:yousign.request.signatory,lastname:0
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_signatory__lastname
 msgid "Lastname"
-msgstr "Nom de famille"
+msgstr ""
 
 #. module: yousign_connector
-#: code:addons/yousign_connector/models/yousign_request.py:409
+#: code:addons/yousign_connector/models/yousign_request.py:0
 #, python-format
 msgid "Mail body of %s is empty."
 msgstr ""
 
 #. module: yousign_connector
-#: field:yousign.request,message_ids:0
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__message_main_attachment_id
+msgid "Main Attachment"
+msgstr ""
+
+#. module: yousign_connector
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: yousign_connector
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__message_ids
 msgid "Messages"
-msgstr "Messages"
+msgstr ""
 
 #. module: yousign_connector
-#: help:yousign.request,message_ids:0
-msgid "Messages and communication history"
-msgstr "Messages and communication history"
-
-#. module: yousign_connector
-#: code:addons/yousign_connector/models/yousign_request.py:512
+#: code:addons/yousign_connector/models/yousign_request.py:0
 #, python-format
 msgid "Missing ID"
 msgstr ""
 
 #. module: yousign_connector
-#: code:addons/yousign_connector/models/yousign_request.py:492
+#: code:addons/yousign_connector/models/yousign_request.py:0
 #, python-format
 msgid "Missing Remind Mail Body"
 msgstr ""
 
 #. module: yousign_connector
-#: code:addons/yousign_connector/models/yousign_request.py:490
+#: code:addons/yousign_connector/models/yousign_request.py:0
 #, python-format
 msgid "Missing Remind Mail Subject"
 msgstr ""
 
 #. module: yousign_connector
-#: code:addons/yousign_connector/models/yousign_request.py:548
+#: code:addons/yousign_connector/models/yousign_request.py:0
 #, python-format
 msgid "Missing email on the signatory '%s'"
 msgstr "E-mail manquant pour le signataire '%s'"
 
 #. module: yousign_connector
-#: code:addons/yousign_connector/models/yousign_request.py:545
-#, fuzzy, python-format
-#| msgid "Missing email on the signatory '%s'"
+#: code:addons/yousign_connector/models/yousign_request.py:0
+#, python-format
 msgid "Missing firstname on signatory '%s'"
 msgstr "E-mail manquant pour le signataire '%s'"
 
 #. module: yousign_connector
-#: code:addons/yousign_connector/models/yousign_request.py:453
-#, fuzzy, python-format
-#| msgid "Missing title on request %s."
+#: code:addons/yousign_connector/models/yousign_request.py:0
+#, python-format
 msgid "Missing init mail body on request %s."
 msgstr "Titre manquant sur la requête %s."
 
 #. module: yousign_connector
-#: code:addons/yousign_connector/models/yousign_request.py:449
-#, fuzzy, python-format
-#| msgid "Missing title on request %s."
+#: code:addons/yousign_connector/models/yousign_request.py:0
+#, python-format
 msgid "Missing init mail subject on request %s."
 msgstr "Titre manquant sur la requête %s."
 
 #. module: yousign_connector
-#: code:addons/yousign_connector/models/yousign_request.py:541
+#: code:addons/yousign_connector/models/yousign_request.py:0
 #, python-format
 msgid "Missing lastname on one of the signatories of request %s"
 msgstr "Nom de famille manquant sur l'un des signataires de la requête %s"
 
 #. module: yousign_connector
-#: code:addons/yousign_connector/models/yousign_request.py:552
-#, fuzzy, python-format
-#| msgid "Missing email on the signatory '%s'"
+#: code:addons/yousign_connector/models/yousign_request.py:0
+#, python-format
 msgid "Missing mobile phone number on signatory '%s'."
 msgstr "E-mail manquant pour le signataire '%s'"
 
 #. module: yousign_connector
-#: code:addons/yousign_connector/models/yousign_request.py:415
+#: code:addons/yousign_connector/models/yousign_request.py:0
 #, python-format
 msgid ""
-"Missing special tag {yousignUrl|Access to documents} in the mail body of %s. "
-"The special tag will be replaced by the button with the label 'Access to "
+"Missing special tag {yousignUrl|Access to documents} in the mail body of %s."
+" The special tag will be replaced by the button with the label 'Access to "
 "documents'."
 msgstr ""
 
 #. module: yousign_connector
-#: field:yousign.request.signatory,mobile:0
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_signatory__mobile
 msgid "Mobile"
-msgstr "Tél. portable"
+msgstr ""
 
 #. module: yousign_connector
-#: field:yousign.request.template,model:0
+#: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_signatory_tree
+msgid "Mode"
+msgstr ""
+
+#. module: yousign_connector
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template__model
 msgid "Model"
-msgstr "Objet"
+msgstr ""
 
 #. module: yousign_connector
-#: field:yousign.request,name:0 field:yousign.request.template,name:0
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr ""
+
+#. module: yousign_connector
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__name
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template__name
 msgid "Name"
-msgstr "Nom"
+msgstr ""
 
 #. module: yousign_connector
-#: view:yousign.request.template:yousign_connector.yousign_request_template_search
+#: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_template_search
 msgid "Name or Mail Subject"
 msgstr ""
 
 #. module: yousign_connector
-#: view:yousign.request:yousign_connector.yousign_request_search
-#, fuzzy
-#| msgid "Name, Document Name or Title"
+#: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_search
 msgid "Name, Document Name or Mail Subject"
-msgstr "Nom, nom du document ou titre"
+msgstr ""
 
 #. module: yousign_connector
-#: view:yousign.request:yousign_connector.new_yousign_request_form
-msgid "New Yousign Request"
-msgstr "Nouvelle requête Yousign"
-
-#. module: yousign_connector
-#: code:addons/yousign_connector/models/yousign_request.py:179
+#: code:addons/yousign_connector/models/yousign_request.py:0
+#: code:addons/yousign_connector/models/yousign_request.py:0
+#: code:addons/yousign_connector/models/yousign_request.py:0
+#: code:addons/yousign_connector/models/yousign_request.py:0
 #, python-format
-msgid "No Yousign Request Template for model %s"
-msgstr "Aucun modèle de requête Yousign pour l'objet %s"
+msgid "New"
+msgstr ""
 
 #. module: yousign_connector
-#: field:yousign.request.notification,notif_type:0
-#: field:yousign.request.template.notification,notif_type:0
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr ""
+
+#. module: yousign_connector
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__activity_summary
+msgid "Next Activity Summary"
+msgstr ""
+
+#. module: yousign_connector
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__activity_type_id
+msgid "Next Activity Type"
+msgstr ""
+
+#. module: yousign_connector
+#: code:addons/yousign_connector/models/yousign_request.py:0
+#, python-format
+msgid "No Yousign Request Template for model '%s'."
+msgstr ""
+
+#. module: yousign_connector
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_notification__notif_type
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_notification__notif_type
 msgid "Notification Type"
 msgstr ""
 
 #. module: yousign_connector
 #: model:ir.model,name:yousign_connector.model_yousign_request_notification
-#, fuzzy
-#| msgid "Signatories of Yousign Request Template"
 msgid "Notifications of Yousign Request"
 msgstr "Signataires du modèle de requête Yousign"
 
 #. module: yousign_connector
 #: model:ir.model,name:yousign_connector.model_yousign_request_template_notification
-#, fuzzy
-#| msgid "Signatories of Yousign Request Template"
 msgid "Notifications of Yousign Request Template"
 msgstr "Signataires du modèle de requête Yousign"
 
 #. module: yousign_connector
-#: field:yousign.request.notification,creator:0
-#: field:yousign.request.template.notification,creator:0
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_notification__creator
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_notification__creator
 msgid "Notify Creator"
 msgstr ""
 
 #. module: yousign_connector
-#: field:yousign.request.notification,members:0
-#: field:yousign.request.template.notification,members:0
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_notification__members
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_notification__members
 msgid "Notify Members"
 msgstr ""
 
 #. module: yousign_connector
-#: field:yousign.request.notification,subscribers:0
-#: field:yousign.request.template.notification,subscribers:0
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_notification__subscribers
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_notification__subscribers
 msgid "Notify Subscribers"
 msgstr ""
 
 #. module: yousign_connector
-#: help:yousign.request,remind_interval:0
-#: help:yousign.request.template,remind_interval:0
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__message_needaction_counter
+msgid "Number of Actions"
+msgstr ""
+
+#. module: yousign_connector
+#: model:ir.model.fields,help:yousign_connector.field_yousign_request__remind_interval
+#: model:ir.model.fields,help:yousign_connector.field_yousign_request_template__remind_interval
 msgid "Number of days between 2 auto-reminders by email."
 msgstr ""
 
 #. module: yousign_connector
-#: view:yousign.request:yousign_connector.yousign_request_search
-#: view:yousign.request.template:yousign_connector.yousign_request_template_search
-msgid "Object"
-msgstr "Objet"
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__message_has_error_counter
+msgid "Number of errors"
+msgstr ""
 
 #. module: yousign_connector
-#: code:addons/yousign_connector/models/yousign_request.py:280
+#: model:ir.model.fields,help:yousign_connector.field_yousign_request__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr ""
+
+#. module: yousign_connector
+#: model:ir.model.fields,help:yousign_connector.field_yousign_request__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: yousign_connector
+#: model:ir.model.fields,help:yousign_connector.field_yousign_request__message_unread_counter
+msgid "Number of unread messages"
+msgstr ""
+
+#. module: yousign_connector
+#: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_search
+#: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_template_search
+msgid "Object"
+msgstr ""
+
+#. module: yousign_connector
+#: code:addons/yousign_connector/models/yousign_request.py:0
 #, python-format
 msgid ""
 "One of the Yousign config parameters is missing in the Odoo server config "
@@ -589,57 +693,79 @@ msgstr ""
 "configuration du serveur Odoo."
 
 #. module: yousign_connector
-#: field:yousign.request.signatory,partner_id:0
+#: model:ir.model.fields,help:yousign_connector.field_yousign_request_template_notification__lang
+#: model:ir.model.fields,help:yousign_connector.field_yousign_request_template_signatory__lang
+msgid ""
+"Optional translation language (ISO code) to select when sending out an "
+"email. If not set, the english version will be used. This should usually be "
+"a placeholder expression that provides the appropriate language, e.g. "
+"${object.partner_id.lang}."
+msgstr ""
+
+#. module: yousign_connector
+#: model:ir.model.fields,help:yousign_connector.field_yousign_request__null_value
+#: model:ir.model.fields,help:yousign_connector.field_yousign_request_template_notification__null_value
+#: model:ir.model.fields,help:yousign_connector.field_yousign_request_template_signatory__null_value
+msgid "Optional value to use if the target field is empty"
+msgstr ""
+
+#. module: yousign_connector
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_signatory__partner_id
 msgid "Partner"
-msgstr "Partenaire"
+msgstr ""
 
 #. module: yousign_connector
-#: field:yousign.request.template.signatory,partner_type:0
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_signatory__partner_type
 msgid "Partner Type"
-msgstr "Type de partenaire"
+msgstr ""
 
 #. module: yousign_connector
-#: field:yousign.request.notification,partner_ids:0
-#: field:yousign.request.template.notification,partner_ids:0
-#, fuzzy
-#| msgid "Partner Type"
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_notification__partner_ids
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_notification__partner_ids
 msgid "Partners to Notify"
-msgstr "Type de partenaire"
+msgstr ""
 
 #. module: yousign_connector
-#: selection:yousign.request.signatory,state:0
+#: model:ir.model.fields.selection,name:yousign_connector.selection__yousign_request_signatory__state__pending
 msgid "Pending"
-msgstr "En attente"
+msgstr ""
 
 #. module: yousign_connector
-#: selection:yousign.request.signatory,state:0
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__copyvalue
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_notification__copyvalue
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_signatory__copyvalue
+msgid "Placeholder Expression"
+msgstr ""
+
+#. module: yousign_connector
+#: model:ir.model.fields.selection,name:yousign_connector.selection__yousign_request_signatory__state__refused
 msgid "Refused"
 msgstr ""
 
 #. module: yousign_connector
-#: field:yousign.request,res_id:0
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__res_id
 msgid "Related Document ID"
-msgstr "ID du document associé"
+msgstr ""
 
 #. module: yousign_connector
-#: field:yousign.request,model:0
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__model
 msgid "Related Document Model"
-msgstr "Objet du document associé"
+msgstr ""
 
 #. module: yousign_connector
-#: field:yousign.request,res_name:0
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__res_name
 msgid "Related Document Name"
-msgstr "Nom du document associé"
+msgstr ""
 
 #. module: yousign_connector
-#: field:yousign.request,remind_interval:0
-#: field:yousign.request.template,remind_interval:0
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__remind_interval
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template__remind_interval
 msgid "Remind Interval"
 msgstr ""
 
 #. module: yousign_connector
-#: field:yousign.request,remind_limit:0
-#: field:yousign.request.template,remind_limit:0
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__remind_limit
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template__remind_limit
 msgid "Remind Limit"
 msgstr ""
 
@@ -649,33 +775,32 @@ msgid "Remind several Yousign requests"
 msgstr "Relance sur plusieurs requêtes Yousign"
 
 #. module: yousign_connector
-#: field:yousign.request,remind_mail_body:0
-#: field:yousign.request.template,remind_mail_body:0
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__remind_mail_body
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template__remind_mail_body
 msgid "Reminder Mail Body"
 msgstr ""
 
 #. module: yousign_connector
-#: field:yousign.request,remind_mail_subject:0
-#: field:yousign.request.template,remind_mail_subject:0
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__remind_mail_subject
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template__remind_mail_subject
 msgid "Reminder Mail Subject"
 msgstr ""
 
 #. module: yousign_connector
-#: view:yousign.request.template:yousign_connector.yousign_request_template_form
+#: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_template_form
 msgid "Remove Action"
-msgstr "Retirer l'action"
+msgstr ""
 
 #. module: yousign_connector
-#: view:yousign.request.template:yousign_connector.yousign_request_template_form
+#: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_template_form
 msgid "Remove the contextual action to use this template on related documents"
 msgstr ""
-"Retire l'action contextuelle liée à ce modèle sur les documents associés"
 
 #. module: yousign_connector
-#: field:yousign.request.notification,parent_id:0
-#: field:yousign.request.signatory,parent_id:0
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_notification__parent_id
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_signatory__parent_id
 msgid "Request"
-msgstr "Requête"
+msgstr ""
 
 #. module: yousign_connector
 #: model:ir.actions.act_window,name:yousign_connector.yousign_request_template_action
@@ -684,96 +809,97 @@ msgid "Request Templates"
 msgstr "Modèles de requêtes"
 
 #. module: yousign_connector
-#: code:addons/yousign_connector/models/yousign_request.py:646
+#: code:addons/yousign_connector/models/yousign_request.py:0
 #, python-format
 msgid "Request successfully cancelled via Yousign webservices."
 msgstr ""
 
 #. module: yousign_connector
-#: selection:yousign.request.signatory,auth_mode:0
-#: selection:yousign.request.template.signatory,auth_mode:0
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__activity_user_id
+msgid "Responsible User"
+msgstr ""
+
+#. module: yousign_connector
+#: model:ir.model.fields.selection,name:yousign_connector.selection__yousign_request_signatory__auth_mode__sms
+#: model:ir.model.fields.selection,name:yousign_connector.selection__yousign_request_template_signatory__auth_mode__sms
 msgid "SMS"
-msgstr "SMS"
+msgstr ""
 
 #. module: yousign_connector
-#: view:yousign.request.template:yousign_connector.yousign_request_template_search
-#, fuzzy
-#| msgid "Yousign Request Templates"
-msgid "Search Yousign Request Templates"
-msgstr "Modèles de requête Yousign"
-
-#. module: yousign_connector
-#: view:yousign.request:yousign_connector.yousign_request_search
-msgid "Search Yousign Requests"
-msgstr "Search Yousign Requests"
+#: model:ir.model.fields,help:yousign_connector.field_yousign_request__model_object_field
+#: model:ir.model.fields,help:yousign_connector.field_yousign_request_template_notification__model_object_field
+#: model:ir.model.fields,help:yousign_connector.field_yousign_request_template_signatory__model_object_field
+msgid ""
+"Select target field from the related document model.\n"
+"If it is a relationship field you will be able to select a target field at the destination of the relationship."
+msgstr ""
 
 #. module: yousign_connector
 #: model:ir.actions.act_window,name:yousign_connector.yousign_request_remind_action
-#: view:yousign.request.remind:yousign_connector.yousign_request_remind_form
+#: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_remind_form
 msgid "Send Reminder"
 msgstr "Envoyer une relance"
 
 #. module: yousign_connector
-#: view:yousign.request:yousign_connector.new_yousign_request_form
-#: view:yousign.request:yousign_connector.yousign_request_form
+#: model_terms:ir.ui.view,arch_db:yousign_connector.new_yousign_request_form
+#: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_form
 msgid "Send to Yousign"
-msgstr "Envoyer à Yousign"
+msgstr ""
 
 #. module: yousign_connector
-#: view:yousign.request:yousign_connector.yousign_request_search
-#: selection:yousign.request,state:0
+#: model:ir.model.fields.selection,name:yousign_connector.selection__yousign_request__state__sent
+#: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_search
 msgid "Sent"
-msgstr "Envoyé"
+msgstr ""
 
 #. module: yousign_connector
-#: field:yousign.request.signatory,sequence:0
-#: field:yousign.request.template.signatory,sequence:0
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_signatory__sequence
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_signatory__sequence
 msgid "Sequence"
-msgstr "Séquence"
+msgstr ""
 
 #. module: yousign_connector
-#: field:yousign.request.template,ir_act_window_id:0
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template__ir_act_window_id
 msgid "Sidebar Action"
-msgstr "Sidebar Action"
+msgstr ""
 
 #. module: yousign_connector
-#: field:yousign.request.template,ir_value_id:0
-msgid "Sidebar Button"
-msgstr "Sidebar Button"
-
-#. module: yousign_connector
-#: help:yousign.request.template,ir_act_window_id:0
+#: model:ir.model.fields,help:yousign_connector.field_yousign_request_template__ir_act_window_id
 msgid ""
 "Sidebar action to make this template available on records of the related "
 "document model"
 msgstr ""
-"Sidebar action to make this template available on records of the related "
-"document model"
 
 #. module: yousign_connector
-#: help:yousign.request.template,ir_value_id:0
-msgid "Sidebar button to open the sidebar action"
-msgstr "Sidebar button to open the sidebar action"
+#: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_signatory_tree
+msgid "Sign Date"
+msgstr ""
 
 #. module: yousign_connector
-#: field:yousign.request,ordered:0 field:yousign.request.template,ordered:0
+#: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_signatory_tree
+msgid "Sign Status"
+msgstr ""
+
+#. module: yousign_connector
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__ordered
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template__ordered
 msgid "Sign one after the other"
 msgstr ""
 
 #. module: yousign_connector
-#: field:yousign.request,sign_position:0
-#: field:yousign.request.template,sign_position:0
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__sign_position
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template__sign_position
 msgid "Sign position"
-msgstr "Emplacement des signatures"
+msgstr ""
 
 #. module: yousign_connector
-#: view:yousign.request:yousign_connector.new_yousign_request_form
-#: view:yousign.request:yousign_connector.yousign_request_form
-#: field:yousign.request,signatory_ids:0
-#: view:yousign.request.template:yousign_connector.yousign_request_template_form
-#: field:yousign.request.template,signatory_ids:0
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__signatory_ids
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template__signatory_ids
+#: model_terms:ir.ui.view,arch_db:yousign_connector.new_yousign_request_form
+#: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_form
+#: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_template_form
 msgid "Signatories"
-msgstr "Signataires"
+msgstr ""
 
 #. module: yousign_connector
 #: model:ir.model,name:yousign_connector.model_yousign_request_template_signatory
@@ -781,11 +907,9 @@ msgid "Signatories of Yousign Request Template"
 msgstr "Signataires du modèle de requête Yousign"
 
 #. module: yousign_connector
-#: field:yousign.request.signatory,signature_date:0
-#, fuzzy
-#| msgid "Signature Status"
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_signatory__signature_date
 msgid "Signature Date"
-msgstr "État des signatures"
+msgstr ""
 
 #. module: yousign_connector
 #: model:ir.actions.act_window,name:yousign_connector.new_yousign_request_action
@@ -799,52 +923,66 @@ msgid "Signature Requests"
 msgstr "Requêtes de signature"
 
 #. module: yousign_connector
-#: field:yousign.request.signatory,state:0
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_signatory__state
 msgid "Signature Status"
-msgstr "État des signatures"
+msgstr ""
 
 #. module: yousign_connector
-#: view:yousign.request:yousign_connector.yousign_request_search
-#: selection:yousign.request,state:0
-#: selection:yousign.request.signatory,state:0
+#: model:ir.model.fields.selection,name:yousign_connector.selection__yousign_request__state__signed
+#: model:ir.model.fields.selection,name:yousign_connector.selection__yousign_request_signatory__state__signed
+#: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_search
 msgid "Signed"
-msgstr "Signé"
+msgstr ""
 
 #. module: yousign_connector
-#: field:yousign.request,signed_attachment_ids:0
-#, fuzzy
-#| msgid "Related Document ID"
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__signed_attachment_ids
 msgid "Signed Documents"
-msgstr "ID du document associé"
+msgstr ""
 
 #. module: yousign_connector
-#: view:yousign.request:yousign_connector.yousign_request_search
-#: field:yousign.request,state:0
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__state
+#: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_search
 msgid "State"
-msgstr "État"
+msgstr ""
 
 #. module: yousign_connector
-#: selection:yousign.request.template.signatory,partner_type:0
+#: model:ir.model.fields.selection,name:yousign_connector.selection__yousign_request_template_signatory__partner_type__static
 msgid "Static"
-msgstr "Statique"
+msgstr ""
 
 #. module: yousign_connector
-#: view:yousign.request:yousign_connector.new_yousign_request_form
-#: field:yousign.request.notification,subject:0
-#: view:yousign.request.template:yousign_connector.yousign_request_template_form
-#: field:yousign.request.template.notification,subject:0
-#, fuzzy
-#| msgid "Object"
+#: model:ir.model.fields,help:yousign_connector.field_yousign_request__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+
+#. module: yousign_connector
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__sub_model_object_field
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_notification__sub_model_object_field
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_signatory__sub_model_object_field
+msgid "Sub-field"
+msgstr ""
+
+#. module: yousign_connector
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__sub_object
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_notification__sub_object
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_signatory__sub_object
+msgid "Sub-model"
+msgstr ""
+
+#. module: yousign_connector
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_notification__subject
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_notification__subject
+#: model_terms:ir.ui.view,arch_db:yousign_connector.new_yousign_request_form
+#: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_template_form
 msgid "Subject"
-msgstr "Objet"
+msgstr ""
 
 #. module: yousign_connector
-#: field:yousign.request,message_summary:0
-msgid "Summary"
-msgstr "Summary"
-
-#. module: yousign_connector
-#: code:addons/yousign_connector/models/yousign_request.py:322
+#: code:addons/yousign_connector/models/yousign_request.py:0
 #, python-format
 msgid ""
 "Technical failure when trying to connect to Yousign.\n"
@@ -853,115 +991,149 @@ msgid ""
 msgstr ""
 
 #. module: yousign_connector
-#: field:yousign.request.template.notification,parent_id:0
-#: field:yousign.request.template.signatory,parent_id:0
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_notification__parent_id
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_signatory__parent_id
 msgid "Template"
-msgstr "Modèle"
-
-#. module: yousign_connector
-#: code:addons/yousign_connector/models/yousign_request.py:340
-#, python-format
-msgid ""
-"The HTTP %s request on Yousign webservice %s returned status code %d whereas "
-"%d was expected. Error message: %s (%s)."
 msgstr ""
 
 #. module: yousign_connector
-#: sql_constraint:yousign.request:0 sql_constraint:yousign.request.template:0
+#: code:addons/yousign_connector/models/yousign_request.py:0
+#, python-format
+msgid ""
+"The HTTP %s request on Yousign webservice %s returned status code %d whereas"
+" %d was expected. Error message: %s (%s)."
+msgstr ""
+
+#. module: yousign_connector
+#: model:ir.model.constraint,message:yousign_connector.constraint_yousign_request_remind_interval_positive
+#: model:ir.model.constraint,message:yousign_connector.constraint_yousign_request_template_remind_interval_positive
 msgid "The Remind Interval must be positive or null."
 msgstr ""
 
 #. module: yousign_connector
-#: sql_constraint:yousign.request:0 sql_constraint:yousign.request.template:0
+#: model:ir.model.constraint,message:yousign_connector.constraint_yousign_request_remind_limit_positive
+#: model:ir.model.constraint,message:yousign_connector.constraint_yousign_request_template_remind_limit_positive
 msgid "The Remind Limit must be positive or null."
 msgstr ""
 
 #. module: yousign_connector
-#: code:addons/yousign_connector/models/yousign_request.py:445
+#: code:addons/yousign_connector/models/yousign_request.py:0
 #, python-format
 msgid "There are no documents to sign on request %s!"
 msgstr "Il n'y a aucun document à signer sur la requête %s !"
 
 #. module: yousign_connector
-#: code:addons/yousign_connector/models/yousign_request.py:442
+#: code:addons/yousign_connector/models/yousign_request.py:0
 #, python-format
 msgid "There are no signatories on request %s!"
 msgstr "Il n'y a aucun signataire sur la requête %s !"
 
 #. module: yousign_connector
-#: sql_constraint:yousign.request.template.notification:0
+#: model:ir.model.constraint,message:yousign_connector.constraint_yousign_request_template_notification_parent_type_uniq
 msgid ""
 "This notification type already exists for this Yousign request template!"
 msgstr ""
 
 #. module: yousign_connector
-#: sql_constraint:yousign.request.notification:0
+#: model:ir.model.constraint,message:yousign_connector.constraint_yousign_request_notification_parent_type_uniq
 msgid "This notification type already exists for this Yousign request!"
 msgstr ""
 
 #. module: yousign_connector
-#: view:yousign.request.remind:yousign_connector.yousign_request_remind_form
-#, fuzzy
-#| msgid ""
-#| "This wizard will ask YouSign to send a reminder to all the selected "
-#| "requests."
+#: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_remind_form
 msgid ""
-"This wizard will ask Yousign to send a reminder to all the selected requests."
+"This wizard will ask Yousign to send a reminder to all the selected "
+"requests."
 msgstr ""
-"Cet assistant demandera à YouSign d'envoyer une relance à toutes les "
-"requêtes sélectionnées."
 
 #. module: yousign_connector
-#: selection:yousign.request,sign_position:0
-#: selection:yousign.request.template,sign_position:0
+#: model:ir.model.fields.selection,name:yousign_connector.selection__yousign_request__sign_position__top
+#: model:ir.model.fields.selection,name:yousign_connector.selection__yousign_request_template__sign_position__top
 msgid "Top"
-msgstr "En haut du document"
+msgstr ""
 
 #. module: yousign_connector
-#: field:yousign.request.signatory,mention_top:0
-#: field:yousign.request.template.signatory,mention_top:0
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_signatory__mention_top
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_signatory__mention_top
 msgid "Top Mention"
 msgstr ""
 
 #. module: yousign_connector
-#: field:yousign.request,message_unread:0
+#: model:ir.model.fields,help:yousign_connector.field_yousign_request__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr ""
+
+#. module: yousign_connector
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__message_unread
 msgid "Unread Messages"
-msgstr "Unread Messages"
+msgstr ""
 
 #. module: yousign_connector
-#: code:addons/yousign_connector/models/yousign_request_template.py:180
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr ""
+
+#. module: yousign_connector
+#: code:addons/yousign_connector/models/yousign_request_template.py:0
 #, python-format
-msgid "Unsupported partner type"
-msgstr "Type de partenaire non supporté"
+msgid "Unsupported partner type '%s'."
+msgstr ""
 
 #. module: yousign_connector
-#: view:yousign.request:yousign_connector.yousign_request_form
+#: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_form
 msgid "Update"
-msgstr "Mettre à jour"
+msgstr ""
 
 #. module: yousign_connector
-#: code:addons/yousign_connector/models/yousign_request.py:183
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__website_message_ids
+msgid "Website Messages"
+msgstr ""
+
+#. module: yousign_connector
+#: model:ir.model.fields,help:yousign_connector.field_yousign_request__website_message_ids
+msgid "Website communication history"
+msgstr ""
+
+#. module: yousign_connector
+#: model:ir.model.fields,help:yousign_connector.field_yousign_request__sub_model_object_field
+#: model:ir.model.fields,help:yousign_connector.field_yousign_request_template_notification__sub_model_object_field
+#: model:ir.model.fields,help:yousign_connector.field_yousign_request_template_signatory__sub_model_object_field
+msgid ""
+"When a relationship field is selected as first field, this field lets you "
+"select the target field within the destination document model (sub-model)."
+msgstr ""
+
+#. module: yousign_connector
+#: model:ir.model.fields,help:yousign_connector.field_yousign_request__sub_object
+#: model:ir.model.fields,help:yousign_connector.field_yousign_request_template_notification__sub_object
+#: model:ir.model.fields,help:yousign_connector.field_yousign_request_template_signatory__sub_object
+msgid ""
+"When a relationship field is selected as first field, this field shows the "
+"document model the relationship goes to."
+msgstr ""
+
+#. module: yousign_connector
+#: code:addons/yousign_connector/models/yousign_request.py:0
 #, python-format
-msgid "Wrong active_model (%s should be %s)"
-msgstr "Wrong active_model (%s should be %s)"
+msgid "Wrong active_model (%(ctx_model)s should be %(template_model)s)"
+msgstr ""
 
 #. module: yousign_connector
-#: code:addons/yousign_connector/models/yousign_request.py:510
-#, fuzzy, python-format
-#| msgid "Wrong active_model (%s should be %s)"
+#: code:addons/yousign_connector/models/yousign_request.py:0
+#, python-format
 msgid "Wrong status, should be draft"
 msgstr "Wrong active_model (%s should be %s)"
 
 #. module: yousign_connector
-#: help:yousign.request.template,init_mail_body:0
+#: model:ir.model.fields,help:yousign_connector.field_yousign_request_template__init_mail_body
 msgid ""
 "You must insert '{yousignUrl}' in the body where you want to insert the URL "
 "to access Yousign."
 msgstr ""
 
 #. module: yousign_connector
-#: code:addons/yousign_connector/models/yousign_request.py:906
-#: code:addons/yousign_connector/models/yousign_request_template.py:235
+#: code:addons/yousign_connector/models/yousign_request.py:0
+#: code:addons/yousign_connector/models/yousign_request_template.py:0
 #, python-format
 msgid "You must select who should be notified."
 msgstr ""
@@ -969,200 +1141,68 @@ msgstr ""
 #. module: yousign_connector
 #: model:ir.ui.menu,name:yousign_connector.yousign_root_config
 msgid "Yousign"
-msgstr "Yousign"
+msgstr ""
 
 #. module: yousign_connector
-#: field:yousign.request,ys_identifier:0
-#: field:yousign.request.signatory,ys_identifier:0
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__ys_identifier
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_signatory__ys_identifier
 msgid "Yousign ID"
-msgstr "ID Yousign"
+msgstr ""
 
 #. module: yousign_connector
 #: model:ir.model,name:yousign_connector.model_yousign_request
-#: view:yousign.request:yousign_connector.yousign_request_form
 msgid "Yousign Request"
 msgstr "Requête Yousign"
 
 #. module: yousign_connector
-#: code:addons/yousign_connector/models/yousign_request_template.py:78
+#: code:addons/yousign_connector/models/yousign_request_template.py:0
 #, python-format
 msgid "Yousign Request (%s)"
 msgstr "Requête Yousign (%s)"
 
 #. module: yousign_connector
-#: view:yousign.request.remind:yousign_connector.yousign_request_remind_form
-msgid "Yousign Request Remind"
-msgstr "Yousign Request Remind"
-
-#. module: yousign_connector
-#: view:yousign.request.signatory:yousign_connector.yousign_request_signatory_form
-#: view:yousign.request.signatory:yousign_connector.yousign_request_signatory_tree
-msgid "Yousign Request Signatory"
-msgstr "Signataire d'une requête"
-
-#. module: yousign_connector
 #: model:ir.model,name:yousign_connector.model_yousign_request_template
-#: view:yousign.request.template:yousign_connector.yousign_request_template_form
 msgid "Yousign Request Template"
 msgstr "Modèle de requête Yousign"
 
 #. module: yousign_connector
-#: view:yousign.request.template.signatory:yousign_connector.yousign_request_template_signatory_form
-#: view:yousign.request.template.signatory:yousign_connector.yousign_request_template_signatory_tree
-msgid "Yousign Request Template Signatory"
-msgstr "Signataire d'un modèle de requête Yousign"
+#: model:ir.actions.server,name:yousign_connector.cron_yousign_update_ir_actions_server
+#: model:ir.cron,cron_name:yousign_connector.cron_yousign_update
+#: model:ir.cron,name:yousign_connector.cron_yousign_update
+msgid "Yousign Requests Update"
+msgstr ""
 
 #. module: yousign_connector
-#: view:yousign.request.template:yousign_connector.yousign_request_template_tree
-msgid "Yousign Request Templates"
-msgstr "Modèles de requête Yousign"
-
-#. module: yousign_connector
-#: view:yousign.request:yousign_connector.yousign_request_tree
-msgid "Yousign Requests"
-msgstr "Requêtes Yousign"
-
-#. module: yousign_connector
-#: code:addons/yousign_connector/models/yousign_request.py:632
+#: code:addons/yousign_connector/models/yousign_request.py:0
 #, python-format
-msgid "Yousign request <b>%s</b> generated with %d signatories"
-msgstr "Requête Yousign <b>%s</b> générée avec %d signataires"
+msgid ""
+"Yousign request <a href=# data-oe-model=yousign.request data-oe-"
+"id=%(req_id)s>%(req_name)s</a> generated with %(signatory_count)s "
+"signatories"
+msgstr ""
 
 #. module: yousign_connector
-#: code:addons/yousign_connector/models/yousign_request.py:703
+#: code:addons/yousign_connector/models/yousign_request.py:0
 #, python-format
-msgid "Yousign request <b>%s</b> has been signed by all signatories"
-msgstr "La requête Yousign <b>%s</b> a été signée par tous les signataires"
+msgid ""
+"Yousign request <a href=# data-oe-model=yousign.request data-oe-"
+"id=%(req_id)s>%(req_name)s</a> has been signed by all signatories."
+msgstr ""
 
 #. module: yousign_connector
-#: view:yousign.request:yousign_connector.new_yousign_request_form
-#: view:yousign.request:yousign_connector.yousign_request_form
-#: view:yousign.request.template:yousign_connector.yousign_request_template_form
+#: model_terms:ir.ui.view,arch_db:yousign_connector.new_yousign_request_form
+#: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_form
+#: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_template_form
 msgid "days"
 msgstr ""
 
 #. module: yousign_connector
-#: code:addons/yousign_connector/models/yousign_request.py:345
+#: code:addons/yousign_connector/models/yousign_request.py:0
 #, python-format
 msgid "no detail"
 msgstr ""
 
-#, python-format
-#~ msgid "<b>Failed to archive signed documents.</b><br/>Technical error: %s"
-#~ msgstr ""
-#~ "<b>Échec de l'archivage des documents signés.</b><br/>Erreur technique : "
-#~ "%s"
-
-#, python-format
-#~ msgid ""
-#~ "<b>Failed to send reminder to late signatories.</b> <br/>Technical error: "
-#~ "%s"
-#~ msgstr ""
-#~ "<b>Échec de l'envoi de la relance aux signataires retardataires.</b> <br/"
-#~ ">Erreur technique : %s"
-
-#, python-format
-#~ msgid "<b>Failed to update status</b>. <br/>Technical error: %s"
-#~ msgstr ""
-#~ "<b>Échec de la mise à jour du statut.</b> <br/>Erreur technique : %s"
-
-#~ msgid "Ask Yousign to send reminder to signatories"
-#~ msgstr ""
-#~ "Demander à Yousign d'envoyer une relance aux signataires retardataires"
-
-#~ msgid "Auth value"
-#~ msgstr "Valeur d'auth."
-
-#~ msgid "Authentication Value"
-#~ msgstr "Valeur d'authentification"
-
-#~ msgid "Corresponding field in Yousign API : message"
-#~ msgstr "Champ correspondant dans l'API Yousign : message"
-
-#~ msgid "Corresponding field in Yousign API : title"
-#~ msgstr "Champ correspondant dans l'API Yousign : title"
-
-#, python-format
-#~ msgid ""
-#~ "Failed to initialize connection to Yousign with username %s on "
-#~ "environment %s. \n"
-#~ "\n"
-#~ "Technical error message: %s"
-#~ msgstr ""
-#~ "Échec de l'initialisation de la connexion vers Yousign avec le login %s "
-#~ "sur l'environnement %s. \n"
-#~ "\n"
-#~ "Message d'erreur technique : %s"
-
-#~ msgid "High"
-#~ msgstr "Élevé"
-
-#~ msgid "Low"
-#~ msgstr "Faible"
-
-#~ msgid "Manual"
-#~ msgstr "Manuel"
-
-#~ msgid "Mass"
-#~ msgstr "En masse"
-
-#~ msgid "Message"
-#~ msgstr "Message"
-
-#, python-format
-#~ msgid "Missing message on request %s."
-#~ msgstr "Message manquant sur la requête %s."
-
-#, python-format
-#~ msgid ""
-#~ "Missing mobile phone number on signatory '%s' whose authentication mode "
-#~ "is SMS"
-#~ msgstr ""
-#~ "Numéro de téléphone portable manquant sur le signataire '%s' dont le mode "
-#~ "d'authentification est SMS"
-
-#~ msgid "Partially Signed"
-#~ msgstr "Partiellement signé"
-
-#~ msgid "Photo"
-#~ msgstr "Photo"
-
-#~ msgid "Proof Level"
-#~ msgstr "Niveau de preuve"
-
-#~ msgid ""
-#~ "Proof level of the signer. In HIGH mode, signer(s) must upload ID cards "
-#~ "to launch the signature (it will be checked immediately after the upload)"
-#~ msgstr ""
-#~ "Niveau de preuve du signataire. En mode élevé, les signataires doivent "
-#~ "déposer une copie d'une pièce d'identité (elle sera vérifiée juste après "
-#~ "le dépôt)"
-
-#, python-format
-#~ msgid "Reminder sent to late signatories"
-#~ msgstr "Relance envoyée aux signataires retardataires"
-
-#~ msgid "Title"
-#~ msgstr "Titre"
-
-#~ msgid "To be set only when Authentication Mode is Manual"
-#~ msgstr ""
-#~ "À renseigner uniquement quand le mode d'authentification est 'manuel'"
-
-#, python-format
-#~ msgid ""
-#~ "You have selected 'manual' as authentication mode for the signatory %s, "
-#~ "so you must set the authentication value for this signatory."
-#~ msgstr ""
-#~ "Vous avez sélectionné le mode d'authentification 'manuel' pour le "
-#~ "signataire %s, donc vous devez entrer une valeur d'authentification pour "
-#~ "ce signataire."
-
-#~ msgid "Yousign Lang"
-#~ msgstr "Langue Yousign"
-
-#, python-format
-#~ msgid ""
-#~ "dynamic_partner_id is a required argument when partner_type is dynamic"
-#~ msgstr ""
-#~ "dynamic_partner_id is a required argument when partner_type is dynamic"
+#. module: yousign_connector
+#: model:ir.model,name:yousign_connector.model_yousign_request_signatory
+msgid "yousign.request.signatory"
+msgstr ""
