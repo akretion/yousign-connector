@@ -6,7 +6,7 @@
 Odoo-Yousign connector
 ======================
 
-This module connects Odoo and `Yousign <https://yousign.com/>`_ via the `Yousign API <http://developer.yousign.fr/>`_. It allows to easily create a signature request from any Odoo object (quotation, contract, ...). You can define signature templates (like email templates) to make it easier to create signature requests.
+This module connects Odoo and `Yousign <https://yousign.com/>`_ via the `Yousign API <https://dev.yousign.com/>`_. It allows to easily create a signature request from any Odoo object (quotation, contract, ...). You can define signature templates (like email templates) to make it easier to create signature requests.
 
 The development of this connector has been sponsored by `Akuit <https://www.akuit.com/>`_, a French umbrella company located in Paris.
 
@@ -15,16 +15,10 @@ Installation
 
 To install this module, you need several Python librairies:
 
-* PyPDF2 (available on `pypi <https://pypi.python.org/pypi/PyPDF2>`_ or as Debian/Ubuntu package *python-pypdf2*)
-* unidecode (available on `pypi <https://pypi.python.org/pypi/Unidecode>`_ or as Debian/Ubuntu package *python-unidecode*)
-* requests (available on `pypi <https://pypi.org/project/requests/>`_) or as Debian/Ubuntu package *python-requests*).
+* `pypdf <https://pypi.org/project/pypdf/>`_
+* `unidecode <https://pypi.org/project/Unidecode>`_
 
-This modules depends on 2 OCA modules:
-
-* `base_phone <https://github.com/OCA/connector-telephony/tree/8.0/base_phone>`_ from the `connector-telephony <https://github.com/OCA/connector-telephony>`_ OCA project,
-* `base_suspend_security <https://github.com/OCA/server-tools/tree/8.0/base_suspend_security>`_ from the `server-tools <https://github.com/OCA/server-tools/>`_ OCA project.
-
-The installation of the OCA module `partner_firstname <https://github.com/OCA/partner-contact/tree/8.0/partner_firstname>`_ is recommended, but not required.
+The installation of the OCA module `partner_firstname <https://github.com/OCA/partner-contact/tree/14.0/partner_firstname>`_ is recommended, but not required.
 
 Configuration
 =============
@@ -32,7 +26,7 @@ Configuration
 You must edit the Odoo server configuration file and add the following keys:
 
 * yousign_apikey = Yousign API key
-* yousign_envir = demo or prod
+* running_env = test or prod
 
 Then restart the Odoo server with the updated configuration file.
 
@@ -61,9 +55,6 @@ Known issues / Roadmap
 ======================
 
 * The images of the signatures are always included on the last page of each PDF.
-* The position of the signatures on the last page are not configurable in Odoo,
-  but you can inherit the method *signature_position()* of the class *yousign.request*
-  to modify the default position.
 
 Bug Tracker
 ===========

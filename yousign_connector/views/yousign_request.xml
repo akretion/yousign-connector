@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  © 2018 Akretion (Alexis de Lattre <alexis.delattre@akretion.com>)
+  Copyright 2018-2024 Akretion France (https://www.akretion.com/)
+  @author: Alexis de Lattre <alexis.delattre@akretion.com>
   License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 -->
 
-<openerp>
-<data>
+<odoo>
 
 <record id="yousign_request_form" model="ir.ui.view">
     <field name="model">yousign.request</field>
     <field name="arch" type="xml">
-        <form string="Yousign Request">
+        <form>
             <header>
                 <button name="send" states="draft" string="Send to Yousign" type="object" class="oe_highlight"/>
                 <button name="update_status" states="sent" string="Update" type="object" help="Check if signatories have signed the documents" class="oe_highlight"/>
@@ -19,25 +19,33 @@
                 <field name="state" widget="statusbar" statusbar_colors="{'draft': 'blue'}" statusbar_visible="draft,sent,signed,archived"/>
             </header>
             <sheet>
+                <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
                 <group name="main">
-                    <field name="name" readonly="1"/>
-                    <field name="ys_identifier" states="sent,signed,cancel"/>
-                    <field name="last_update"/>
-                    <field name="res_name"/>
-                    <field name="model" invisible="0"/>
-                    <field name="res_id" invisible="0"/>
-                    <field name="sign_position"/>
-                    <field name="ordered"/>
-                    <field name="attachment_ids" widget="many2many_binary"/>
-                    <field name="signed_attachment_ids" widget="many2many_binary" states="archived,cancel"/>
-                    <field name="remind_auto"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
+                    <group name="main-left">
+                        <field name="ys_identifier" states="sent,signed,archived,cancel"/>
+                        <field name="last_update"/>
+                        <field name="res_name"/>
+                        <field name="model" invisible="0"/>
+                        <field name="res_id" invisible="0"/>
+                        <field name="sign_position"/>
+                        <field name="ordered"/>
+                    </group>
+                    <group name="main-right">
+                        <field name="attachment_ids" widget="many2many_binary"/>
+                        <field name="signed_attachment_ids" widget="many2many_binary" states="archived,cancel"/>
+                        <field name="remind_auto"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
                 </group>
                 <group name="signatories" string="Signatories">
                     <field name="signatory_ids" nolabel="1"/>
                 </group>
                 <notebook>
-                    <page name="init_mail" string="Email">
+                    <page name="init_mail" string="Init E-mail">
                         <group name="init_mail">
                             <field name="lang"/>
                             <field name="init_mail_subject"/>
@@ -45,7 +53,7 @@
                         </group>
                     </page>
                     <page name="other_mail" string="E-mail Notifications">
-                        <field name="notification_ids" nolabel="1"/>
+                        <field name="notification_ids" nolabel="1" colspan="2"/>
                     </page>
                     <page name="remind" string="Auto-Remind Setup" attrs="{'invisible': [('remind_auto', '=', False)]}">
                         <group name="remind">
@@ -62,6 +70,7 @@
             </sheet>
             <div class="oe_chatter">
                 <field name="message_follower_ids" widget="mail_followers"/>
+                <field name="activity_ids" widget="mail_activity"/>
                 <field name="message_ids" widget="mail_thread"/>
             </div>
         </form>
@@ -72,19 +81,19 @@
     <field name="model">yousign.request</field>
     <field name="priority">100</field>
     <field name="arch" type="xml">
-        <form string="New Yousign Request">
+        <form>
             <group name="main">
                 <field name="name" readonly="1" invisible="1"/>
                 <field name="ys_identifier" invisible="1"/>
                 <field name="res_name" invisible="1"/>
                 <field name="model" invisible="1"/>
                 <field name="res_id" invisible="1"/>
-                <field name="sign_position"/>
                 <field name="state" invisible="1"/>
-                <field name="company_id" groups="base.group_multi_company" invisible="1"/>
+                <field name="company_id" invisible="1"/>
+                <field name="sign_position"/>
+                <field name="ordered"/>
                 <field name="attachment_ids" widget="many2many_binary"/>
                 <field name="remind_auto"/>
-                <field name="ordered"/>
             </group>
             <group name="signatories" string="Signatories">
                 <field name="signatory_ids" nolabel="1"/>
@@ -92,12 +101,13 @@
             <notebook>
                 <page name="init_mail" string="Init E-mail">
                     <group name="init_mail">
+                        <field name="lang"/>
                         <field name="init_mail_subject" string="Subject"/>
                         <field name="init_mail_body" string="Body"/>
                     </group>
                 </page>
                 <page name="other_mail" string="E-mail Notifications">
-                    <field name="notification_ids" nolabel="1"/>
+                    <field name="notification_ids" nolabel="1" colspan="2"/>
                 </page>
                 <page name="remind" string="Auto-Remind Setup" attrs="{'invisible': [('remind_auto', '=', False)]}">
                     <group name="remind">
@@ -123,12 +133,15 @@
 <record id="yousign_request_tree" model="ir.ui.view">
     <field name="model">yousign.request</field>
     <field name="arch" type="xml">
-        <tree string="Yousign Requests" colors="blue:state == 'draft';red:state == 'sent';gray:state == 'cancel'">
-            <field name="name"/>
+        <tree>
+            <field name="name" decoration-bf="1"/>
             <field name="res_name"/>
             <field name="init_mail_subject"/>
-            <field name="ys_identifier"/>
-            <field name="state"/>
+            <field name="ys_identifier" optional="show"/>
+            <field name="remind_auto" optional="hide"/>
+            <field name="ordered" optional="hide"/>
+            <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'signed'" decoration-warning="state == 'sent'" decoration-muted="state == 'cancel'"/>
         </tree>
     </field>
 </record>
@@ -136,8 +149,9 @@
 <record id="yousign_request_search" model="ir.ui.view">
     <field name="model">yousign.request</field>
     <field name="arch" type="xml">
-        <search string="Search Yousign Requests">
+        <search>
             <field name="name" filter_domain="['|', '|', ('name', 'ilike', self), ('res_name', 'ilike', self), ('init_mail_subject', 'ilike', self)]" string="Name, Document Name or Mail Subject"/>
+            <separator />
             <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]" />
             <filter name="sent" string="Sent" domain="[('state', '=', 'sent')]" />
             <filter name="signed" string="Signed" domain="[('state', '=', 'signed')]" />
@@ -154,7 +168,7 @@
 <record id="yousign_request_signatory_form" model="ir.ui.view">
     <field name="model">yousign.request.signatory</field>
     <field name="arch" type="xml">
-        <form string="Yousign Request Signatory">
+        <form>
             <header>
                 <field name="state" widget="statusbar"/>
             </header>
@@ -163,7 +177,7 @@
                 <field name="partner_id"/>
                 <field name="firstname"/>
                 <field name="lastname" required="1"/>
-                <field name="email" required="1"/>
+                <field name="email" required="1" widget="email"/>
                 <field name="mobile" widget="phone" attrs="{'required': [('auth_mode', '=', 'sms')]}"/>
                 <field name="auth_mode"/>
                 <field name="mention_top"/>
@@ -179,16 +193,21 @@
 <record id="yousign_request_signatory_tree" model="ir.ui.view">
     <field name="model">yousign.request.signatory</field>
     <field name="arch" type="xml">
-        <tree string="Yousign Request Signatory" colors="red:state =='refused'" >
+        <tree >
+            <field name="sequence" widget="handle"/>
             <field name="parent_id" invisible="not context.get('yousign_request_signatory_main_view')"/>
-            <field name="sequence" invisible="1"/>
+            <field name="partner_id" optional="hide"/>
             <field name="firstname"/>
             <field name="lastname"/>
             <field name="email"/>
             <field name="mobile" widget="phone"/>
-            <field name="auth_mode"/>
-            <field name="state"/>
-            <field name="signature_date"/>
+            <field name="auth_mode" string="Mode"/>
+            <field name="mention_top" optional="hide"/>
+            <field name="mention_bottom" optional="hide"/>
+            <field name="state" widget="badge" decoration-success="state == 'signed'" decoration-danger="state == 'refused'" decoration-info="state == 'pending'" decoration-muted="state == 'draft'" string="Sign Status"/>
+            <field name="signature_date" string="Sign Date"/>
+            <field name="comment" optional="hide"/>
+            <field name="ys_identifier" optional="hide"/>
         </tree>
     </field>
 </record>
@@ -211,6 +230,8 @@
     </field>
 </record>
 
+<!-- WARNING: fields MUST also be present in tree view (can be invisible or optional
+otherwise the default_get() doesn't work on that field -->
 <record id="yousign_request_notification_tree" model="ir.ui.view">
     <field name="model">yousign.request.notification</field>
     <field name="arch" type="xml">
@@ -221,6 +242,8 @@
             <field name="creator"/>
             <field name="members"/>
             <field name="subscribers"/>
+            <field name="partner_ids" widget="many2many_tags" optional="hide"/>
+            <field name="body" invisible="1"/>
         </tree>
     </field>
 </record>
@@ -241,5 +264,4 @@
 
 <menuitem id="yousign_request_menu" parent="yousign_root_config" action="yousign_request_action" sequence="10"/>
 
-</data>
-</openerp>
+</odoo>

@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  © 2018 Akretion (Alexis de Lattre <alexis.delattre@akretion.com>)
+  Copyright 2018-2024 Akretion (Alexis de Lattre <alexis.delattre@akretion.com>)
   License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 -->
 
-<openerp>
-<data>
+<odoo>
 
 <record id="yousign_request_template_form" model="ir.ui.view">
     <field name="model">yousign.request.template</field>
     <field name="arch" type="xml">
-        <form string="Yousign Request Template">
+        <form>
             <div class="oe_right oe_button_box" name="buttons">
                 <field name="ir_act_window_id" invisible="1"/>
                 <button class="oe_inline oe_stat_button" name="create_button" type="object"
@@ -27,7 +26,7 @@
             </div>
             <group name="main">
                 <field name="name"/>
-                <field name="model_id"/>
+                <field name="model_id" required="1"/>
                 <field name="model" invisible="1"/>
                 <field name="sign_position"/>
                 <field name="ordered"/>
@@ -47,7 +46,7 @@
                     </group>
                 </page>
                 <page name="other_mail" string="E-mail Notifications">
-                    <field name="notification_ids" nolabel="1"/>
+                    <field name="notification_ids" nolabel="1" colspan="2"/>
                 </page>
                 <page name="remind" string="Auto-Remind Setup" attrs="{'invisible': [('remind_auto', '=', False)]}">
                     <group name="remind">
@@ -68,11 +67,16 @@
 <record id="yousign_request_template_tree" model="ir.ui.view">
     <field name="model">yousign.request.template</field>
     <field name="arch" type="xml">
-        <tree string="Yousign Request Templates">
-            <field name="name"/>
+        <tree>
+            <field name="name" decoration-bf="1"/>
             <field name="model_id"/>
             <field name="init_mail_subject"/>
             <field name="report_id"/>
+            <field name="sign_position" optional="hide"/>
+            <field name="ordered" optional="hide"/>
+            <field name="lang" optional="hide"/>
+            <field name="remind_auto" optional="hide"/>
+            <field name="company_id" groups="base.group_multi_company" optional="hide"/>
         </tree>
     </field>
 </record>
@@ -80,7 +84,7 @@
 <record id="yousign_request_template_search" model="ir.ui.view">
     <field name="model">yousign.request.template</field>
     <field name="arch" type="xml">
-        <search string="Search Yousign Request Templates">
+        <search>
             <field name="name" filter_domain="['|', ('name', 'ilike', self), ('init_mail_subject', 'ilike', self)]" string="Name or Mail Subject"/>
             <group string="Group By" name="groupby">
                 <filter name="object_groupby" string="Object" context="{'group_by': 'model_id'}"/>
@@ -93,7 +97,7 @@
 <record id="yousign_request_template_signatory_form" model="ir.ui.view">
     <field name="model">yousign.request.template.signatory</field>
     <field name="arch" type="xml">
-        <form string="Yousign Request Template Signatory">
+        <form>
             <group name="main">
                 <field name="parent_id" invisible="not context.get('yousign_request_template_signatory_main_view')"/>
                 <field name="partner_type" widget="radio"/>
@@ -110,9 +114,9 @@
 <record id="yousign_request_template_signatory_tree" model="ir.ui.view">
     <field name="model">yousign.request.template.signatory</field>
     <field name="arch" type="xml">
-        <tree string="Yousign Request Template Signatory">
+        <tree>
+            <field name="sequence" widget="handle"/>
             <field name="parent_id" invisible="not context.get('yousign_request_template_signatory_main_view')"/>
-            <field name="sequence" invisible="1"/>
             <field name="partner_type"/>
             <field name="partner_id"/>
             <field name="partner_tmpl"/>
@@ -164,5 +168,4 @@
 
 <menuitem id="yousign_request_template_menu" parent="yousign_root_config" action="yousign_request_template_action" sequence="20"/>
 
-</data>
-</openerp>
+</odoo>
