@@ -1,14 +1,14 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* yousign_sale
+# 	* yousign_sale
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 8.0\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-05 17:42+0000\n"
-"PO-Revision-Date: 2018-02-05 17:42+0000\n"
-"Last-Translator: <>\n"
+"POT-Creation-Date: 2024-09-04 21:51+0000\n"
+"PO-Revision-Date: 2024-09-04 21:51+0000\n"
+"Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -16,31 +16,104 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: yousign_sale
-#: model:yousign.request.template,title:yousign_sale.sale_sign_template
+#: model:yousign.request.template.notification,subject:yousign_sale.sale_sign_template_notification_finished
+msgid ""
+"${object.company_id.name} - Quotation ${object.name} signed by all RAEDL"
+msgstr ""
+
+#. module: yousign_sale
+#: model:yousign.request.template,init_mail_subject:yousign_sale.sale_sign_template
 msgid "${object.company_id.name} - Sign request for quotation ${object.name}"
-msgstr "${object.company_id.name} - Requête de signature pour le devis ${object.name}"
+msgstr ""
 
 #. module: yousign_sale
-#: model:yousign.request.template,message:yousign_sale.sale_sign_template
-msgid "Hello ${object.partner_id.name},\n"
-"\n"
-"We have prepared a quotation ${object.name} for a total amount of ${object.amount_untaxed} ${object.currency_id.name} without taxes (${object.amount_total} ${object.currency_id.name} with taxes).\n"
-"\n"
-"Regards,\n"
-"\n"
+#: model_terms:yousign.request.template,init_mail_body:yousign_sale.sale_sign_template
+#: model_terms:yousign.request.template,remind_mail_body:yousign_sale.sale_sign_template
+#: model_terms:yousign.request.template.notification,body:yousign_sale.sale_sign_template_notification_finished
+msgid ""
+"<code data-o-mail-quote=\"1\">\n"
+"-- <br data-o-mail-quote=\"1\">\n"
 "${object.company_id.name}\n"
-""
-msgstr "Bonjour ${object.partner_id.name},\n"
-"\n"
-"Nous avons préparé un devis ${object.name} pour un montant total de ${object.amount_untaxed} ${object.currency_id.name} HT (${object.amount_total} ${object.currency_id.name} TTC).\n"
-"\n"
-"Cordialement,\n"
-"\n"
-"${object.company_id.name}\n"
-""
+"</code>"
+msgstr ""
 
 #. module: yousign_sale
-#: view:sale.order:yousign_sale.view_order_form
+#: model_terms:yousign.request.template,init_mail_body:yousign_sale.sale_sign_template
+#: model_terms:yousign.request.template,remind_mail_body:yousign_sale.sale_sign_template
+#: model_terms:yousign.request.template.notification,body:yousign_sale.sale_sign_template_notification_finished
+msgid "Hello ${object.partner_id.name},"
+msgstr ""
+
+#. module: yousign_sale
+#: model_terms:yousign.request.template,init_mail_body:yousign_sale.sale_sign_template
+#: model_terms:yousign.request.template,remind_mail_body:yousign_sale.sale_sign_template
+#: model_terms:yousign.request.template.notification,body:yousign_sale.sale_sign_template_notification_finished
+msgid "Regards,"
+msgstr ""
+
+#. module: yousign_sale
+#: model:yousign.request.template,remind_mail_subject:yousign_sale.sale_sign_template
+msgid "Reminder - Sign request for quotation ${object.name}"
+msgstr ""
+
+#. module: yousign_sale
+#: model_terms:ir.ui.view,arch_db:yousign_sale.view_order_form
 msgid "Send Yousign Request"
-msgstr "Envoyer une requête Yousign"
+msgstr ""
 
+#. module: yousign_sale
+#: model_terms:yousign.request.template.notification,body:yousign_sale.sale_sign_template_notification_finished
+msgid "Thanks for your cooperation in this online signature process!"
+msgstr ""
+
+#. module: yousign_sale
+#: model_terms:yousign.request.template.notification,body:yousign_sale.sale_sign_template_notification_finished
+msgid ""
+"The quotation ${object.name} for a total amount of "
+"${format_amount(object.amount_untaxed, object.pricelist_id.currency_id)} "
+"without taxes (${format_amount(object.amount_total, "
+"object.pricelist_id.currency_id)} with taxes) has been signed by all "
+"parties. Therefore, this quotation has been automatically confirmed and "
+"converted to a sale order."
+msgstr ""
+
+#. module: yousign_sale
+#: model_terms:yousign.request.template,init_mail_body:yousign_sale.sale_sign_template
+msgid ""
+"To approve this quotation, you should sign it by following the signature "
+"process on Yousign: {yousignUrl|Access to quotation}."
+msgstr ""
+
+#. module: yousign_sale
+#: model_terms:yousign.request.template,init_mail_body:yousign_sale.sale_sign_template
+msgid ""
+"We have prepared a quotation ${object.name} for a total amount of "
+"${format_amount(object.amount_untaxed, object.pricelist_id.currency_id)} "
+"without taxes (${format_amount(object.amount_total, "
+"object.pricelist_id.currency_id)} with taxes)."
+msgstr ""
+
+#. module: yousign_sale
+#: model_terms:yousign.request.template,remind_mail_body:yousign_sale.sale_sign_template
+msgid ""
+"We recently sent you a quotation a quotation ${object.name} for a total "
+"amount of ${format_amount(object.amount_untaxed, "
+"object.pricelist_id.currency_id)} without taxes "
+"(${format_amount(object.amount_total, object.pricelist_id.currency_id)} with"
+" taxes)."
+msgstr ""
+
+#. module: yousign_sale
+#: model_terms:yousign.request.template,remind_mail_body:yousign_sale.sale_sign_template
+msgid ""
+"We remind you that, in order to approve this quotation, you should sign it "
+"by following the signature process on Yousign: {yousignUrl|Access to "
+"quotation}."
+msgstr ""
+
+#. module: yousign_sale
+#: model_terms:yousign.request.template.notification,body:yousign_sale.sale_sign_template_notification_finished
+msgid ""
+"You can now download the signed document: {yousignUrl|Access to signed "
+"document}."
+msgstr ""

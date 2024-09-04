@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<openerp>
-<data noupdate="1">
+<odoo noupdate="1">
 
 <record id="sale_sign_template" model="yousign.request.template">
     <field name="name">Quotation</field>
@@ -11,7 +10,7 @@
     <field name="init_mail_body"><![CDATA[
     <p>Hello ${object.partner_id.name},</p>
 
-<p>We have prepared a quotation ${object.name} for a total amount of ${object.amount_untaxed} ${object.currency_id.name} without taxes (${object.amount_total} ${object.currency_id.name} with taxes).</p>
+<p>We have prepared a quotation ${object.name} for a total amount of ${format_amount(object.amount_untaxed, object.pricelist_id.currency_id)} without taxes (${format_amount(object.amount_total, object.pricelist_id.currency_id)} with taxes).</p>
 
 <p>To approve this quotation, you should sign it by following the signature process on Yousign: {yousignUrl|Access to quotation}.</p>
 
@@ -22,7 +21,7 @@
 ${object.company_id.name}
 </code>
 ]]></field>
-    <field name="report_id" ref="sale.report_sale_order"/>
+    <field name="report_id" ref="sale.action_report_saleorder"/>
     <field name="remind_auto">1</field>
     <field name="remind_interval">1</field>
     <field name="remind_limit">10</field>
@@ -30,7 +29,7 @@ ${object.company_id.name}
     <field name="remind_mail_body"><![CDATA[
     <p>Hello ${object.partner_id.name},</p>
 
-<p>We recently sent you a quotation a quotation ${object.name} for a total amount of ${object.amount_untaxed} ${object.currency_id.name} without taxes (${object.amount_total} ${object.currency_id.name} with taxes).</p>
+<p>We recently sent you a quotation a quotation ${object.name} for a total amount of ${format_amount(object.amount_untaxed, object.pricelist_id.currency_id)} without taxes (${format_amount(object.amount_total, object.pricelist_id.currency_id)} with taxes).</p>
 
 <p>We remind you that, in order to approve this quotation, you should sign it by following the signature process on Yousign: {yousignUrl|Access to quotation}.</p>
 
@@ -52,7 +51,7 @@ ${object.company_id.name}
 <record id="sale_sign_template_signatory_admin" model="yousign.request.template.signatory">
     <field name="parent_id" ref="sale_sign_template"/>
     <field name="partner_type">static</field>
-    <field name="partner_id" ref="base.partner_root"/>
+    <field name="partner_id" ref="base.partner_admin"/>
 </record>
 
 <record id="sale_sign_template_notification_finished" model="yousign.request.template.notification">
@@ -60,11 +59,12 @@ ${object.company_id.name}
     <field name="notif_type">procedure.finished</field>
     <field name="creator" eval="True"/>
     <field name="members" eval="True"/>
-    <field name="subject">${object.company_id.name} - Quotation ${object.name} signed by all</field>
+    <field name="partner_ids" eval="[(4, ref('base.partner_admin'))]"/>
+    <field name="subject">${object.company_id.name} - Quotation ${object.name} signed by all RAEDL</field>
     <field name="body"><![CDATA[
     <p>Hello ${object.partner_id.name},</p>
 
-<p>The quotation ${object.name} for a total amount of ${object.amount_untaxed} ${object.currency_id.name} without taxes (${object.amount_total} ${object.currency_id.name} with taxes) has been signed by all parties. Therefore, this quotation has been automatically confirmed and converted to a sale order.</p>
+<p>The quotation ${object.name} for a total amount of ${format_amount(object.amount_untaxed, object.pricelist_id.currency_id)} without taxes (${format_amount(object.amount_total, object.pricelist_id.currency_id)} with taxes) has been signed by all parties. Therefore, this quotation has been automatically confirmed and converted to a sale order.</p>
 
 <p>You can now download the signed document: {yousignUrl|Access to signed document}.</p>
 
@@ -80,5 +80,4 @@ ${object.company_id.name}
 </record>
 
 
-</data>
-</openerp>
+</odoo>
