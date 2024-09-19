@@ -552,7 +552,7 @@ class YousignRequest(models.Model):
         for attach, attach_vals in attach_data.items():
             json = {
                 'name': attach_vals['filename'],
-                'content': attach_vals['base64'],
+                'content': attach_vals['base64'].decode("utf-8"),
                 'procedure': ys_id,
                 }
             rattach_res = self.yousign_request('POST', '/files', json=json)
