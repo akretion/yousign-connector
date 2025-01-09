@@ -371,7 +371,7 @@ class YousignRequest(models.Model):
             'name': self.name,
             'delivery_mode': 'email',
             # timezone  TODO
-            "audit_trail_locale": self.lang[:2],
+            "audit_trail_locale": self.lang and self.lang[:2] or 'fr',
             "ordered_signers": self.ordered,
         }
         if self.remind_auto:
@@ -482,7 +482,7 @@ class YousignRequest(models.Model):
                 "request_body": self.init_mail_body,
             },
             "info": {
-                "locale": self.lang[:2],
+                "locale": self.lang and self.lang[:2] or 'fr',
                 "first_name": signer.firstname and signer.firstname.strip() or '',
                 "last_name": signer.lastname and signer.lastname.strip(),
                 "email": signer.email.strip(),
