@@ -638,22 +638,18 @@ class YousignRequest(models.Model):
         # sign_position is passed as parameter because this method
         # is decorated by api.model
 
-        # return "llx,lly,urx,ury".
-        # llx=left lower x coordinate,
-        # lly=left lower y coordinate,
-        # urx=upper right x coordinate,
-        # ury = upper right y coordinate
+        # return "x,y,width,height". the origin is the top/left of the page
         TOPRANK2POSITION = {
-            1: (70, 600, 215, 90),
-            2: (310, 600, 215, 90),
-            3: (70, 460, 215, 90),
-            4: (310, 460, 215, 50),
+            1: (70, 173, 215, 50),
+            2: (310, 173, 215, 50),
+            3: (70, 203, 215, 50),
+            4: (310, 203, 215, 50),
         }
         BOTTOMRANK2POSITION = {
-            1: (95, 195, 150, 50),  # width = 150 - height = 50
-            2: (330, 195, 150, 50),
-            3: (95, 150, 150, 50),
-            4: (330, 145, 150, 50),
+            1: (95, 594, 150, 50),  # width = 150 - height = 50
+            2: (330, 594, 150, 50),
+            3: (95, 637, 150, 50),
+            4: (330, 637, 150, 50),
         }
         rank2position = (
             TOPRANK2POSITION
