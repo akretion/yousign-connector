@@ -67,19 +67,17 @@ class YousignRequestTemplate(models.Model):
     def create_button(self):
         iaao = self.env['ir.actions.act_window']
         for template in self:
-            src_obj = template.model_id.model
             view = self.env.ref('yousign_connector.new_yousign_request_form')
             button_name = _('Yousign Request (%s)') % template.name
             action = iaao.sudo().create({
                 'name': button_name,
                 'type': 'ir.actions.act_window',
                 'res_model': 'yousign.request',
-                'src_model': src_obj,
                 'view_mode': 'form',
                 'view_id': view.id,
                 'target': 'new',
                 'context': f"{{'yousign_template_id': {template.id}}}",
-                'binding_model_id': src_obj.id,
+                'binding_model_id': template.model_id.id,
                 })
 
             template.write({
