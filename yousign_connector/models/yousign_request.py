@@ -11,6 +11,7 @@ from unidecode import unidecode
 from StringIO import StringIO
 from unidecode import unidecode_expect_nonascii
 import logging
+import time
 logger = logging.getLogger(__name__)
 
 try:
@@ -774,12 +775,18 @@ class YousignRequest(models.Model):
     def cron_update(self):
         # Filter-out the YS requests of the old-API plateform
         domain_base = [('ys_identifier', '!=', False)]
-        requests_to_update = self.search(
-            domain_base + [('state', '=', 'sent')])
-        requests_to_update.update_status(raise_if_ko=False)
+
         requests_to_archive = self.search(
-            domain_base + [('state', '=', 'signed')])
-        requests_to_archive.archive(raise_if_ko=False)
+            domain_base + [('state', '=', 'signed')], limit=None)
+        for request in requests_to_archive:
+            request.archive(raise_if_ko=False)
+            time.sleep(120)
+
+        requests_to_update = self.search(
+            domain_base + [('state', '=', 'sent')], limit=None)
+        for request in requests_to_update:
+            request.update_status(raise_if_ko=False)
+            time.sleep(180)
 
     @api.multi
     def archive(self, raise_if_ko=True):
