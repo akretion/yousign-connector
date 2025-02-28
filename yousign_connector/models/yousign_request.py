@@ -506,6 +506,210 @@ class YousignRequest(models.Model):
             'ys_identifier': res['id'],
         })
 
+    def api_get_signer(self, signer, raise_if_ko=True):
+        ystate2ostate = {
+            'initiated': 'draft',
+            'declined': 'refused',
+            "notified": 'pending',
+            'verified': 'verified',
+            'processing': 'processing',
+            'consent_given': 'consent_given',
+            'signed': 'signed',
+            'aborted': 'aborted',
+            'error': 'error',
+        }
+        if signer.state == 'signed':
+            return True
+
+        if not signer.ys_identifier:
+            logger.warning(
+                'Signer ID %s has no YS identifier', signer.id)
+            return False
+
+        res = self.yousign_request(
+            'GET',
+            '/signature_requests/%s/signers/%s' % (
+                self.ys_identifier,
+                signer.ys_identifier,
+            ),
+            200,
+            raise_if_ko=raise_if_ko,
+        )
+        if res is None:
+            logger.warning('Skipping YS req %s ID %d', self.name, self.id)
+            return False
+
+        ystate = res.get('status')
+        if ystate not in ystate2ostate:
+            logger.warning(
+                'Bad state value for member ID %d: %s',
+                signer.id, ystate)
+            return False
+
+        ostate = ystate2ostate[ystate]
+        signed = False
+        signature_date = None
+        if ostate == "signed":
+            signed = True
+            res = self.yousign_request(
+                'GET',
+                '/signature_requests/%s/signers/%s/audit_trails' % (
+                    self.ys_identifier,
+                    signer.ys_identifier,
+                ),
+                200,
+                raise_if_ko=raise_if_ko,
+            )
+            signature_date = res["signer"]["signature_process_completed_at"]
+
+        signer.write({
+            'state': ostate,
+            'signature_date': signature_date,
+        })
+        return signed
+
+    def api_dowload_document(self, document_id, raise_if_ko=True):
+        self.check_has_ys_identidifier()
+        doc_url = '/signature_requests/%s/documents/%s'
+        download_url = doc_url + '/download'
+        document = self.yousign_request(
+            'GET',
+            doc_url % (self.ys_identifier, document_id),
+            200,
+            raise_if_ko=raise_if_ko
+        )
+        download = self.yousign_request(
+            'GET',
+            download_url % (self.ys_identifier, document_id),
+            200,
+            return_raw=True,
+            raise_if_ko=raise_if_ko
+        )
+        return document['filename'], download
+
+    @api.multi
+    def webhook_signature_request_done(self, atDate, data):
+        self.ensure_one()
+
+        self.write({
+            'last_update': atDate,
+            'state': 'signed',
+        })
+        logger.info("Yousign request %s switched to signed state", self.ys_identifier)
+
+        src_obj = self.get_source_object_with_chatter()
+        if src_obj:
+            # for v10, add link to request in message
+            src_obj.suspend_security().message_post(_(
+                "Yousign request <b>%s</b> has been signed by all "
+                "signatories") % self.name)
+            self.signed_hook(src_obj)
+
+        docs_to_sign_count = len(self.attachment_ids)
+        signed_filenames = [
+            att.datas_fname for att in self.signed_attachment_ids]
+        if self.res_id and self.model:
+            res_model = self.model
+            res_id = self.res_id
+        else:
+            res_model = self._name
+            res_id = self.id
+
+        for document in data['signature_request']['documents']:
+            if document["nature"] != "signable_document":
+                continue
+
+            document_id = document['id']
+            original_filename, dl = self.api_dowload_document(
+                document_id, raise_if_ko=False)
+            if not original_filename:
+                continue
+
+            if (
+                original_filename[-4:] and
+                original_filename[-4:].lower() == '.pdf'
+            ):
+                signed_filename = '%s_signed.pdf' % original_filename[:-4]
+            else:
+                signed_filename = original_filename
+            if signed_filename in signed_filenames:
+                logger.debug(
+                    'File %s is already attached as '
+                    'signed_attachment_ids', signed_filename)
+                continue
+
+            attach = self.env['ir.attachment'].create({
+                'name': signed_filename,
+                'res_id': res_id,
+                'res_model': res_model,
+                'datas': dl.content.encode('base64'),
+                'datas_fname': signed_filename,
+            })
+            self.signed_attachment_ids = [(4, attach.id)]
+            signed_filenames.append(signed_filename)
+            logger.info(
+                'Signed file %s attached on %s ID %d',
+                signed_filename, res_model, res_id)
+
+        if len(signed_filenames) == docs_to_sign_count:
+            self.state = 'archived'
+            self.message_post(_(
+                "%d signed document(s) are now attached. "
+                "Request %s is archived")
+                % (len(signed_filenames), self.name))
+            logger.info(
+                "Yousign request %s switched to archived state",
+                self.ys_identifier)
+
+        return self.read(['state', 'last_update', 'ys_identifier'])[0]
+
+    @api.multi
+    def webhook_signature_request_expired(self, atDate, data):
+        return self.webhook_signature_request_declined(atDate, data)
+
+    @api.multi
+    def webhook_signature_request_declined(self, atDate, data):
+        self.ensure_one()
+
+        self.write({
+            'last_update': atDate,
+            'state': 'cancel',
+        })
+        logger.info("Yousign request %s switched to canceled state",
+                    self.ys_identifier)
+        return self.read(['state', 'last_update', 'ys_identifier'])[0]
+
+    @api.multi
+    def webhook_signer_done(self, atDate, data):
+        self.ensure_one()
+        signer = self.env['yousign.request.signatory'].search([
+            ('ys_identifier', '=', data['signer']['id'])
+        ])
+        signer.ensure_one()
+        signer.write({
+            'state': 'signed',
+            'signature_date': atDate,
+        })
+        logger.info("Yousign signer %s switched to signed state",
+                    self.ys_identifier)
+        return signer.read(['state', 'signature_date', 'ys_identifier'])[0]
+
+    @api.multi
+    def webhook_signer_declined(self, atDate, data):
+        self.ensure_one()
+        signer = self.env['yousign.request.signatory'].search([
+            ('ys_identifier', '=', data['signer']['id'])
+        ])
+        signer.ensure_one()
+        signer.write({
+            'state': 'refused',
+            'signature_date': atDate,
+        })
+        logger.info("Yousign signer %s switched to refused state",
+                    self.ys_identifier)
+        return signer.read(['state', 'signature_date', 'ys_identifier'])[0]
+
+    @api.multi
     def name_get(self):
         res = []
         for req in self:
@@ -716,13 +920,17 @@ class YousignRequest(models.Model):
     @api.model
     def cron_update(self):
         # Filter-out the YS requests of the old-API plateform
-        domain_base = [('ys_identifier', '=like', '/procedures/%')]
-        requests_to_update = self.search(
-            domain_base + [('state', '=', 'sent')])
-        requests_to_update.update_status(raise_if_ko=False)
+        domain_base = [('ys_identifier', '!=', False)]
+
         requests_to_archive = self.search(
-            domain_base + [('state', '=', 'signed')])
-        requests_to_archive.archive(raise_if_ko=False)
+            domain_base + [('state', '=', 'signed')], limit=None)
+        for request in requests_to_archive:
+            request.archive(raise_if_ko=False)
+
+        requests_to_update = self.search(
+            domain_base + [('state', '=', 'sent')], limit=None)
+        for request in requests_to_update:
+            request.update_status(raise_if_ko=False)
 
     def archive(self, raise_if_ko=True):
         for req in self.filtered(
