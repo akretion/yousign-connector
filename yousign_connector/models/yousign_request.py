@@ -11,7 +11,6 @@ from unidecode import unidecode
 from StringIO import StringIO
 from unidecode import unidecode_expect_nonascii
 import logging
-import time
 logger = logging.getLogger(__name__)
 
 try:
@@ -625,6 +624,128 @@ class YousignRequest(models.Model):
         return document['filename'], download
 
     @api.multi
+    def webhook_signature_request_done(self, atDate, data):
+        self.ensure_one()
+
+        self.write({
+            'last_update': atDate,
+            'state': 'signed',
+        })
+        logger.info("Yousign request %s switched to signed state", self.ys_identifier)
+
+        src_obj = self.get_source_object_with_chatter()
+        if src_obj:
+            # for v10, add link to request in message
+            src_obj.suspend_security().message_post(_(
+                "Yousign request <b>%s</b> has been signed by all "
+                "signatories") % self.name)
+            self.signed_hook(src_obj)
+
+        docs_to_sign_count = len(self.attachment_ids)
+        signed_filenames = [
+            att.datas_fname for att in self.signed_attachment_ids]
+        if self.res_id and self.model:
+            res_model = self.model
+            res_id = self.res_id
+        else:
+            res_model = self._name
+            res_id = self.id
+
+        for document in data['signature_request']['documents']:
+            if document["nature"] != "signable_document":
+                continue
+
+            document_id = document['id']
+            original_filename, dl = self.api_dowload_document(
+                document_id, raise_if_ko=False)
+            if not original_filename:
+                continue
+
+            if (
+                original_filename[-4:] and
+                original_filename[-4:].lower() == '.pdf'
+            ):
+                signed_filename = '%s_signed.pdf' % original_filename[:-4]
+            else:
+                signed_filename = original_filename
+            if signed_filename in signed_filenames:
+                logger.debug(
+                    'File %s is already attached as '
+                    'signed_attachment_ids', signed_filename)
+                continue
+
+            attach = self.env['ir.attachment'].create({
+                'name': signed_filename,
+                'res_id': res_id,
+                'res_model': res_model,
+                'datas': dl.content.encode('base64'),
+                'datas_fname': signed_filename,
+                })
+            self.signed_attachment_ids = [(4, attach.id)]
+            signed_filenames.append(signed_filename)
+            logger.info(
+                'Signed file %s attached on %s ID %d',
+                signed_filename, res_model, res_id)
+
+        if len(signed_filenames) == docs_to_sign_count:
+            self.state = 'archived'
+            self.message_post(_(
+                "%d signed document(s) are now attached. "
+                "Request %s is archived")
+                % (len(signed_filenames), self.name))
+            logger.info(
+                "Yousign request %s switched to archived state",
+                self.ys_identifier)
+
+        return self.read(['state', 'last_update', 'ys_identifier'])[0]
+
+    @api.multi
+    def webhook_signature_request_expired(self, atDate, data):
+        return self.webhook_signature_request_declined(atDate, data)
+
+    @api.multi
+    def webhook_signature_request_declined(self, atDate, data):
+        self.ensure_one()
+
+        self.write({
+            'last_update': atDate,
+            'state': 'cancel',
+        })
+        logger.info("Yousign request %s switched to canceled state",
+                    self.ys_identifier)
+        return self.read(['state', 'last_update', 'ys_identifier'])[0]
+
+    @api.multi
+    def webhook_signer_done(self, atDate, data):
+        self.ensure_one()
+        signer = self.env['yousign.request.signatory'].search([
+            ('ys_identifier', '=', data['signer']['id'])
+        ])
+        signer.ensure_one()
+        signer.write({
+            'state': 'signed',
+            'signature_date': atDate,
+        })
+        logger.info("Yousign signer %s switched to signed state",
+                    self.ys_identifier)
+        return signer.read(['state', 'signature_date', 'ys_identifier'])[0]
+
+    @api.multi
+    def webhook_signer_declined(self, atDate, data):
+        self.ensure_one()
+        signer = self.env['yousign.request.signatory'].search([
+            ('ys_identifier', '=', data['signer']['id'])
+        ])
+        signer.ensure_one()
+        signer.write({
+            'state': 'refused',
+            'signature_date': atDate,
+        })
+        logger.info("Yousign signer %s switched to refused state",
+                    self.ys_identifier)
+        return signer.read(['state', 'signature_date', 'ys_identifier'])[0]
+
+    @api.multi
     def name_get(self):
         res = []
         for req in self:
@@ -780,13 +901,11 @@ class YousignRequest(models.Model):
             domain_base + [('state', '=', 'signed')], limit=None)
         for request in requests_to_archive:
             request.archive(raise_if_ko=False)
-            time.sleep(120)
 
         requests_to_update = self.search(
             domain_base + [('state', '=', 'sent')], limit=None)
         for request in requests_to_update:
             request.update_status(raise_if_ko=False)
-            time.sleep(180)
 
     @api.multi
     def archive(self, raise_if_ko=True):
