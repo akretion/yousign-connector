@@ -1,6 +1,6 @@
-# import simplejson
-# import hmac
-# import hashlib
+import simplejson
+import hmac
+import hashlib
 from datetime import datetime
 from openerp.http import Controller, route, request, JsonRequest
 from openerp.api import Environment
@@ -48,20 +48,20 @@ class YouSignController(Controller):
         data = request.jsonrequest
 
         # ## check the signature
-        # signature = request.httprequest.headers.get(
-        #     'X-Yousign-Signature-256', '')
-        # if not signature:
-        #     return WebHookBadRequest("The header has not a signature")
+        signature = request.httprequest.headers.get(
+            'X-Yousign-Signature-256', '')
+        if not signature:
+            return WebHookBadRequest("The header has not a signature")
 
-        # digest = hmac.new(
-        #     secret.encode("utf-8"),
-        #     simplejson.dumps(data).encode("utf-8"),
-        #     hashlib.sha256
-        # ).hexdigest()
-        # computed_signature = "sha256=%s" % digest
-        # matches = hmac.compare_digest(signature, computed_signature)
-        # if not matches:
-        #     return WebHookBadRequest("Wrong signature")
+        digest = hmac.new(
+            secret.encode("utf-8"),
+            simplejson.dumps(data).encode("utf-8"),
+            hashlib.sha256
+        ).hexdigest()
+        computed_signature = "sha256=%s" % digest
+        matches = hmac.compare_digest(signature, computed_signature)
+        if not matches:
+            return WebHookBadRequest("Wrong signature")
 
         # ## payload
         # {
