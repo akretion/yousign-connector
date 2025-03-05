@@ -7,6 +7,10 @@ from openerp.api import Environment
 from openerp.modules.registry import RegistryManager
 from openerp import SUPERUSER_ID, tools
 from werkzeug.exceptions import BadRequest
+from logging import getLogger
+
+
+logger = getLogger(__name__)
 
 
 class WebHookBadRequest(BadRequest):
@@ -19,6 +23,7 @@ odoo_json_response = JsonRequest._json_response
 
 def yousign_json_response(self, result=None, error=None):
     if result and isinstance(result, BadRequest):
+        logger.warning(str(result))
         return result
 
     return odoo_json_response(self, result=result, error=error)
