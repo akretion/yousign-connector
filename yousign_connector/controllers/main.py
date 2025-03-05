@@ -22,7 +22,7 @@ odoo_json_response = JsonRequest._json_response
 
 
 def yousign_json_response(self, result=None, error=None):
-    if result and isinstance(result, BadRequest):
+    if result and isinstance(result, WebHookBadRequest):
         logger.warning(str(result))
         return result
 
@@ -31,6 +31,21 @@ def yousign_json_response(self, result=None, error=None):
 
 JsonRequest._json_response = yousign_json_response
 # / Monkey patch of the _json_response
+
+
+# Monkey patch of the _handle_exception
+odoo_handle_exception = JsonRequest._handle_exception
+
+
+def yousign_handle_exception(self, exception):
+    if isinstance(exception, WebHookBadRequest):
+        return exception
+
+    return odoo_handle_exception(self, exception)
+
+
+JsonRequest._handle_exception = yousign_handle_exception
+# / Monkey patch of the _handle_exception
 
 
 class YouSignController(Controller):
