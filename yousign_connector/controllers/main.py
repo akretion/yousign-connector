@@ -1,8 +1,9 @@
 import simplejson
 import hmac
 import hashlib
+import werkzeug
 from datetime import datetime
-from openerp.http import Controller, route, request, JsonRequest
+from openerp.http import Controller, route, request, JsonRequest, _logger
 from openerp.api import Environment
 from openerp.modules.registry import RegistryManager
 from openerp import SUPERUSER_ID, tools
@@ -48,6 +49,55 @@ JsonRequest._handle_exception = yousign_handle_exception
 # / Monkey patch of the _handle_exception
 
 
+# Monkey patch of the __init__
+def yousign_init(self, *args):
+    super(JsonRequest, self).__init__(*args)
+
+    self.jsonp_handler = None
+
+    args = self.httprequest.args
+    jsonp = args.get('jsonp')
+    self.jsonp = jsonp
+    request = None
+    request_id = args.get('id')
+
+    if jsonp and self.httprequest.method == 'POST':
+        # jsonp 2 steps step1 POST: save call
+        def handler():
+            self.session['jsonp_request_%s' % (request_id,)] = self.httprequest.form['r']
+            self.session.modified = True
+            headers = [('Content-Type', 'text/plain; charset=utf-8')]
+            r = werkzeug.wrappers.Response(request_id, headers=headers)
+            return r
+        self.jsonp_handler = handler
+        return
+    elif jsonp and args.get('r'):
+        # jsonp method GET
+        request = args.get('r')
+    elif jsonp and request_id:
+        # jsonp 2 steps step2 GET: run and return result
+        request = self.session.pop('jsonp_request_%s' % (request_id,), '{}')
+    else:
+        # regular jsonrpc2
+        request = self.httprequest.stream.read()
+
+    # Read POST content or POST Form Data named "request"
+    try:
+        self.jsonrequest = simplejson.loads(request)
+    except simplejson.JSONDecodeError:
+        msg = 'Invalid JSON data: %r' % (request,)
+        _logger.error('%s: %s', self.httprequest.path, msg)
+        raise BadRequest(msg)
+
+    self.params = dict(self.jsonrequest.get("params", {}))
+    self.context = self.params.pop('context', dict(self.session.context))
+    self.original_request = request  # need for signature check
+
+
+JsonRequest.__init__ = yousign_init
+# / Monkey patch of the __init__
+
+
 class YouSignController(Controller):
 
     @route('/<db>/yousign/webhook', type='json', auth='none', methods=['post'])
@@ -69,13 +119,13 @@ class YouSignController(Controller):
 
         # ## check the signature
         signature = request.httprequest.headers.get(
-            'X-Yousign-Signature-256', '')
+            'X-Yousign-Signature-256', '').encode('utf-8')
         if not signature:
             return WebHookBadRequest("The header has not a signature")
 
         digest = hmac.new(
             secret.encode("utf-8"),
-            simplejson.dumps(data).encode("utf-8"),
+            request.original_request.encode("utf-8"),
             hashlib.sha256
         ).hexdigest()
         computed_signature = "sha256=%s" % digest
