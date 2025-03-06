@@ -658,7 +658,7 @@ class YousignRequest(models.Model):
             document_id = document['id']
             original_filename, dl = self.api_dowload_document(
                 document_id, raise_if_ko=False)
-            if not original_filename:
+            if not original_filename or not dl:
                 continue
 
             if (
