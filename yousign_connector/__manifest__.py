@@ -14,7 +14,7 @@
         'mail',
         'phone_validation',
         ],
-    'external_dependencies': {'python': ['unidecode', 'pypdf>=3.1.0']},
+    'external_dependencies': {'python': ['requests', 'unidecode', 'pypdf>=3.1.0']},
     'data': [
         'data/yousign_seq.xml',
         'data/cron.xml',
