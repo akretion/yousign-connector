@@ -8,7 +8,7 @@ from odoo.addons.phone_validation.tools import phone_validation
 from odoo.tools.safe_eval import safe_eval, time
 from unidecode import unidecode
 from io import BytesIO
-# from pprint import pprint
+import base64
 
 import re
 import logging
@@ -587,7 +587,6 @@ class YousignRequest(models.Model):
         )
         return document['filename'], download
 
-    @api.multi
     def webhook_signature_request_done(self, atDate, data):
         self.ensure_one()
 
@@ -599,15 +598,14 @@ class YousignRequest(models.Model):
 
         src_obj = self.get_source_object_with_chatter()
         if src_obj:
-            # for v10, add link to request in message
-            src_obj.suspend_security().message_post(_(
+            src_obj.sudo().message_post(body=_(
                 "Yousign request <b>%s</b> has been signed by all "
                 "signatories") % self.name)
-            self.signed_hook(src_obj)
+            self._signed_hook(src_obj)
 
         docs_to_sign_count = len(self.attachment_ids)
         signed_filenames = [
-            att.datas_fname for att in self.signed_attachment_ids]
+            att.name for att in self.signed_attachment_ids]
         if self.res_id and self.model:
             res_model = self.model
             res_id = self.res_id
@@ -637,13 +635,12 @@ class YousignRequest(models.Model):
                     'File %s is already attached as '
                     'signed_attachment_ids', signed_filename)
                 continue
-
             attach = self.env['ir.attachment'].create({
                 'name': signed_filename,
+                'type': 'binary',
                 'res_id': res_id,
                 'res_model': res_model,
-                'datas': dl.content.encode('base64'),
-                'datas_fname': signed_filename,
+                'datas': base64.encodebytes(dl.content),
             })
             self.signed_attachment_ids = [(4, attach.id)]
             signed_filenames.append(signed_filename)
@@ -653,7 +650,7 @@ class YousignRequest(models.Model):
 
         if len(signed_filenames) == docs_to_sign_count:
             self.state = 'archived'
-            self.message_post(_(
+            self.message_post(body=_(
                 "%d signed document(s) are now attached. "
                 "Request %s is archived")
                 % (len(signed_filenames), self.name))
@@ -663,11 +660,10 @@ class YousignRequest(models.Model):
 
         return self.read(['state', 'last_update', 'ys_identifier'])[0]
 
-    @api.multi
+
     def webhook_signature_request_expired(self, atDate, data):
         return self.webhook_signature_request_declined(atDate, data)
 
-    @api.multi
     def webhook_signature_request_declined(self, atDate, data):
         self.ensure_one()
 
@@ -679,7 +675,6 @@ class YousignRequest(models.Model):
                     self.ys_identifier)
         return self.read(['state', 'last_update', 'ys_identifier'])[0]
 
-    @api.multi
     def webhook_signer_done(self, atDate, data):
         self.ensure_one()
         signer = self.env['yousign.request.signatory'].search([
@@ -694,7 +689,6 @@ class YousignRequest(models.Model):
                     self.ys_identifier)
         return signer.read(['state', 'signature_date', 'ys_identifier'])[0]
 
-    @api.multi
     def webhook_signer_declined(self, atDate, data):
         self.ensure_one()
         signer = self.env['yousign.request.signatory'].search([
@@ -709,7 +703,6 @@ class YousignRequest(models.Model):
                     self.ys_identifier)
         return signer.read(['state', 'signature_date', 'ys_identifier'])[0]
 
-    @api.multi
     def name_get(self):
         res = []
         for req in self:
@@ -719,7 +712,6 @@ class YousignRequest(models.Model):
             res.append((req.id, name))
         return res
 
-    @api.model
     def signature_position(self, signatory_rank):
         # sign_position is passed as parameter because this method
         # is decorated by api.model
