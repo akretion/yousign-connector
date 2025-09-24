@@ -41,7 +41,7 @@
                         <group name="init_mail">
                             <field name="lang"/>
                             <field name="init_mail_subject"/>
-                            <field name="init_mail_body"/>
+                            <field name="init_mail_body" widget="text"/>
                         </group>
                     </page>
                     <page name="other_mail" string="E-mail Notifications">
@@ -50,12 +50,10 @@
                     <page name="remind" string="Auto-Remind Setup" attrs="{'invisible': [('remind_auto', '=', False)]}">
                         <group name="remind">
                             <label for="remind_interval"/>
-                            <div name="remind_interval">
-                                <field name="remind_interval" class="oe_inline" attrs="{'required': [('remind_auto', '=', True)]}"/> days
-                            </div>
+                            <field name="remind_interval" attrs="{'required': [('remind_auto', '=', True)]}"/>
                             <field name="remind_limit" attrs="{'required': [('remind_auto', '=', True)]}"/>
                             <field name="remind_mail_subject" attrs="{'required': [('remind_auto', '=', True)]}"/>
-                            <field name="remind_mail_body" attrs="{'required': [('remind_auto', '=', True)]}"/>
+                            <field name="remind_mail_body" attrs="{'required': [('remind_auto', '=', True)]}" widget="text"/>
                         </group>
                     </page>
                 </notebook>
@@ -93,7 +91,7 @@
                 <page name="init_mail" string="Init E-mail">
                     <group name="init_mail">
                         <field name="init_mail_subject" string="Subject"/>
-                        <field name="init_mail_body" string="Body"/>
+                        <field name="init_mail_body" string="Body" widget="text"/>
                     </group>
                 </page>
                 <page name="other_mail" string="E-mail Notifications">
@@ -102,12 +100,10 @@
                 <page name="remind" string="Auto-Remind Setup" attrs="{'invisible': [('remind_auto', '=', False)]}">
                     <group name="remind">
                         <label for="remind_interval"/>
-                        <div name="remind_interval">
-                            <field name="remind_interval" class="oe_inline" attrs="{'required': [('remind_auto', '=', True)]}"/> days
-                        </div>
+                        <field name="remind_interval" attrs="{'required': [('remind_auto', '=', True)]}"/>
                         <field name="remind_limit" attrs="{'required': [('remind_auto', '=', True)]}"/>
                         <field name="remind_mail_subject" attrs="{'required': [('remind_auto', '=', True)]}"/>
-                        <field name="remind_mail_body" attrs="{'required': [('remind_auto', '=', True)]}"/>
+                        <field name="remind_mail_body" attrs="{'required': [('remind_auto', '=', True)]}" widget="text"/>
                     </group>
                 </page>
             </notebook>
@@ -164,7 +160,7 @@
                 <field name="firstname"/>
                 <field name="lastname" required="1"/>
                 <field name="email" required="1"/>
-                <field name="mobile" widget="phone" attrs="{'required': [('auth_mode', '=', 'sms')]}"/>
+                <field name="mobile" widget="phone" attrs="{'required': [('auth_mode', '=', 'otp_sms')]}"/>
                 <field name="auth_mode"/>
                 <field name="mention_top"/>
                 <field name="mention_bottom"/>

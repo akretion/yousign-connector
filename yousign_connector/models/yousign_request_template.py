@@ -20,18 +20,23 @@ class YousignRequestTemplate(models.Model):
     lang = fields.Char('Language')
     ordered = fields.Boolean(string='Sign one after the other')
     init_mail_subject = fields.Char(
-        'Init Mail Subject', translate=True)
-    init_mail_body = fields.Html(
+        'Init Mail Subject', translate=True, size=150)
+    init_mail_body = fields.Char(
         'Init Mail Body', translate=True,
-        help="You must insert '{yousignUrl}' in the body where you want to "
-        "insert the URL to access Yousign.")
+        size=500)
     remind_auto = fields.Boolean(string='Automatic Reminder')
     remind_mail_subject = fields.Char(
-        'Reminder Mail Subject', translate=True)
-    remind_mail_body = fields.Html(
-        'Reminder Mail Body', translate=True)
-    remind_interval = fields.Integer(
-        string='Remind Interval', default=3,
+        'Reminder Mail Subject', translate=True, size=150)
+    remind_mail_body = fields.Char(
+        'Reminder Mail Body', translate=True, size=500)
+    remind_interval = fields.Selection(
+        [
+            (1, '1 day'),
+            (2, '2 days'),
+            (7, '7 days'),
+            (14, '14 days'),
+        ],
+        string='Remind Interval', default=2,
         help="Number of days between 2 auto-reminders by email.")
     remind_limit = fields.Integer(string='Remind Limit', default=10)
     report_id = fields.Many2one(
@@ -137,9 +142,10 @@ class YousignRequestTemplateSignatory(models.Model):
         'res.partner', string='Fixed Partner', ondelete='restrict')
     partner_tmpl = fields.Char(string='Dynamic Partner')
     auth_mode = fields.Selection([
-        ('sms', 'SMS'),
-        ('email', 'E-Mail'),
-        ], default='sms', string='Authentication Mode', required=True,
+        ('otp_sms', 'SMS'),
+        ('otp_email', 'E-Mail'),
+        ('no_otp', 'No OTP'),
+        ], default='otp_sms', string='Authentication Mode', required=True,
         help='Authentication mode used for the signer')
     mention_top = fields.Char(string='Top Mention')
     mention_bottom = fields.Char(string='Bottom Mention')

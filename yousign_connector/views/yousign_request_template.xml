@@ -43,7 +43,7 @@
                 <page name="init_mail" string="Init E-mail">
                     <group name="init_mail">
                         <field name="init_mail_subject" string="Subject"/>
-                        <field name="init_mail_body" string="Body"/>
+                        <field name="init_mail_body" string="Body" widget="text"/>
                     </group>
                 </page>
                 <page name="other_mail" string="E-mail Notifications">
@@ -51,13 +51,10 @@
                 </page>
                 <page name="remind" string="Auto-Remind Setup" attrs="{'invisible': [('remind_auto', '=', False)]}">
                     <group name="remind">
-                        <label for="remind_interval"/>
-                        <div name="remind_interval">
-                            <field name="remind_interval" class="oe_inline"/> days
-                        </div>
+                        <field name="remind_interval"/>
                         <field name="remind_limit"/>
                         <field name="remind_mail_subject"/>
-                        <field name="remind_mail_body"/>
+                        <field name="remind_mail_body" widget="text"/>
                     </group>
                 </page>
             </notebook>
