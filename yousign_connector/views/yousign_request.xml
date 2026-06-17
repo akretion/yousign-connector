@@ -175,10 +175,10 @@
             <group name="main">
                 <field name="parent_id" invisible="not context.get('yousign_request_signatory_main_view')"/>
                 <field name="partner_id"/>
-                <field name="firstname"/>
+                <field name="firstname" required="1"/>
                 <field name="lastname" required="1"/>
                 <field name="email" required="1" widget="email"/>
-                <field name="mobile" widget="phone" attrs="{'required': [('auth_mode', '=', 'sms')]}"/>
+                <field name="mobile" widget="phone" required="1"/>
                 <field name="auth_mode"/>
                 <field name="mention_top"/>
                 <field name="mention_bottom"/>

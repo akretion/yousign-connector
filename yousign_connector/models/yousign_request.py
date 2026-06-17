@@ -92,7 +92,7 @@ class YousignRequest(models.Model):
         tracking=True)
     sign_position = fields.Selection(
         [('top', 'Top'), ('bottom', 'Bottom')],
-        string='Sign Position', default='top',
+        string='Sign Position', default='bottom',
         readonly=True, states={'draft': [('readonly', False)]})
     company_id = fields.Many2one(
         'res.company', string='Company', ondelete='cascade',
@@ -190,6 +190,22 @@ class YousignRequest(models.Model):
         for signatory in template.signatory_ids:
             signatory_vals = signatory._prepare_template2request(
                 model, res_id)
+            # firstname and lastname mandatory on api yousign
+            if not signatory_vals.get("firstname"):
+                name = (signatory_vals.get("lastname") or "").strip()
+
+                if " " in name:
+                    firstname, lastname = name.split(" ", 1)
+                else:
+                    firstname = name
+                    lastname = name
+
+                # Suppression des caractères interdits
+                for char in ("°", "!", "@", "#", "$", "%", "^", "&", "*", "_", "+", "=", "{", "}", "[", "]", "|", "\\", "/", ":", ";", '"', "<", ">", "?", ",", ".", "~"):
+                    firstname = firstname.replace(char, "")
+                    lastname = lastname.replace(char, "")
+                signatory_vals["firstname"] = firstname.strip()
+                signatory_vals["lastname"] = lastname.strip()
             signatory_ids.append((0, 0, signatory_vals))
         notification_ids = []
         for notif in template.notification_ids:
@@ -722,16 +738,16 @@ class YousignRequest(models.Model):
         # urx=upper right x coordinate,
         # ury = upper right y coordinate
         TOPRANK2POSITION = {
-            1: (70, 600, 215, 90),
-            2: (310, 600, 215, 90),
-            3: (70, 460, 215, 90),
-            4: (310, 460, 215, 50),
-        }
-        BOTTOMRANK2POSITION = {
             1: (95, 195, 150, 50),  # width = 150 - height = 50
             2: (330, 195, 150, 50),
             3: (95, 150, 150, 50),
             4: (330, 145, 150, 50),
+        }
+        BOTTOMRANK2POSITION = {
+            1: (70, 600, 215, 90),
+            2: (310, 600, 215, 90),
+            3: (70, 460, 215, 90),
+            4: (310, 460, 215, 50),
         }
         rank2position = (
             TOPRANK2POSITION

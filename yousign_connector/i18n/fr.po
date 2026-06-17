@@ -72,19 +72,19 @@ msgstr "Archivé"
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Nombre de documents"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_signatory__auth_mode
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_signatory__auth_mode
 msgid "Authentication Mode"
-msgstr ""
+msgstr "Mode d'authentification"
 
 #. module: yousign_connector
 #: model:ir.model.fields,help:yousign_connector.field_yousign_request_signatory__auth_mode
 #: model:ir.model.fields,help:yousign_connector.field_yousign_request_template_signatory__auth_mode
 msgid "Authentication mode used for the signer"
-msgstr ""
+msgstr "Mode d'authentification utilisé pour le signataire"
 
 #. module: yousign_connector
 #: model_terms:ir.ui.view,arch_db:yousign_connector.new_yousign_request_form
@@ -117,24 +117,24 @@ msgstr "Bas"
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_signatory__mention_bottom
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_signatory__mention_bottom
 msgid "Bottom Mention"
-msgstr ""
+msgstr "Mention bas de page"
 
 #. module: yousign_connector
 #: model_terms:ir.ui.view,arch_db:yousign_connector.new_yousign_request_form
 #: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_form
 #: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_remind_form
 msgid "Cancel"
-msgstr ""
+msgstr "Annuler"
 
 #. module: yousign_connector
 #: model:ir.model.fields.selection,name:yousign_connector.selection__yousign_request__state__cancel
 msgid "Cancelled"
-msgstr ""
+msgstr "Annulé"
 
 #. module: yousign_connector
 #: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_form
 msgid "Check if signatories have signed the documents"
-msgstr ""
+msgstr "Vérifier si les signataires ont signé les documents"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_signatory__comment
@@ -145,7 +145,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__company_id
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template__company_id
 msgid "Company"
-msgstr ""
+msgstr "Société"
 
 #. module: yousign_connector
 #: code:addons/yousign_connector/models/yousign_request.py:0
@@ -844,7 +844,7 @@ msgstr "Envoyer une relance"
 #: model_terms:ir.ui.view,arch_db:yousign_connector.new_yousign_request_form
 #: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_form
 msgid "Send to Yousign"
-msgstr ""
+msgstr "Envoyer à Yousign"
 
 #. module: yousign_connector
 #: model:ir.model.fields.selection,name:yousign_connector.selection__yousign_request__state__sent
@@ -1056,7 +1056,7 @@ msgstr "Haut"
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_signatory__mention_top
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_signatory__mention_top
 msgid "Top Mention"
-msgstr ""
+msgstr "Mention haut de page"
 
 #. module: yousign_connector
 #: model:ir.model.fields,help:yousign_connector.field_yousign_request__activity_exception_decoration
