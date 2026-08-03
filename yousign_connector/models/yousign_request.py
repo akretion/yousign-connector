@@ -601,7 +601,10 @@ class YousignRequest(models.Model):
             return_raw=True,
             raise_if_ko=raise_if_ko
         )
-        return document['filename'], download
+        if not document or not download:
+            return False, False
+    
+        return document.get("filename"), download
 
     def webhook_signature_request_done(self, atDate, data):
         self.ensure_one()
@@ -638,7 +641,16 @@ class YousignRequest(models.Model):
                 document_id, raise_if_ko=False)
             if not original_filename:
                 continue
-
+            if (
+                not dl
+                or dl.status_code != 200
+                or not dl.content.startswith(b"%PDF")
+            ):
+                logger.error(
+                    "Invalid Yousign PDF download for document %s",
+                    document_id,
+                )
+                continue
             if (
                 original_filename[-4:] and
                 original_filename[-4:].lower() == '.pdf'
