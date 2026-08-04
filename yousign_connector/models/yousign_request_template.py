@@ -51,7 +51,7 @@ class YousignRequestTemplate(models.Model):
         "records of the related document model")
     sign_position = fields.Selection(
         [('top', 'Top'), ('bottom', 'Bottom')],
-        string='Sign position', default='top')
+        string='Sign position', default='bottom')
 
     _sql_constraints = [
         (
