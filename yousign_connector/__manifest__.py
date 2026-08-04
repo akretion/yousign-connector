@@ -4,7 +4,7 @@
 
 {
     'name': 'Yousign Connector',
-    'version': '14.0.1.0.0',
+    'version': "14.0.1.0.0",
     'category': 'Signature',
     'license': 'AGPL-3',
     'summary': 'Odoo generates signature requests on Yousign',
@@ -14,7 +14,7 @@
         'mail',
         'phone_validation',
         ],
-    'external_dependencies': {'python': ['unidecode', 'pypdf>=3.1.0']},
+    'external_dependencies': {'python': ['requests', 'unidecode', 'pypdf>=3.1.0']},
     'data': [
         'data/yousign_seq.xml',
         'data/cron.xml',

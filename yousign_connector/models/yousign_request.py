@@ -8,7 +8,8 @@ from odoo.addons.phone_validation.tools import phone_validation
 from odoo.tools.safe_eval import safe_eval, time
 from unidecode import unidecode
 from io import BytesIO
-# from pprint import pprint
+import base64
+
 import re
 import logging
 logger = logging.getLogger(__name__)
@@ -18,11 +19,13 @@ try:
 except (ImportError, IOError) as err:
     logger.debug('Cannot import requests')
     logger.debug(err)
+
 try:
     import pypdf
 except (ImportError, IOError) as err:
     logger.debug('Cannot import pypdf')
     logger.debug(err)
+
 
 TIMEOUT = 30
 
@@ -85,11 +88,11 @@ class YousignRequest(models.Model):
         ('signed', 'Signed'),
         ('archived', 'Archived'),
         ('cancel', 'Cancelled'),
-        ], string='State', default='draft', readonly=True,
+    ], string='State', default='draft', readonly=True,
         tracking=True)
     sign_position = fields.Selection(
         [('top', 'Top'), ('bottom', 'Bottom')],
-        string='Sign Position', default='top',
+        string='Sign Position', default='bottom',
         readonly=True, states={'draft': [('readonly', False)]})
     company_id = fields.Many2one(
         'res.company', string='Company', ondelete='cascade',
@@ -125,7 +128,7 @@ class YousignRequest(models.Model):
             'remind_limit_positive',
             'CHECK(remind_limit >= 0)',
             'The Remind Limit must be positive or null.'),
-        ]
+    ]
 
     @api.depends('model', 'res_id')
     def _compute_res_name(self):
@@ -187,6 +190,22 @@ class YousignRequest(models.Model):
         for signatory in template.signatory_ids:
             signatory_vals = signatory._prepare_template2request(
                 model, res_id)
+            # firstname and lastname mandatory on api yousign
+            if not signatory_vals.get("firstname"):
+                name = (signatory_vals.get("lastname") or "").strip()
+
+                if " " in name:
+                    firstname, lastname = name.split(" ", 1)
+                else:
+                    firstname = name
+                    lastname = name
+
+                # Suppression des caractères interdits
+                for char in ("°", "!", "@", "#", "$", "%", "^", "&", "*", "_", "+", "=", "{", "}", "[", "]", "|", "\\", "/", ":", ";", '"', "<", ">", "?", ",", ".", "~"):
+                    firstname = firstname.replace(char, "")
+                    lastname = lastname.replace(char, "")
+                signatory_vals["firstname"] = firstname.strip()
+                signatory_vals["lastname"] = lastname.strip()
             signatory_ids.append((0, 0, signatory_vals))
         notification_ids = []
         for notif in template.notification_ids:
@@ -210,7 +229,7 @@ class YousignRequest(models.Model):
                 # 'res_id': Signature request is not created yet
                 'res_model': self._name,
                 'raw': report_data_bin,
-                }
+            }
             attach = iao.create(attach_vals)
             attachment_ids.append((6, 0, [attach.id]))
         lang = self._render_template(
@@ -222,7 +241,7 @@ class YousignRequest(models.Model):
             'init_mail_body': template.init_mail_body,
             'remind_mail_subject': template.remind_mail_subject,
             'remind_mail_body': template.remind_mail_body,
-            }
+        }
         for field_name, field_content in dyn_fields.items():
             dyn_fields[field_name] = self._render_template(
                 dyn_fields[field_name], model, [res_id])[res_id]
@@ -236,7 +255,7 @@ class YousignRequest(models.Model):
             'signatory_ids': signatory_ids,
             'notification_ids': notification_ids,
             'attachment_ids': attachment_ids,
-            })
+        })
         return res
 
     @api.model_create_multi
@@ -266,7 +285,7 @@ class YousignRequest(models.Model):
             return None
 
     @api.model
-    def yousign_init(self):
+    def yousign_init(self, has_file=False):
         apikey = tools.config.get('yousign_apikey', False)
         environment = tools.config.get('running_env', 'test')
         if not apikey or not environment:
@@ -275,29 +294,39 @@ class YousignRequest(models.Model):
                 "server config file."))
 
         headers = {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer %s' % apikey,
+            'accept': 'application/json',
+            'content-type': 'application/json',
+            'authorization': 'Bearer %s' % apikey,
         }
+
+        if has_file:
+            # headers["content-type"] = "multipart/form-data"
+            # doesn't work with this header, yet required according the documentation
+            del headers['content-type']
+
         if environment == 'prod':
-            url_base = 'https://api.yousign.com'
+            url_base = 'https://api.yousign.app/v3'
         else:
-            url_base = 'https://staging-api.yousign.com'
+            url_base = 'https://api-sandbox.yousign.app/v3'
 
         return (url_base, headers)
 
     @api.model
     def yousign_request(
             self, method, url, expected_status_code=201,
-            json=None, return_raw=False, raise_if_ko=True):
-        url_base, headers = self.yousign_init()
+            json=None, data=None, files=None, return_raw=False, raise_if_ko=True):
+        url_base, headers = self.yousign_init(has_file=bool(True if files else False))
         full_url = url_base + url
         logger.info(
             'Sending %s request on %s. Expecting status code %d.',
             method, full_url, expected_status_code)
+        logger.debug('headers sent: %s', headers)
         logger.debug('JSON data sent: %s', json)
+        logger.debug('data sent: %s', data)
+        logger.debug('files sent: %s', files)
         try:
             res = requests.request(
-                method, full_url, headers=headers, json=json, timeout=TIMEOUT)
+                method, full_url, headers=headers, json=json, data=data, files=files, timeout=TIMEOUT)
         except requests.exceptions.ConnectionError as e:
             logger.error("Connection to %s failed. Error: %s", full_url, e)
             if raise_if_ko:
@@ -343,6 +372,365 @@ class YousignRequest(models.Model):
         logger.debug('JSON webservice answer: %s', res_json)
         return res_json
 
+    def check_has_ys_identidifier(self):
+        if not self.ys_identifier:
+            raise UserError(_('No YS request identifier found'))
+
+    def api_post_signature_requests(self):
+        json = {
+            'name': self.name,
+            'delivery_mode': 'email',
+            # timezone
+            # 'audit_trail_locale': locale
+            "ordered_signers": self.ordered,
+        }
+        if self.remind_auto:
+            json["reminder_settings"] = {
+                "interval_in_days": self.remind_interval,
+                "max_occurrences": self.remind_limit,
+            }
+        return self.yousign_request(
+            'POST',
+            '/signature_requests',
+            201,
+            json=json,
+        )
+
+    def api_get_signature_requests(self, raise_if_ko=True):
+        self.check_has_ys_identidifier()
+        return self.yousign_request(
+            'GET',
+            '/signature_requests/%s' % self.ys_identifier,
+            200,
+            raise_if_ko=raise_if_ko,
+        )
+
+    def api_delete_signature_requests(self):
+        self.check_has_ys_identidifier()
+        return self.yousign_request(
+            'DELETE',
+            '/signature_requests/%s' % self.ys_identifier,
+            204,
+            return_raw=True,
+        )
+
+    def api_activate_signature_requests(self):
+        self.check_has_ys_identidifier()
+        return self.yousign_request(
+            'POST',
+            '/signature_requests/%s/activate' % self.ys_identifier,
+            201,
+        )
+
+    def api_post_document(self, attachment):
+        self.check_has_ys_identidifier()
+        filename = attachment.name
+        pdf_file = BytesIO(attachment.raw)
+        try:
+            pdf_reader = pypdf.PdfReader(pdf_file)
+        except pypdf.utils.PdfReadError:
+            raise UserError(_(
+                "File to sign '%s' is not a valid PDF file. You "
+                "must convert it to PDF before including it in a "
+                "Yousign request.") % filename)
+        num_pages = len(pdf_reader.pages)
+        logger.info('PDF %s has %d pages', filename, num_pages)
+
+        data = {
+            "nature": "signable_document",
+        }
+        files = {
+            'file': (
+                filename,
+                attachment.raw,
+                'application/pdf'
+            )
+        }
+        res = self.yousign_request(
+            'POST',
+            '/signature_requests/%s/documents' % self.ys_identifier,
+            201,
+            data=data,
+            files=files,
+        )
+        return (res['id'], num_pages)
+
+    def api_post_signer(self, signer, rank, documents):
+        self.check_has_ys_identidifier()
+        if not signer.lastname:
+            raise UserError(_(
+                "Missing lastname on one of the signatories of request %s")
+                % self.display_name)
+
+        if not signer.firstname:
+            raise UserError(_(
+                "Missing firstname on signatory '%s'" % signer.lastname))
+
+        if not signer.email:
+            raise UserError(_(
+                "Missing email on the signatory '%s'") % signer.lastname)
+
+        if not signer.mobile and signer.auth_mode == 'otp_sms':
+            raise UserError(_(
+                "Missing mobile phone number on signatory '%s'.")
+                % signer.lastname)
+
+        json = {
+            "custom_text": {
+                "request_subject": self.init_mail_subject,
+                # "request_body": self.include_url_tag(
+                #     self.init_mail_body, 'init', raise_if_not_found=True)
+            },
+            "info": {
+                "locale": "fr",  # TODO fix local
+                "first_name": signer.firstname and signer.firstname.strip() or '',
+                "last_name": signer.lastname and signer.lastname.strip(),
+                "email": signer.email.strip(),
+                "phone_number": signer.mobile and signer.mobile.replace(' ', '') or ''
+                # API Sandbox: phone_number is mandatory regardless of the auth_mode
+            },
+            "signature_level": "electronic_signature",
+            "fields": [],
+            "signature_authentication_mode": signer.auth_mode
+        }
+        if self.remind_mail_subject:
+            json['custom_text']['reminder_subject'] = self.remind_mail_subject
+
+        # if self.remind_mail_body:
+        #     json['custom_text']['reminder_body'] = self.remind_mail_body
+
+        x, y, width, height = self.signature_position(rank)
+        for document_id, num_page in documents:
+            json['fields'].append({
+                "document_id": document_id,
+                "type": "signature",
+                "page": num_page,
+                "x": x,
+                "y": y,
+                "height": height,
+                "width": width,
+            })
+
+        res = self.yousign_request(
+            'POST',
+            '/signature_requests/%s/signers' % self.ys_identifier,
+            201,
+            json=json,
+        )
+        signer.write({
+            'state': 'pending',
+            'ys_identifier': res['id'],
+        })
+
+    def api_get_signer(self, signer, raise_if_ko=True):
+        ystate2ostate = {
+            'initiated': 'draft',
+            'declined': 'refused',
+            "notified": 'pending',
+            'verified': 'verified',
+            'processing': 'processing',
+            'consent_given': 'consent_given',
+            'signed': 'signed',
+            'aborted': 'aborted',
+            'error': 'error',
+        }
+        if signer.state == 'signed':
+            return True
+
+        if not signer.ys_identifier:
+            logger.warning(
+                'Signer ID %s has no YS identifier', signer.id)
+            return False
+
+        res = self.yousign_request(
+            'GET',
+            '/signature_requests/%s/signers/%s' % (
+                self.ys_identifier,
+                signer.ys_identifier,
+            ),
+            200,
+            raise_if_ko=raise_if_ko,
+        )
+        if res is None:
+            logger.warning('Skipping YS req %s ID %d', self.name, self.id)
+            return False
+
+        ystate = res.get('status')
+        if ystate not in ystate2ostate:
+            logger.warning(
+                'Bad state value for member ID %d: %s',
+                signer.id, ystate)
+            return False
+
+        ostate = ystate2ostate[ystate]
+        signed = False
+        signature_date = None
+        if ostate == "signed":
+            signed = True
+            res = self.yousign_request(
+                'GET',
+                '/signature_requests/%s/signers/%s/audit_trails' % (
+                    self.ys_identifier,
+                    signer.ys_identifier,
+                ),
+                200,
+                raise_if_ko=raise_if_ko,
+            )
+            signature_date = res["signer"]["signature_process_completed_at"]
+
+        signer.write({
+            'state': ostate,
+            'signature_date': signature_date,
+        })
+        return signed
+
+    def api_dowload_document(self, document_id, raise_if_ko=True):
+        self.check_has_ys_identidifier()
+        doc_url = '/signature_requests/%s/documents/%s'
+        download_url = doc_url + '/download'
+        document = self.yousign_request(
+            'GET',
+            doc_url % (self.ys_identifier, document_id),
+            200,
+            raise_if_ko=raise_if_ko
+        )
+        download = self.yousign_request(
+            'GET',
+            download_url % (self.ys_identifier, document_id),
+            200,
+            return_raw=True,
+            raise_if_ko=raise_if_ko
+        )
+        if not document or not download:
+            return False, False
+    
+        return document.get("filename"), download
+
+    def webhook_signature_request_done(self, atDate, data):
+        self.ensure_one()
+
+        self.write({
+            'last_update': atDate,
+            'state': 'signed',
+        })
+        logger.info("Yousign request %s switched to signed state", self.ys_identifier)
+
+        src_obj = self.get_source_object_with_chatter()
+        if src_obj:
+            src_obj.sudo().message_post(body=_(
+                "Yousign request <b>%s</b> has been signed by all "
+                "signatories") % self.name)
+            self._signed_hook(src_obj)
+
+        docs_to_sign_count = len(self.attachment_ids)
+        signed_filenames = [
+            att.name for att in self.signed_attachment_ids]
+        if self.res_id and self.model:
+            res_model = self.model
+            res_id = self.res_id
+        else:
+            res_model = self._name
+            res_id = self.id
+
+        for document in data['signature_request']['documents']:
+            if document["nature"] != "signable_document":
+                continue
+
+            document_id = document['id']
+            original_filename, dl = self.api_dowload_document(
+                document_id, raise_if_ko=False)
+            if not original_filename:
+                continue
+            if (
+                not dl
+                or dl.status_code != 200
+                or not dl.content.startswith(b"%PDF")
+            ):
+                logger.error(
+                    "Invalid Yousign PDF download for document %s",
+                    document_id,
+                )
+                continue
+            if (
+                original_filename[-4:] and
+                original_filename[-4:].lower() == '.pdf'
+            ):
+                signed_filename = '%s_signed.pdf' % original_filename[:-4]
+            else:
+                signed_filename = original_filename
+            if signed_filename in signed_filenames:
+                logger.debug(
+                    'File %s is already attached as '
+                    'signed_attachment_ids', signed_filename)
+                continue
+            attach = self.env['ir.attachment'].create({
+                'name': signed_filename,
+                'type': 'binary',
+                'res_id': res_id,
+                'res_model': res_model,
+                'datas': base64.encodebytes(dl.content),
+            })
+            self.signed_attachment_ids = [(4, attach.id)]
+            signed_filenames.append(signed_filename)
+            logger.info(
+                'Signed file %s attached on %s ID %d',
+                signed_filename, res_model, res_id)
+
+        if len(signed_filenames) == docs_to_sign_count:
+            self.state = 'archived'
+            self.message_post(body=_(
+                "%d signed document(s) are now attached. "
+                "Request %s is archived")
+                % (len(signed_filenames), self.name))
+            logger.info(
+                "Yousign request %s switched to archived state",
+                self.ys_identifier)
+
+        return self.read(['state', 'last_update', 'ys_identifier'])[0]
+
+
+    def webhook_signature_request_expired(self, atDate, data):
+        return self.webhook_signature_request_declined(atDate, data)
+
+    def webhook_signature_request_declined(self, atDate, data):
+        self.ensure_one()
+
+        self.write({
+            'last_update': atDate,
+            'state': 'cancel',
+        })
+        logger.info("Yousign request %s switched to canceled state",
+                    self.ys_identifier)
+        return self.read(['state', 'last_update', 'ys_identifier'])[0]
+
+    def webhook_signer_done(self, atDate, data):
+        self.ensure_one()
+        signer = self.env['yousign.request.signatory'].search([
+            ('ys_identifier', '=', data['signer']['id'])
+        ])
+        signer.ensure_one()
+        signer.write({
+            'state': 'signed',
+            'signature_date': atDate,
+        })
+        logger.info("Yousign signer %s switched to signed state",
+                    self.ys_identifier)
+        return signer.read(['state', 'signature_date', 'ys_identifier'])[0]
+
+    def webhook_signer_declined(self, atDate, data):
+        self.ensure_one()
+        signer = self.env['yousign.request.signatory'].search([
+            ('ys_identifier', '=', data['signer']['id'])
+        ])
+        signer.ensure_one()
+        signer.write({
+            'state': 'refused',
+            'signature_date': atDate,
+        })
+        logger.info("Yousign signer %s switched to refused state",
+                    self.ys_identifier)
+        return signer.read(['state', 'signature_date', 'ys_identifier'])[0]
+
     def name_get(self):
         res = []
         for req in self:
@@ -352,8 +740,7 @@ class YousignRequest(models.Model):
             res.append((req.id, name))
         return res
 
-    @api.model
-    def signature_position(self, sign_position, signatory_rank):
+    def signature_position(self, signatory_rank):
         # sign_position is passed as parameter because this method
         # is decorated by api.model
 
@@ -363,20 +750,20 @@ class YousignRequest(models.Model):
         # urx=upper right x coordinate,
         # ury = upper right y coordinate
         TOPRANK2POSITION = {
-            1: '70,600,285,690',  # width = 215 - height = 90
-            2: '310,600,525,690',
-            3: '70,460,285,550',
-            4: '310,460,525,550',
+            1: (95, 195, 150, 50),  # width = 150 - height = 50
+            2: (330, 195, 150, 50),
+            3: (95, 150, 150, 50),
+            4: (330, 145, 150, 50),
         }
         BOTTOMRANK2POSITION = {
-            1: '95,195,245,245',  # width = 150 - height = 50
-            2: '330,195,480,245',
-            3: '95,150,245,200',
-            4: '330,145,480,195',
+            1: (70, 600, 215, 90),
+            2: (310, 600, 215, 90),
+            3: (70, 460, 215, 90),
+            4: (310, 460, 215, 50),
         }
         rank2position = (
             TOPRANK2POSITION
-            if sign_position == 'top'
+            if self.sign_position == 'top'
             else BOTTOMRANK2POSITION
         )
 
@@ -387,7 +774,7 @@ class YousignRequest(models.Model):
                 signatory_rank
             )
 
-        return rank2position.get(signatory_rank, '56,392,296,464')
+        return rank2position.get(signatory_rank, (56, 392, 140, 72))
 
     @api.model
     def include_url_tag(self, mail_body, mail_name, raise_if_not_found=False):
@@ -438,165 +825,25 @@ class YousignRequest(models.Model):
             raise UserError(_(
                 "Missing init mail body on request %s.") % self.display_name)
         rank = 0
-        init_mail_body = self.include_url_tag(
-            self.init_mail_body, 'init', raise_if_not_found=True)
-        data = {
-            'name': self.name,
-            'description': 'Created by Odoo connector',
-            'start': False,
-            'ordered': self.ordered,
-            'config': {
-                'email': {
-                    'member.started': [{
-                        'subject': self.init_mail_subject,
-                        'message': init_mail_body,
-                        'to': ['@member'],
-                        }]
-                    }
-                }
-            }
-        for notif in self.notification_ids:
-            to = []
-            if notif.creator:
-                to.append('@creator')
-            if notif.members:
-                to.append('@members')
-            if notif.subscribers:
-                to.append('@subscribers')
-            for p in notif.partner_ids.filtered(lambda x: x.email):
-                to.append(p.email)
-            data['config']['email'][notif.notif_type] = [{
-                'subject': notif.subject,
-                'message': self.include_url_tag(notif.body, notif.notif_type),
-                'to': to,
-                }]
-        if self.remind_auto:
-            if not self.remind_mail_subject:
-                raise UserError(_("Missing Remind Mail Subject"))
-            if not self.remind_mail_body:
-                raise UserError(_("Missing Remind Mail Body"))
-            remind_mail_body = self.include_url_tag(
-                self.remind_mail_body, 'reminder', raise_if_not_found=True)
-            data['config']['reminders'] = [{
-                'interval': self.remind_interval,
-                'limit': self.remind_limit,
-                'config': {
-                    'email': {
-                        'reminder.executed': [{
-                            'subject': self.remind_mail_subject,
-                            'message': remind_mail_body,
-                            'to': ["@members.auto"],
-                            }],
-                        },
-                    },
-                }]
-        rproc_res = self.yousign_request('POST', '/procedures', json=data)
-        if rproc_res.get('status') != 'draft':
+        sign_request = self.api_post_signature_requests()
+        if sign_request.get('status') != 'draft':
             raise UserError(_('Wrong status, should be draft'))
-        if not rproc_res.get('id'):
+        if not sign_request.get('id'):
             raise UserError(_('Missing ID'))
-        ys_id = rproc_res['id']
-        attach_data = {}
-        # key = attach recordset
-        # value = {'pagenum': 4, 'filename': 'tutu.pdf', 'ys_id': 'JLDKSJDKL'}
-        for attach in self.attachment_ids:
-            # We decide to always add signature on last page
-            filename = attach.name
-            pdf_file = BytesIO(attach.raw)
-            try:
-                pdf_reader = pypdf.PdfReader(pdf_file)
-            except pypdf.utils.PdfReadError:
-                raise UserError(_(
-                    "File to sign '%s' is not a valid PDF file. You "
-                    "must convert it to PDF before including it in a "
-                    "Yousign request.") % filename)
-            num_pages = len(pdf_reader.pages)
-            logger.info('PDF %s has %d pages', filename, num_pages)
-            attach_data[attach] = {
-                'filename': filename,
-                'base64': attach.datas,
-                'num_pages': num_pages,
-                }
 
-        members_data = {}
+        self.ys_identifier = sign_request['id']
+
+        documents = []
+        for attachment in self.attachment_ids:
+            documents.append(self.api_post_document(attachment))
 
         for signat in self.signatory_ids:
             rank += 1
-            if not signat.lastname:
-                raise UserError(_(
-                    "Missing lastname on one of the signatories of request %s")
-                    % self.display_name)
-            if not signat.firstname:
-                raise UserError(_(
-                    "Missing firstname on signatory '%s'" % signat.lastname))
-            if not signat.email:
-                raise UserError(_(
-                    "Missing email on the signatory '%s'") % signat.lastname)
-
-            if not signat.mobile and signat.auth_mode == 'sms':
-                raise UserError(_(
-                    "Missing mobile phone number on signatory '%s'.")
-                    % signat.lastname)
-            members_data[signat] = {
-                'firstname':
-                signat.firstname and signat.firstname.strip() or '',
-                'lastname': signat.lastname and signat.lastname.strip(),
-                'phone':
-                signat.mobile and signat.mobile.replace(' ', '') or '',
-                'email': signat.email.strip(),
-                'rank': rank,
-                'mention': signat.mention_top or '',
-                'mention2': signat.mention_bottom or '',
-                }
-
-        for attach, attach_vals in attach_data.items():
-            json = {
-                'name': attach_vals['filename'],
-                'content': attach_vals['base64'],
-                'procedure': ys_id,
-                }
-            rattach_res = self.yousign_request('POST', '/files', json=json)
-            ys_attach_id = rattach_res.get('id')
-            assert ys_attach_id
-            attach_data[attach]['ys_attach_id'] = ys_attach_id
-
-        for member, member_vals in members_data.items():
-            json = {
-                'firstname': member_vals['firstname'],
-                'lastname': member_vals['lastname'],
-                'email': member_vals['email'],
-                'procedure': ys_id,
-                'operationLevel': "custom",
-                'operationCustomModes': [member.auth_mode],
-                }
-            if member_vals.get('phone'):
-                json['phone'] = member_vals['phone']
-            else:
-                json['phone'] = '+33699089246'
-            if self.ordered:
-                json['position'] = member_vals['rank']
-            rmember_res = self.yousign_request('POST', '/members', json=json)
-            ys_member_id = rmember_res.get('id')
-            assert ys_member_id
-            members_data[member]['ys_member_id'] = ys_member_id
-            member.ys_identifier = ys_member_id
-
-            for attach_id, attach_vals in attach_data.items():
-                json_fo = {
-                    'file': attach_vals['ys_attach_id'],
-                    'member': ys_member_id,
-                    'page': attach_vals['num_pages'],
-                    'position': self.signature_position(
-                        self.sign_position, member_vals['rank']),
-                    'mention': member_vals.get('mention'),
-                    'mention2': member_vals.get('mention2'),
-                    # 'reason': ,
-                    }
-                self.yousign_request('POST', '/file_objects', json=json_fo)
+            self.api_post_signer(signat, rank, documents)
 
         try:
             logger.debug('Start YS initSign on req ID %d', self.id)
-            self.yousign_request('PUT', ys_id, 200, json={'start': True})
+            self.api_activate_signature_requests()
         except Exception as err:
             logger.error(
                 'YS initSign failed on req ID %d with error %s',
@@ -605,14 +852,11 @@ class YousignRequest(models.Model):
                 "Failure when sending the signing request %s to "
                 "Yousign.\n\n"
                 "Error: %s") % (self.display_name, err))
-        self.write({
-            'state': 'sent',
-            'ys_identifier': ys_id,
-            })
-        self.signatory_ids.write({'state': 'pending'})
+
+        self.state = 'sent'
+
         src_obj = self.get_source_object_with_chatter()
         if src_obj:
-            # for v10, add link to request in message
             src_obj.sudo().message_post(body=_(
                 "Yousign request <a href=# data-oe-model=yousign.request "
                 "data-oe-id=%(req_id)s>%(req_name)s</a> "
@@ -623,8 +867,7 @@ class YousignRequest(models.Model):
     def cancel(self):
         for req in self:
             if req.state == 'sent' and req.ys_identifier:
-                self.yousign_request(
-                    'DELETE', req.ys_identifier, 204, return_raw=True)
+                self.api_delete_signature_requests()
                 logger.info(
                     'Yousign request %s ID %s successfully cancelled.',
                     req.name, req.id)
@@ -640,7 +883,7 @@ class YousignRequest(models.Model):
             'processing': 'pending',
             'done': 'signed',
             'refused': 'refused',
-            }
+        }
         for req in self.filtered(lambda x: x.state == 'sent'):
             logger.info(
                 'Start getInfosFromSignatureDemand request on YS req %s ID %d',
@@ -652,8 +895,7 @@ class YousignRequest(models.Model):
                     logger.warning(
                         'Signer ID %s has no YS identifier', signer.id)
                     continue
-                res = self.yousign_request(
-                    'GET', signer.ys_identifier, 200, raise_if_ko=raise_if_ko)
+                res = self.api_get_signature_requests(raise_if_ko)
                 if res is None:
                     logger.warning('Skipping YS req %s ID %d', req.name, req.id)
                     continue
@@ -674,7 +916,7 @@ class YousignRequest(models.Model):
                     'state': ostate,
                     'signature_date': signature_date,
                     'comment': res.get('comment', False),
-                    })
+                })
 
             vals = {'last_update': now}
             if all([x == 'signed' for x in sign_state.values()]):
@@ -698,13 +940,17 @@ class YousignRequest(models.Model):
     @api.model
     def cron_update(self):
         # Filter-out the YS requests of the old-API plateform
-        domain_base = [('ys_identifier', '=like', '/procedures/%')]
-        requests_to_update = self.search(
-            domain_base + [('state', '=', 'sent')])
-        requests_to_update.update_status(raise_if_ko=False)
+        domain_base = [('ys_identifier', '!=', False)]
+
         requests_to_archive = self.search(
-            domain_base + [('state', '=', 'signed')])
-        requests_to_archive.archive(raise_if_ko=False)
+            domain_base + [('state', '=', 'signed')], limit=None)
+        for request in requests_to_archive:
+            request.archive(raise_if_ko=False)
+
+        requests_to_update = self.search(
+            domain_base + [('state', '=', 'sent')], limit=None)
+        for request in requests_to_update:
+            request.update_status(raise_if_ko=False)
 
     def archive(self, raise_if_ko=True):
         for req in self.filtered(
@@ -718,8 +964,7 @@ class YousignRequest(models.Model):
                     "Skip Yousign request %s ID %s: no documents to sign, "
                     "so nothing to archive", req.name, req.id)
 
-            res = self.yousign_request(
-                'GET', req.ys_identifier, 200, raise_if_ko=raise_if_ko)
+            res = self.api_get_signature_requests(raise_if_ko=raise_if_ko)
             if res is None:
                 logger.warning("Skipping Yousign request %s ID %s", req.name, req.id)
                 continue
@@ -761,11 +1006,12 @@ class YousignRequest(models.Model):
                                 'File %s is already attached as '
                                 'signed_attachment_ids', signed_filename)
                             continue
-                        attach = self.env['ir.attachment'].create({
-                            'name': signed_filename,
-                            'res_id': res_id,
-                            'res_model': res_model,
-                            'datas': dl.content,
+                        attach = self.env['ir.attachment'].create(
+                            {
+                                'name': signed_filename,
+                                'res_id': res_id,
+                                'res_model': res_model,
+                                'datas': dl.content,
                             })
                         req.signed_attachment_ids = [(4, attach.id)]
                         signed_filenames.append(signed_filename)
@@ -796,19 +1042,22 @@ class YousignRequestSignatory(models.Model):
     lastname = fields.Char()
     email = fields.Char('E-mail')
     mobile = fields.Char('Mobile')
-    auth_mode = fields.Selection([
-        ('sms', 'SMS'),
-        ('email', 'E-Mail'),
-        ], default='sms', string='Authentication Mode', required=True,
+    auth_mode = fields.Selection(
+        [
+            ('otp_sms', 'SMS'),
+            ('otp_email', 'E-Mail'),  # TODO mig script old value : mail
+            ('no_otp', 'No OTP'),  # TODO mig script old value : mail
+        ], default='otp_sms', string='Authentication Mode', required=True,
         help='Authentication mode used for the signer')
     mention_top = fields.Char(string='Top Mention')
     mention_bottom = fields.Char(string='Bottom Mention')
     ys_identifier = fields.Char('Yousign ID', readonly=True)
-    state = fields.Selection([
-        ('draft', 'Draft'),
-        ('pending', 'Pending'),
-        ('signed', 'Signed'),
-        ('refused', 'Refused'),
+    state = fields.Selection(
+        [
+            ('draft', 'Draft'),
+            ('pending', 'Pending'),
+            ('signed', 'Signed'),
+            ('refused', 'Refused'),
         ], string='Signature Status', readonly=True, default='draft')
     comment = fields.Text(string='Comment')
     signature_date = fields.Date(string='Signature Date', readonly=True)

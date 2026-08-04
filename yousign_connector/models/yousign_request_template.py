@@ -51,7 +51,7 @@ class YousignRequestTemplate(models.Model):
         "records of the related document model")
     sign_position = fields.Selection(
         [('top', 'Top'), ('bottom', 'Bottom')],
-        string='Sign position', default='top')
+        string='Sign position', default='bottom')
 
     _sql_constraints = [
         (
@@ -122,9 +122,9 @@ class YousignRequestTemplateSignatory(models.Model):
         'res.partner', string='Fixed Partner', ondelete='restrict')
     partner_tmpl = fields.Char(string='Dynamic Partner')
     auth_mode = fields.Selection([
-        ('sms', 'SMS'),
-        ('email', 'E-Mail'),
-        ], default='sms', string='Authentication Mode', required=True,
+        ('otp_sms', 'SMS'),
+        ('otp_email', 'E-Mail'),
+        ], default='otp_sms', string='Authentication Mode', required=True,
         help='Authentication mode used for the signer')
     mention_top = fields.Char(string='Top Mention')
     mention_bottom = fields.Char(string='Bottom Mention')

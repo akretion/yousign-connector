@@ -20,8 +20,8 @@ msgstr ""
 #, python-format
 msgid ""
 "%(doc_count)d signed document(s) are now attached. Request %(req_name)s is "
-"archived."
-msgstr ""
+"Archived."
+msgstr "Archivé"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__message_needaction
@@ -67,37 +67,37 @@ msgstr ""
 #: model:ir.model.fields.selection,name:yousign_connector.selection__yousign_request__state__archived
 #: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_search
 msgid "Archived"
-msgstr ""
+msgstr "Archivé"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Nombre de documents"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_signatory__auth_mode
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_signatory__auth_mode
 msgid "Authentication Mode"
-msgstr ""
+msgstr "Mode d'authentification"
 
 #. module: yousign_connector
 #: model:ir.model.fields,help:yousign_connector.field_yousign_request_signatory__auth_mode
 #: model:ir.model.fields,help:yousign_connector.field_yousign_request_template_signatory__auth_mode
 msgid "Authentication mode used for the signer"
-msgstr ""
+msgstr "Mode d'authentification utilisé pour le signataire"
 
 #. module: yousign_connector
 #: model_terms:ir.ui.view,arch_db:yousign_connector.new_yousign_request_form
 #: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_form
 #: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_template_form
 msgid "Auto-Remind Setup"
-msgstr ""
+msgstr "Rappel de Signature"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__remind_auto
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template__remind_auto
 msgid "Automatic Reminder"
-msgstr ""
+msgstr "Rappel de signature automatique"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_notification__body
@@ -105,36 +105,36 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:yousign_connector.new_yousign_request_form
 #: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_template_form
 msgid "Body"
-msgstr ""
+msgstr "Message"
 
 #. module: yousign_connector
 #: model:ir.model.fields.selection,name:yousign_connector.selection__yousign_request__sign_position__bottom
 #: model:ir.model.fields.selection,name:yousign_connector.selection__yousign_request_template__sign_position__bottom
 msgid "Bottom"
-msgstr ""
+msgstr "Bas"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_signatory__mention_bottom
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_signatory__mention_bottom
 msgid "Bottom Mention"
-msgstr ""
+msgstr "Mention bas de page"
 
 #. module: yousign_connector
 #: model_terms:ir.ui.view,arch_db:yousign_connector.new_yousign_request_form
 #: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_form
 #: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_remind_form
 msgid "Cancel"
-msgstr ""
+msgstr "Annuler"
 
 #. module: yousign_connector
 #: model:ir.model.fields.selection,name:yousign_connector.selection__yousign_request__state__cancel
 msgid "Cancelled"
-msgstr ""
+msgstr "Annulé"
 
 #. module: yousign_connector
 #: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_form
 msgid "Check if signatories have signed the documents"
-msgstr ""
+msgstr "Vérifier si les signataires ont signé les documents"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_signatory__comment
@@ -145,7 +145,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__company_id
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template__company_id
 msgid "Company"
-msgstr ""
+msgstr "Société"
 
 #. module: yousign_connector
 #: code:addons/yousign_connector/models/yousign_request.py:0
@@ -211,7 +211,7 @@ msgstr ""
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__attachment_ids
 msgid "Documents to Sign"
-msgstr ""
+msgstr "Documents à signer"
 
 #. module: yousign_connector
 #: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_form
@@ -223,7 +223,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:yousign_connector.selection__yousign_request_signatory__state__draft
 #: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_search
 msgid "Draft"
-msgstr ""
+msgstr "Brouillon"
 
 #. module: yousign_connector
 #: model:ir.model.fields.selection,name:yousign_connector.selection__yousign_request_template_signatory__partner_type__dynamic
@@ -259,7 +259,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_form
 #: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_template_form
 msgid "E-mail Notifications"
-msgstr ""
+msgstr "Mail de Notifications"
 
 #. module: yousign_connector
 #: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_form
@@ -307,7 +307,7 @@ msgstr ""
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_signatory__firstname
 msgid "Firstname"
-msgstr ""
+msgstr "Prénom"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_signatory__partner_id
@@ -391,7 +391,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:yousign_connector.new_yousign_request_form
 #: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_template_form
 msgid "Init E-mail"
-msgstr ""
+msgstr "Premier Mail"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__init_mail_body
@@ -416,7 +416,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_notification__lang
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_signatory__lang
 msgid "Language"
-msgstr ""
+msgstr "Langue"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request____last_update
@@ -432,7 +432,7 @@ msgstr ""
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__last_update
 msgid "Last Status Update"
-msgstr ""
+msgstr "Dernière à jour du statut"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__write_uid
@@ -459,7 +459,7 @@ msgstr ""
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_signatory__lastname
 msgid "Lastname"
-msgstr ""
+msgstr "Nom"
 
 #. module: yousign_connector
 #: code:addons/yousign_connector/models/yousign_request.py:0
@@ -745,29 +745,29 @@ msgstr ""
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__res_id
 msgid "Related Document ID"
-msgstr ""
+msgstr "ID du document lié"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__model
 msgid "Related Document Model"
-msgstr ""
+msgstr "Modèle du document lié"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__res_name
 msgid "Related Document Name"
-msgstr ""
+msgstr "Nom du document lié"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__remind_interval
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template__remind_interval
 msgid "Remind Interval"
-msgstr ""
+msgstr "Intervalle de rappel"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__remind_limit
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template__remind_limit
 msgid "Remind Limit"
-msgstr ""
+msgstr "Limite de rappel"
 
 #. module: yousign_connector
 #: model:ir.model,name:yousign_connector.model_yousign_request_remind
@@ -778,13 +778,13 @@ msgstr "Relance sur plusieurs requêtes Yousign"
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__remind_mail_body
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template__remind_mail_body
 msgid "Reminder Mail Body"
-msgstr ""
+msgstr "Message du mail de rappel"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__remind_mail_subject
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template__remind_mail_subject
 msgid "Reminder Mail Subject"
-msgstr ""
+msgstr "Sujet du mail de rappel"
 
 #. module: yousign_connector
 #: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_template_form
@@ -844,13 +844,13 @@ msgstr "Envoyer une relance"
 #: model_terms:ir.ui.view,arch_db:yousign_connector.new_yousign_request_form
 #: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_form
 msgid "Send to Yousign"
-msgstr ""
+msgstr "Envoyer à Yousign"
 
 #. module: yousign_connector
 #: model:ir.model.fields.selection,name:yousign_connector.selection__yousign_request__state__sent
 #: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_search
 msgid "Sent"
-msgstr ""
+msgstr "Envoyé"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_signatory__sequence
@@ -873,24 +873,24 @@ msgstr ""
 #. module: yousign_connector
 #: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_signatory_tree
 msgid "Sign Date"
-msgstr ""
+msgstr "Date de Signature"
 
 #. module: yousign_connector
 #: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_signatory_tree
 msgid "Sign Status"
-msgstr ""
+msgstr "Statut"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__ordered
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template__ordered
 msgid "Sign one after the other"
-msgstr ""
+msgstr "Signer dans l'ordre des signataires"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__sign_position
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template__sign_position
 msgid "Sign position"
-msgstr ""
+msgstr "Emplacement de a signature"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__signatory_ids
@@ -899,7 +899,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_form
 #: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_template_form
 msgid "Signatories"
-msgstr ""
+msgstr "Signataires"
 
 #. module: yousign_connector
 #: model:ir.model,name:yousign_connector.model_yousign_request_template_signatory
@@ -932,7 +932,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:yousign_connector.selection__yousign_request_signatory__state__signed
 #: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_search
 msgid "Signed"
-msgstr ""
+msgstr "signé"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__signed_attachment_ids
@@ -979,7 +979,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:yousign_connector.new_yousign_request_form
 #: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_template_form
 msgid "Subject"
-msgstr ""
+msgstr "Sujet"
 
 #. module: yousign_connector
 #: code:addons/yousign_connector/models/yousign_request.py:0
@@ -1050,13 +1050,13 @@ msgstr ""
 #: model:ir.model.fields.selection,name:yousign_connector.selection__yousign_request__sign_position__top
 #: model:ir.model.fields.selection,name:yousign_connector.selection__yousign_request_template__sign_position__top
 msgid "Top"
-msgstr ""
+msgstr "Haut"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_signatory__mention_top
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_signatory__mention_top
 msgid "Top Mention"
-msgstr ""
+msgstr "Mention haut de page"
 
 #. module: yousign_connector
 #: model:ir.model.fields,help:yousign_connector.field_yousign_request__activity_exception_decoration
@@ -1122,21 +1122,21 @@ msgstr ""
 #: code:addons/yousign_connector/models/yousign_request.py:0
 #, python-format
 msgid "Wrong status, should be draft"
-msgstr "Wrong active_model (%s should be %s)"
+msgstr "Erreur de statut, il doit être en brouillon"
 
 #. module: yousign_connector
 #: model:ir.model.fields,help:yousign_connector.field_yousign_request_template__init_mail_body
 msgid ""
 "You must insert '{yousignUrl}' in the body where you want to insert the URL "
 "to access Yousign."
-msgstr ""
+msgstr "Vous devez ajouter '{yousignUrl}' dans le corps du message pour afficher le lien vers la signature"
 
 #. module: yousign_connector
 #: code:addons/yousign_connector/models/yousign_request.py:0
 #: code:addons/yousign_connector/models/yousign_request_template.py:0
 #, python-format
 msgid "You must select who should be notified."
-msgstr ""
+msgstr "Vous devez choisir qui sera notifié"
 
 #. module: yousign_connector
 #: model:ir.ui.menu,name:yousign_connector.yousign_root_config
@@ -1180,6 +1180,9 @@ msgid ""
 "id=%(req_id)s>%(req_name)s</a> generated with %(signatory_count)s "
 "signatories"
 msgstr ""
+"Demande de signature Yousign <a href=# data-oe-model=yousign.request data-oe-"
+"id=%(req_id)s>%(req_name)s</a> envoyé avec %(signatory_count)s "
+"signataires"
 
 #. module: yousign_connector
 #: code:addons/yousign_connector/models/yousign_request.py:0
@@ -1188,13 +1191,15 @@ msgid ""
 "Yousign request <a href=# data-oe-model=yousign.request data-oe-"
 "id=%(req_id)s>%(req_name)s</a> has been signed by all signatories."
 msgstr ""
+"Demande de signature Yousign <a href=# data-oe-model=yousign.request data-oe-"
+"id=%(req_id)s>%(req_name)s</a> a été signé par tous les signataires."
 
 #. module: yousign_connector
 #: model_terms:ir.ui.view,arch_db:yousign_connector.new_yousign_request_form
 #: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_form
 #: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_template_form
 msgid "days"
-msgstr ""
+msgstr "jours"
 
 #. module: yousign_connector
 #: code:addons/yousign_connector/models/yousign_request.py:0
