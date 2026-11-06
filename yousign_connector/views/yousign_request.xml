@@ -68,11 +68,7 @@
                     </page>
                 </notebook>
             </sheet>
-            <div class="oe_chatter">
-                <field name="message_follower_ids" widget="mail_followers"/>
-                <field name="activity_ids" widget="mail_activity"/>
-                <field name="message_ids" widget="mail_thread"/>
-            </div>
+            <chatter/>
         </form>
     </field>
 </record>
@@ -133,7 +129,7 @@
 <record id="yousign_request_tree" model="ir.ui.view">
     <field name="model">yousign.request</field>
     <field name="arch" type="xml">
-        <tree>
+        <list>
             <field name="name" decoration-bf="1"/>
             <field name="res_name"/>
             <field name="init_mail_subject"/>
@@ -142,7 +138,7 @@
             <field name="ordered" optional="hide"/>
             <field name="company_id" groups="base.group_multi_company" optional="hide"/>
             <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'signed'" decoration-warning="state == 'sent'" decoration-muted="state == 'cancel'"/>
-        </tree>
+        </list>
     </field>
 </record>
 
@@ -193,7 +189,7 @@
 <record id="yousign_request_signatory_tree" model="ir.ui.view">
     <field name="model">yousign.request.signatory</field>
     <field name="arch" type="xml">
-        <tree >
+        <list >
             <field name="sequence" widget="handle"/>
             <field name="parent_id" invisible="not context.get('yousign_request_signatory_main_view')"/>
             <field name="partner_id" optional="hide"/>
@@ -208,7 +204,7 @@
             <field name="signature_date" string="Sign Date"/>
             <field name="comment" optional="hide"/>
             <field name="ys_identifier" optional="hide"/>
-        </tree>
+        </list>
     </field>
 </record>
 
@@ -230,12 +226,12 @@
     </field>
 </record>
 
-<!-- WARNING: fields MUST also be present in tree view (can be invisible or optional
+<!-- WARNING: fields MUST also be present in list view (can be invisible or optional
 otherwise the default_get() doesn't work on that field -->
 <record id="yousign_request_notification_tree" model="ir.ui.view">
     <field name="model">yousign.request.notification</field>
     <field name="arch" type="xml">
-        <tree>
+        <list>
             <field name="parent_id" invisible="not context.get('yousign_request_notification_main_view')"/>
             <field name="notif_type"/>
             <field name="subject"/>
@@ -244,7 +240,7 @@ otherwise the default_get() doesn't work on that field -->
             <field name="subscribers"/>
             <field name="partner_ids" widget="many2many_tags" optional="hide"/>
             <field name="body" invisible="1"/>
-        </tree>
+        </list>
     </field>
 </record>
 
@@ -259,7 +255,7 @@ otherwise the default_get() doesn't work on that field -->
 <record id="yousign_request_action" model="ir.actions.act_window">
     <field name="name">Signature Requests</field>
     <field name="res_model">yousign.request</field>
-    <field name="view_mode">tree,form</field>
+    <field name="view_mode">list,form</field>
 </record>
 
 <menuitem id="yousign_request_menu" parent="yousign_root_config" action="yousign_request_action" sequence="10"/>
