@@ -1,0 +1,11 @@
+[project]
+name = "odoo-addons-akretion-yousign-connector"
+version = "18.0.20261109.0"
+dependencies = [
+    "odoo-addon-yousign_connector==18.0.*",
+]
+classifiers=[
+    "Programming Language :: Python",
+    "Framework :: Odoo",
+    "Framework :: Odoo :: 18.0",
+]
