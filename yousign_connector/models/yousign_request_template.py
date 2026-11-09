@@ -1,90 +1,104 @@
-# Copyright 2018-2024 Akretion France (https://www.akretion.com/)
+# Copyright 2018-2026 Akretion France (https://www.akretion.com/)
 # @author: Alexis de Lattre <alexis.delattre@akretion.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import api, fields, models, _
-from odoo.exceptions import UserError, ValidationError
 import logging
+
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError, ValidationError
+
 logger = logging.getLogger(__name__)
 
 
 class YousignRequestTemplate(models.Model):
-    _name = 'yousign.request.template'
-    _description = 'Yousign Request Template'
-    _order = 'name'
+    _name = "yousign.request.template"
+    _description = "Yousign Request Template"
+    _order = "name"
 
     name = fields.Char(required=True)
-    model_id = fields.Many2one(
-        'ir.model', string='Applies to')
-    model = fields.Char(related='model_id.model', store=True)
-    lang = fields.Char('Language')
-    ordered = fields.Boolean(string='Sign one after the other')
-    init_mail_subject = fields.Char(
-        'Init Mail Subject', translate=True)
+    model_id = fields.Many2one("ir.model", string="Applies to")
+    model = fields.Char(related="model_id.model", store=True)
+    lang = fields.Char("Language")
+    ordered = fields.Boolean(string="Sign one after the other")
+    init_mail_subject = fields.Char(translate=True)
     init_mail_body = fields.Html(
-        'Init Mail Body', translate=True,
+        translate=True,
         help="You must insert '{yousignUrl}' in the body where you want to "
-        "insert the URL to access Yousign.")
-    remind_auto = fields.Boolean(string='Automatic Reminder')
-    remind_mail_subject = fields.Char(
-        'Reminder Mail Subject', translate=True)
-    remind_mail_body = fields.Html(
-        'Reminder Mail Body', translate=True)
+        "insert the URL to access Yousign.",
+    )
+    remind_auto = fields.Boolean(string="Automatic Reminder")
+    remind_mail_subject = fields.Char("Reminder Mail Subject", translate=True)
+    remind_mail_body = fields.Html("Reminder Mail Body", translate=True)
     remind_interval = fields.Integer(
-        string='Remind Interval', default=3,
-        help="Number of days between 2 auto-reminders by email.")
-    remind_limit = fields.Integer(string='Remind Limit', default=10)
-    report_id = fields.Many2one(
-        'ir.actions.report', string='Default Report to Sign')
+        default=3,
+        help="Number of days between 2 auto-reminders by email.",
+    )
+    remind_limit = fields.Integer(default=10)
+    report_id = fields.Many2one("ir.actions.report", string="Default Report to Sign")
     company_id = fields.Many2one(
-        'res.company', string='Company', ondelete='cascade',
-        default=lambda self: self.env.company)
+        "res.company",
+        string="Company",
+        ondelete="cascade",
+        default=lambda self: self.env.company,
+    )
     signatory_ids = fields.One2many(
-        'yousign.request.template.signatory', 'parent_id',
-        string='Signatories')
+        "yousign.request.template.signatory", "parent_id", string="Signatories"
+    )
     notification_ids = fields.One2many(
-        'yousign.request.template.notification', 'parent_id',
-        string='E-mail Notifications')
+        "yousign.request.template.notification",
+        "parent_id",
+        string="E-mail Notifications",
+    )
     ir_act_window_id = fields.Many2one(
-        'ir.actions.act_window', string='Sidebar Action', readonly=True,
-        copy=False, help="Sidebar action to make this template available on "
-        "records of the related document model")
+        "ir.actions.act_window",
+        string="Sidebar Action",
+        readonly=True,
+        copy=False,
+        help="Sidebar action to make this template available on "
+        "records of the related document model",
+    )
     sign_position = fields.Selection(
-        [('top', 'Top'), ('bottom', 'Bottom')],
-        string='Sign position', default='bottom')
+        [("top", "Top"), ("bottom", "Bottom")], string="Sign position", default="bottom"
+    )
 
     _sql_constraints = [
         (
-            'remind_interval_positive',
-            'CHECK(remind_interval >= 0)',
-            'The Remind Interval must be positive or null.'),
+            "remind_interval_positive",
+            "CHECK(remind_interval >= 0)",
+            "The Remind Interval must be positive or null.",
+        ),
         (
-            'remind_limit_positive',
-            'CHECK(remind_limit >= 0)',
-            'The Remind Limit must be positive or null.'),
-        ]
+            "remind_limit_positive",
+            "CHECK(remind_limit >= 0)",
+            "The Remind Limit must be positive or null.",
+        ),
+    ]
 
     def create_button(self):
-        iaao = self.env['ir.actions.act_window']
+        iaao = self.env["ir.actions.act_window"]
         for template in self:
             src_obj = template.model_id.model
-            view = self.env.ref('yousign_connector.new_yousign_request_form')
-            button_name = _('Yousign Request (%s)') % template.name
-            action = iaao.sudo().create({
-                'name': button_name,
-                'type': 'ir.actions.act_window',
-                'res_model': 'yousign.request',
-                'src_model': src_obj,
-                'view_mode': 'form',
-                'view_id': view.id,
-                'target': 'new',
-                'context': f"{{'yousign_template_id': {template.id}}}",
-                'binding_model_id': src_obj.id,
-                })
+            view = self.env.ref("yousign_connector.new_yousign_request_form")
+            button_name = _("Yousign Request (%s)") % template.name
+            action = iaao.sudo().create(
+                {
+                    "name": button_name,
+                    "type": "ir.actions.act_window",
+                    "res_model": "yousign.request",
+                    "src_model": src_obj,
+                    "view_mode": "form",
+                    "view_id": view.id,
+                    "target": "new",
+                    "context": f"{{'yousign_template_id': {template.id}}}",
+                    "binding_model_id": src_obj.id,
+                }
+            )
 
-            template.write({
-                'ir_act_window_id': action.id,
-                })
+            template.write(
+                {
+                    "ir_act_window_id": action.id,
+                }
+            )
         return
 
     def unlink_button(self):
@@ -96,139 +110,161 @@ class YousignRequestTemplate(models.Model):
     def _prepare_template2request(self):
         self.ensure_one()
         res = {
-            'ordered': self.ordered,
-            'remind_auto': self.remind_auto,
-            'remind_interval': self.remind_interval,
-            'remind_limit': self.remind_limit,
-            'sign_position': self.sign_position,
-            }
+            "ordered": self.ordered,
+            "remind_auto": self.remind_auto,
+            "remind_interval": self.remind_interval,
+            "remind_limit": self.remind_limit,
+            "sign_position": self.sign_position,
+        }
         return res
 
 
 class YousignRequestTemplateSignatory(models.Model):
-    _name = 'yousign.request.template.signatory'
-    _description = 'Signatories of Yousign Request Template'
-    _order = 'parent_id, sequence, id'
-    _inherit = ['mail.render.mixin']
+    _name = "yousign.request.template.signatory"
+    _description = "Signatories of Yousign Request Template"
+    _order = "parent_id, sequence, id"
+    _inherit = ["mail.render.mixin"]
 
     parent_id = fields.Many2one(
-        'yousign.request.template', string='Template', ondelete='cascade')
+        "yousign.request.template", string="Template", ondelete="cascade"
+    )
     sequence = fields.Integer()
-    partner_type = fields.Selection([
-        ('static', 'Static'),
-        ('dynamic', 'Dynamic'),
-        ], string='Partner Type', default='dynamic', required=True)
+    partner_type = fields.Selection(
+        [
+            ("static", "Static"),
+            ("dynamic", "Dynamic"),
+        ],
+        default="dynamic",
+        required=True,
+    )
     partner_id = fields.Many2one(
-        'res.partner', string='Fixed Partner', ondelete='restrict')
-    partner_tmpl = fields.Char(string='Dynamic Partner')
-    auth_mode = fields.Selection([
-        ('otp_sms', 'SMS'),
-        ('otp_email', 'E-Mail'),
-        ], default='otp_sms', string='Authentication Mode', required=True,
-        help='Authentication mode used for the signer')
-    mention_top = fields.Char(string='Top Mention')
-    mention_bottom = fields.Char(string='Bottom Mention')
+        "res.partner", string="Fixed Partner", ondelete="restrict"
+    )
+    partner_tmpl = fields.Char(string="Dynamic Partner")
+    auth_mode = fields.Selection(
+        [
+            ("otp_sms", "SMS"),
+            ("otp_email", "E-Mail"),
+        ],
+        default="otp_sms",
+        string="Authentication Mode",
+        required=True,
+        help="Authentication mode used for the signer",
+    )
+    mention_top = fields.Char(string="Top Mention")
+    mention_bottom = fields.Char(string="Bottom Mention")
 
-    @api.onchange('partner_type')
+    @api.onchange("partner_type")
     def partner_type_change(self):
-        if self.partner_type == 'static':
+        if self.partner_type == "static":
             self.partner_tmpl = False
-        elif self.partner_type == 'dynamic':
+        elif self.partner_type == "dynamic":
             self.partner_id = False
 
-    @api.constrains('partner_type', 'partner_id', 'partner_tmpl')
+    @api.constrains("partner_type", "partner_id", "partner_tmpl")
     def check_signatory_template(self):
         for signatory in self:
-            if signatory.partner_type == 'static' and not signatory.partner_id:
-                raise ValidationError(_(
-                    "Fixed Partner is required when Partner Type is set "
-                    "to 'Static'."))
-            elif (
-                    signatory.partner_type == 'dynamic' and
-                    not signatory.partner_tmpl):
-                raise ValidationError(_(
-                    "Dynamic Partner is required when Partner Type is set "
-                    "to 'Dynamic'."))
+            if signatory.partner_type == "static" and not signatory.partner_id:
+                raise ValidationError(
+                    _(
+                        "Fixed Partner is required when Partner Type is set "
+                        "to 'Static'."
+                    )
+                )
+            elif signatory.partner_type == "dynamic" and not signatory.partner_tmpl:
+                raise ValidationError(
+                    _(
+                        "Dynamic Partner is required when Partner Type is set "
+                        "to 'Dynamic'."
+                    )
+                )
 
     def _prepare_template2request(self, model, res_id):
         self.ensure_one()
-        if self.partner_type == 'static':
+        if self.partner_type == "static":
             partner = self.partner_id
-        elif self.partner_type == 'dynamic':
+        elif self.partner_type == "dynamic":
             dynamic_partner_str = self._render_template(
-                self.partner_tmpl, model, [res_id])[res_id]
+                self.partner_tmpl, model, [res_id]
+            )[res_id]
             dynamic_partner_id = int(dynamic_partner_str)
-            partner = self.env['res.partner'].browse(dynamic_partner_id)
+            partner = self.env["res.partner"].browse(dynamic_partner_id)
         else:
             raise UserError(_("Unsupported partner type '%s'.") % self.partner_type)
         vals = {
-            'partner_id': partner.id,
-            'email': partner.email,
-            'lastname': partner.name,
-            'mobile': partner.mobile,
-            'auth_mode': self.auth_mode,
-            'mention_top': self.mention_top,
-            'mention_bottom': self.mention_bottom,
+            "partner_id": partner.id,
+            "email": partner.email,
+            "lastname": partner.name,
+            "mobile": partner.mobile,
+            "auth_mode": self.auth_mode,
+            "mention_top": self.mention_top,
+            "mention_bottom": self.mention_bottom,
         }
-        if (
-                hasattr(partner, 'firstname') and
-                not partner.is_company):
-            vals.update({
-                'firstname': partner.firstname,
-                'lastname': partner.lastname,
-                })
+        if hasattr(partner, "firstname") and not partner.is_company:
+            vals.update(
+                {
+                    "firstname": partner.firstname,
+                    "lastname": partner.lastname,
+                }
+            )
         return vals
 
 
 class YousignRequestTemplateNotification(models.Model):
-    _name = 'yousign.request.template.notification'
-    _description = 'Notifications of Yousign Request Template'
-    _inherit = ['mail.render.mixin']
+    _name = "yousign.request.template.notification"
+    _description = "Notifications of Yousign Request Template"
+    _inherit = ["mail.render.mixin"]
 
     parent_id = fields.Many2one(
-        'yousign.request.template', string='Template', ondelete='cascade')
+        "yousign.request.template", string="Template", ondelete="cascade"
+    )
     notif_type = fields.Selection(
-        '_notif_type_selection', string='Notification Type', required=True)
-    creator = fields.Boolean(string='Notify Creator')
-    members = fields.Boolean(string='Notify Members')
-    subscribers = fields.Boolean(string='Notify Subscribers')
+        "_notif_type_selection", string="Notification Type", required=True
+    )
+    creator = fields.Boolean(string="Notify Creator")
+    members = fields.Boolean(string="Notify Members")
+    subscribers = fields.Boolean(string="Notify Subscribers")
     partner_ids = fields.Many2many(
-        'res.partner', string='Partners to Notify',
-        domain=[('email', '!=', False)])
+        "res.partner", string="Partners to Notify", domain=[("email", "!=", False)]
+    )
     subject = fields.Char(required=True, translate=True)
     body = fields.Html(required=True, translate=True)
 
-    _sql_constraints = [(
-        'parent_type_uniq',
-        'unique(parent_id, notif_type)',
-        "This notification type already exists for this Yousign request "
-        "template!")]
+    _sql_constraints = [
+        (
+            "parent_type_uniq",
+            "unique(parent_id, notif_type)",
+            "This notification type already exists for this Yousign request "
+            "template!",
+        )
+    ]
 
     @api.model
     def _notif_type_selection(self):
-        return self.env['yousign.request.notification']._notif_type_selection()
+        return self.env["yousign.request.notification"]._notif_type_selection()
 
-    @api.constrains('creator', 'members', 'subscribers', 'partner_ids')
+    @api.constrains("creator", "members", "subscribers", "partner_ids")
     def _notif_check(self):
         for notif in self:
             if (
-                    not notif.creator and
-                    not notif.members and
-                    not notif.subscribers and
-                    not notif.partner_ids):
-                raise ValidationError(_(
-                    "You must select who should be notified."))
+                not notif.creator
+                and not notif.members
+                and not notif.subscribers
+                and not notif.partner_ids
+            ):
+                raise ValidationError(_("You must select who should be notified."))
 
     def _prepare_template2request(self, model, res_id):
         self.ensure_one()
         vals = {
-            'notif_type': self.notif_type,
-            'creator': self.creator,
-            'members': self.members,
-            'subscribers': self.subscribers,
-            'partner_ids': [(6, 0, self.partner_ids.ids)],
-            }
-        for dyn_field in ['subject', 'body']:
-            vals[dyn_field] = self._render_template(
-                self[dyn_field], model, [res_id])[res_id]
+            "notif_type": self.notif_type,
+            "creator": self.creator,
+            "members": self.members,
+            "subscribers": self.subscribers,
+            "partner_ids": [(6, 0, self.partner_ids.ids)],
+        }
+        for dyn_field in ["subject", "body"]:
+            vals[dyn_field] = self._render_template(self[dyn_field], model, [res_id])[
+                res_id
+            ]
         return vals

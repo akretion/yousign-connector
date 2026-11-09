@@ -1,11 +1,17 @@
-import simplejson
-import werkzeug
+# Copyright 2018-2026 Akretion France (http://www.akretion.com/)
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+
+import hashlib
+import hmac
 from datetime import datetime
-from odoo.http import Controller, route, request, JsonRequest, _logger
-from odoo.api import Environment
-from odoo import SUPERUSER_ID, tools, registry
-from werkzeug.exceptions import BadRequest
 from logging import getLogger
+
+from werkzeug.exceptions import BadRequest
+
+from odoo import SUPERUSER_ID, tools
+from odoo.api import Environment
+from odoo.http import Controller, request, route
+from odoo.modules.registry import Registry
 
 logger = getLogger(__name__)
 
@@ -15,13 +21,25 @@ class WebHookBadRequest(BadRequest):
 
 
 class YouSignController(Controller):
+    @route(
+        "/<db>/yousign/webhook",
+        type="http",
+        auth="none",
+        methods=["POST"],
+        csrf=False,
+        save_session=False,
+    )
+    def webhook(self, db, **kw):
+        try:
+            return self._webhook(db)
+        except WebHookBadRequest as e:
+            logger.warning("Yousign webhook rejected: %s", e.description)
+            return request.make_json_response({"error": e.description}, status=400)
 
-    @route('/<db>/yousign/webhook', type='json', auth='public', methods=['POST'])
-    def webhook(self, *a, **kw):
-        
-        secret = tools.config.get('yousign_secret', False)
+    def _webhook(self, dbname):
+        secret = tools.config.get("yousign_secret", False)
         if not secret:
-            return WebHookBadRequest("No secret defined")
+            raise WebHookBadRequest("No secret defined")
 
         # ## Headers
         # Content-Type:            application/json
@@ -32,23 +50,23 @@ class YouSignController(Controller):
         # X-Yousign-Issued-At:     The moment when this specific webhook was
         #                          sent. (timestamp)
         # User-Agent:              Yousign Webhook Bot
-        data = request.jsonrequest
-        logger.info("Webhook received:\n %s", data)
         # ## check the signature
-        # signature = request.httprequest.headers.get(
-        #     'X-Yousign-Signature-256', '')
-        # if not signature:
-        #     return WebHookBadRequest("The header has not a signature")
+        # Yousign signs the raw request body (bytes as sent), so the HMAC
+        # must be computed on it, never on a re-serialized JSON.
+        signature = request.httprequest.headers.get("X-Yousign-Signature-256", "")
+        if not signature:
+            raise WebHookBadRequest("Missing X-Yousign-Signature-256 header")
+        raw_body = request.httprequest.get_data()
+        digest = hmac.new(secret.encode("utf-8"), raw_body, hashlib.sha256).hexdigest()
+        computed_signature = f"sha256={digest}"
+        if not hmac.compare_digest(signature, computed_signature):
+            raise WebHookBadRequest("Wrong signature")
 
-        # digest = hmac.new(
-        #     secret.encode("utf-8"),
-        #     simplejson.dumps(data).encode("utf-8"),
-        #     hashlib.sha256
-        # ).hexdigest()
-        # computed_signature = "sha256=%s" % digest
-        # matches = hmac.compare_digest(signature, computed_signature)
-        # if not matches:
-        #     return WebHookBadRequest("Wrong signature")
+        try:
+            data = request.get_json_data()
+        except ValueError as e:
+            raise WebHookBadRequest("Invalid JSON payload") from e
+        logger.info("Webhook received:\n %s", data)
 
         # ## payload
         # {
@@ -61,31 +79,33 @@ class YouSignController(Controller):
         #   "data": { ... }
         # }
         try:
-            funcname = "webhook_" + data['event_name'].replace('.', '_')
-            event_time = data['event_time']
-            data['data']['signature_request']['id']
-        except KeyError as e:
-            return WebHookBadRequest(str(e))
+            funcname = "webhook_" + data["event_name"].replace(".", "_")
+            event_time = data["event_time"]
+            ys_identifier = data["data"]["signature_request"]["id"]
+        except (KeyError, TypeError) as e:
+            raise WebHookBadRequest(f"Missing key in payload: {e}") from e
 
-        dbname = request.endpoint_arguments['db']
-        
-        with registry(dbname).cursor() as cr:
+        with Registry(dbname).cursor() as cr:
             env = Environment(cr, SUPERUSER_ID, {})
-            Request = env['yousign.request']
+            Request = env["yousign.request"]
             if not hasattr(Request, funcname):
-                return WebHookBadRequest(
-                    "The webhook %s does not exist" % funcname)
+                raise WebHookBadRequest(f"The webhook {funcname} does not exist")
 
-            ys_identifier = data['data']['signature_request']['id']
-            odoo_request = Request.search(
-                [('ys_identifier', '=', ys_identifier)])
+            odoo_request = Request.search([("ys_identifier", "=", ys_identifier)])
             if not odoo_request:
-                return WebHookBadRequest(
-                    "No signature_request for id %s" % ys_identifier)
+                raise WebHookBadRequest(f"No signature_request for id {ys_identifier}")
+            # No user session here: use the language of the user who
+            # created the request so chatter messages are translated.
+            lang = odoo_request[:1].create_uid.lang
+            if lang:
+                odoo_request = odoo_request.with_context(lang=lang)
 
             try:
-                return getattr(odoo_request, funcname)(
-                    datetime.fromtimestamp(float(event_time)), data['data'])
+                res = getattr(odoo_request, funcname)(
+                    datetime.fromtimestamp(float(event_time)), data["data"]
+                )
             except Exception as e:
-                env.cr.rollback()  # all exception force to rollback environ
-                return WebHookBadRequest(str(e))
+                cr.rollback()  # all exception force to rollback environ
+                logger.exception("Yousign webhook %s failed", funcname)
+                raise WebHookBadRequest(str(e)) from e
+        return request.make_json_response(res)

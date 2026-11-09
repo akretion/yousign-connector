@@ -4,64 +4,67 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-04 21:50+0000\n"
+"POT-Creation-Date: 2026-11-09 19:06+0000\n"
 "PO-Revision-Date: 2024-09-04 21:50+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
 
 #. module: yousign_connector
+#. odoo-python
 #: code:addons/yousign_connector/models/yousign_request.py:0
-#, python-format
 msgid ""
 "%(doc_count)d signed document(s) are now attached. Request %(req_name)s is "
-"Archived."
-msgstr "Archivé"
+"archived."
+msgstr ""
+"%(doc_count)d document(s) signé(s) désormais en pièce jointe. La demande "
+"%(req_name)s est archivée."
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Action requise"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__activity_ids
 msgid "Activities"
-msgstr ""
+msgstr "Activités"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Décoration d'exception d'activité"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__activity_state
 msgid "Activity State"
-msgstr ""
+msgstr "Statut de l'activité"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__activity_type_icon
 msgid "Activity Type Icon"
-msgstr ""
+msgstr "Icône de type d'activité"
 
 #. module: yousign_connector
 #: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_template_form
 msgid "Add Action"
-msgstr ""
+msgstr "Ajouter l'action"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template__model_id
 msgid "Applies to"
-msgstr ""
+msgstr "S'applique à"
 
 #. module: yousign_connector
 #: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_form
 msgid "Archive"
-msgstr ""
+msgstr "Archiver"
 
 #. module: yousign_connector
 #: model:ir.model.fields.selection,name:yousign_connector.selection__yousign_request__state__archived
@@ -139,7 +142,7 @@ msgstr "Vérifier si les signataires ont signé les documents"
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_signatory__comment
 msgid "Comment"
-msgstr ""
+msgstr "Commentaire"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__company_id
@@ -148,13 +151,18 @@ msgid "Company"
 msgstr "Société"
 
 #. module: yousign_connector
+#. odoo-python
 #: code:addons/yousign_connector/models/yousign_request.py:0
-#, python-format
 msgid ""
-"Connection to %s failed. Check the Internet connection of the Odoo server.\n"
+"Connection to %(url)s failed. Check the Internet connection of the Odoo "
+"server.\n"
 "\n"
-"Error details: %s"
+"Error details: %(error)s"
 msgstr ""
+"La connexion à %(url)s a échoué. Vérifiez la connexion Internet du serveur "
+"Odoo.\n"
+"\n"
+"Détails de l'erreur : %(error)s"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__create_uid
@@ -165,7 +173,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_notification__create_uid
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_signatory__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Créé par"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__create_date
@@ -176,19 +184,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_notification__create_date
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_signatory__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Créé le"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template__report_id
 msgid "Default Report to Sign"
-msgstr ""
-
-#. module: yousign_connector
-#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__null_value
-#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_notification__null_value
-#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_signatory__null_value
-msgid "Default Value"
-msgstr ""
+msgstr "Rapport à signer par défaut"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__display_name
@@ -199,7 +200,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_notification__display_name
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_signatory__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nom d'affichage"
 
 #. module: yousign_connector
 #: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_template_form
@@ -207,6 +208,8 @@ msgid ""
 "Display an option on related documents to open a composition wizard with "
 "this template"
 msgstr ""
+"Afficher une option sur les documents liés pour ouvrir un assistant de "
+"création avec ce modèle"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__attachment_ids
@@ -217,6 +220,8 @@ msgstr "Documents à signer"
 #: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_form
 msgid "Download signed files from Yousign and add them as attachments."
 msgstr ""
+"Télécharger les fichiers signés depuis Yousign et les ajouter en pièces "
+"jointes."
 
 #. module: yousign_connector
 #: model:ir.model.fields.selection,name:yousign_connector.selection__yousign_request__state__draft
@@ -228,29 +233,31 @@ msgstr "Brouillon"
 #. module: yousign_connector
 #: model:ir.model.fields.selection,name:yousign_connector.selection__yousign_request_template_signatory__partner_type__dynamic
 msgid "Dynamic"
-msgstr ""
+msgstr "Dynamique"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_signatory__partner_tmpl
 msgid "Dynamic Partner"
-msgstr ""
+msgstr "Partenaire dynamique"
 
 #. module: yousign_connector
+#. odoo-python
 #: code:addons/yousign_connector/models/yousign_request_template.py:0
-#, python-format
 msgid "Dynamic Partner is required when Partner Type is set to 'Dynamic'."
 msgstr ""
+"Le partenaire dynamique est obligatoire lorsque le type de partenaire est « "
+"Dynamique »."
 
 #. module: yousign_connector
-#: model:ir.model.fields.selection,name:yousign_connector.selection__yousign_request_signatory__auth_mode__email
-#: model:ir.model.fields.selection,name:yousign_connector.selection__yousign_request_template_signatory__auth_mode__email
+#: model:ir.model.fields.selection,name:yousign_connector.selection__yousign_request_signatory__auth_mode__otp_email
+#: model:ir.model.fields.selection,name:yousign_connector.selection__yousign_request_template_signatory__auth_mode__otp_email
 msgid "E-Mail"
-msgstr ""
+msgstr "E-mail"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_signatory__email
 msgid "E-mail"
-msgstr ""
+msgstr "E-mail"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__notification_ids
@@ -262,47 +269,26 @@ msgid "E-mail Notifications"
 msgstr "Mail de Notifications"
 
 #. module: yousign_connector
-#: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_form
-msgid "Email"
-msgstr ""
-
-#. module: yousign_connector
+#. odoo-python
 #: code:addons/yousign_connector/models/yousign_request.py:0
-#, python-format
 msgid ""
-"Failure when sending the signing request %s to Yousign.\n"
+"Failure when sending the signing request %(req_name)s to Yousign.\n"
 "\n"
-"Error: %s"
+"Error: %(error)s"
 msgstr ""
-"Échec de l'envoi de la requête de signature %s à Yousign.\n"
+"Échec de l'envoi de la demande de signature %(req_name)s à Yousign.\n"
 "\n"
-"Erreur: %s"
+"Erreur : %(error)s"
 
 #. module: yousign_connector
-#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__model_object_field
-#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_notification__model_object_field
-#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_signatory__model_object_field
-msgid "Field"
-msgstr ""
-
-#. module: yousign_connector
+#. odoo-python
 #: code:addons/yousign_connector/models/yousign_request.py:0
-#, python-format
 msgid ""
-"File to sign '%s' is not a valid PDF file. You must convert it to PDF before"
-" including it in a Yousign request."
+"File to sign '%s' is not a valid PDF file. You must convert it to PDF before "
+"including it in a Yousign request."
 msgstr ""
 "Le fichier à signer '%s' n'est pas un fichier PDF valide. Vous devez le "
 "convertir en PDF avant de l'inclure dans une requête Yousign."
-
-#. module: yousign_connector
-#: model:ir.model.fields,help:yousign_connector.field_yousign_request__copyvalue
-#: model:ir.model.fields,help:yousign_connector.field_yousign_request_template_notification__copyvalue
-#: model:ir.model.fields,help:yousign_connector.field_yousign_request_template_signatory__copyvalue
-msgid ""
-"Final placeholder expression, to be copy-pasted in the desired template "
-"field."
-msgstr ""
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_signatory__firstname
@@ -312,39 +298,41 @@ msgstr "Prénom"
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_signatory__partner_id
 msgid "Fixed Partner"
-msgstr ""
+msgstr "Partenaire fixe"
 
 #. module: yousign_connector
+#. odoo-python
 #: code:addons/yousign_connector/models/yousign_request_template.py:0
-#, python-format
 msgid "Fixed Partner is required when Partner Type is set to 'Static'."
 msgstr ""
+"Le partenaire fixe est obligatoire lorsque le type de partenaire est « "
+"Statique »."
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__message_follower_ids
 msgid "Followers"
-msgstr ""
-
-#. module: yousign_connector
-#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__message_channel_ids
-msgid "Followers (Channels)"
-msgstr ""
+msgstr "Abonnés"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Abonnés (partenaires)"
 
 #. module: yousign_connector
 #: model:ir.model.fields,help:yousign_connector.field_yousign_request__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr ""
+msgstr "Icône Font Awesome, par ex. fa-tasks"
 
 #. module: yousign_connector
 #: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_search
 #: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_template_search
 msgid "Group By"
-msgstr ""
+msgstr "Regrouper par"
+
+#. module: yousign_connector
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__has_message
+msgid "Has Message"
+msgstr "A un message"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__id
@@ -355,40 +343,43 @@ msgstr ""
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_notification__id
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_signatory__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__activity_exception_icon
 msgid "Icon"
-msgstr ""
+msgstr "Icône"
 
 #. module: yousign_connector
 #: model:ir.model.fields,help:yousign_connector.field_yousign_request__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Icône pour indiquer une activité d'exception."
 
 #. module: yousign_connector
 #: model:ir.model.fields,help:yousign_connector.field_yousign_request__message_needaction
-#: model:ir.model.fields,help:yousign_connector.field_yousign_request__message_unread
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Si coché, de nouveaux messages demandent votre attention."
 
 #. module: yousign_connector
 #: model:ir.model.fields,help:yousign_connector.field_yousign_request__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Si coché, certains messages ont une erreur de distribution."
 
 #. module: yousign_connector
+#. odoo-python
 #: code:addons/yousign_connector/models/yousign_request.py:0
-#, python-format
 msgid ""
 "In mail body of %s, it seems you tried to include the yousign URL, but the "
-"regular expression didn't match. Please check the special expression for the"
-" yousign URL."
+"regular expression didn't match. Please check the special expression for the "
+"yousign URL."
 msgstr ""
+"Dans le corps du mail de %s, vous semblez avoir voulu inclure l'URL Yousign, "
+"mais l'expression régulière ne correspond pas. Vérifiez l'expression "
+"spéciale de l'URL Yousign."
 
 #. module: yousign_connector
 #: model_terms:ir.ui.view,arch_db:yousign_connector.new_yousign_request_form
+#: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_form
 #: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_template_form
 msgid "Init E-mail"
 msgstr "Premier Mail"
@@ -397,18 +388,18 @@ msgstr "Premier Mail"
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__init_mail_body
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template__init_mail_body
 msgid "Init Mail Body"
-msgstr ""
+msgstr "Corps du premier mail"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__init_mail_subject
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template__init_mail_subject
 msgid "Init Mail Subject"
-msgstr ""
+msgstr "Sujet du premier mail"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Est abonné"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__lang
@@ -419,20 +410,9 @@ msgid "Language"
 msgstr "Langue"
 
 #. module: yousign_connector
-#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request____last_update
-#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_notification____last_update
-#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_remind____last_update
-#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_signatory____last_update
-#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template____last_update
-#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_notification____last_update
-#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_signatory____last_update
-msgid "Last Modified on"
-msgstr ""
-
-#. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__last_update
 msgid "Last Status Update"
-msgstr "Dernière à jour du statut"
+msgstr "Dernière mise à jour du statut"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__write_uid
@@ -443,7 +423,7 @@ msgstr "Dernière à jour du statut"
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_notification__write_uid
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_signatory__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Dernière mise à jour par"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__write_date
@@ -454,7 +434,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_notification__write_date
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_signatory__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Dernière mise à jour le"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_signatory__lastname
@@ -462,160 +442,154 @@ msgid "Lastname"
 msgstr "Nom"
 
 #. module: yousign_connector
+#. odoo-python
 #: code:addons/yousign_connector/models/yousign_request.py:0
-#, python-format
 msgid "Mail body of %s is empty."
-msgstr ""
-
-#. module: yousign_connector
-#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__message_main_attachment_id
-msgid "Main Attachment"
-msgstr ""
+msgstr "Le corps du mail de %s est vide."
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Erreur de distribution du message"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__message_ids
 msgid "Messages"
-msgstr ""
+msgstr "Messages"
 
 #. module: yousign_connector
+#. odoo-python
 #: code:addons/yousign_connector/models/yousign_request.py:0
-#, python-format
 msgid "Missing ID"
-msgstr ""
+msgstr "ID manquant"
 
 #. module: yousign_connector
+#. odoo-python
 #: code:addons/yousign_connector/models/yousign_request.py:0
-#, python-format
-msgid "Missing Remind Mail Body"
-msgstr ""
-
-#. module: yousign_connector
-#: code:addons/yousign_connector/models/yousign_request.py:0
-#, python-format
-msgid "Missing Remind Mail Subject"
-msgstr ""
-
-#. module: yousign_connector
-#: code:addons/yousign_connector/models/yousign_request.py:0
-#, python-format
 msgid "Missing email on the signatory '%s'"
 msgstr "E-mail manquant pour le signataire '%s'"
 
 #. module: yousign_connector
+#. odoo-python
 #: code:addons/yousign_connector/models/yousign_request.py:0
-#, python-format
 msgid "Missing firstname on signatory '%s'"
 msgstr "E-mail manquant pour le signataire '%s'"
 
 #. module: yousign_connector
+#. odoo-python
 #: code:addons/yousign_connector/models/yousign_request.py:0
-#, python-format
 msgid "Missing init mail body on request %s."
 msgstr "Titre manquant sur la requête %s."
 
 #. module: yousign_connector
+#. odoo-python
 #: code:addons/yousign_connector/models/yousign_request.py:0
-#, python-format
 msgid "Missing init mail subject on request %s."
 msgstr "Titre manquant sur la requête %s."
 
 #. module: yousign_connector
+#. odoo-python
 #: code:addons/yousign_connector/models/yousign_request.py:0
-#, python-format
 msgid "Missing lastname on one of the signatories of request %s"
 msgstr "Nom de famille manquant sur l'un des signataires de la requête %s"
 
 #. module: yousign_connector
+#. odoo-python
 #: code:addons/yousign_connector/models/yousign_request.py:0
-#, python-format
 msgid "Missing mobile phone number on signatory '%s'."
 msgstr "E-mail manquant pour le signataire '%s'"
 
 #. module: yousign_connector
+#. odoo-python
 #: code:addons/yousign_connector/models/yousign_request.py:0
-#, python-format
 msgid ""
-"Missing special tag {yousignUrl|Access to documents} in the mail body of %s."
-" The special tag will be replaced by the button with the label 'Access to "
+"Missing special tag {yousignUrl|Access to documents} in the mail body of %s. "
+"The special tag will be replaced by the button with the label 'Access to "
 "documents'."
 msgstr ""
+"La balise spéciale {yousignUrl|Access to documents} est absente du corps du "
+"mail de %s. Cette balise sera remplacée par le bouton portant le libellé « "
+"Access to documents »."
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_signatory__mobile
 msgid "Mobile"
-msgstr ""
+msgstr "Mobile"
 
 #. module: yousign_connector
 #: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_signatory_tree
 msgid "Mode"
-msgstr ""
+msgstr "Mode"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template__model
 msgid "Model"
-msgstr ""
+msgstr "Modèle"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "Échéance de mon activité"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__name
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template__name
 msgid "Name"
-msgstr ""
+msgstr "Nom"
 
 #. module: yousign_connector
 #: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_template_search
 msgid "Name or Mail Subject"
-msgstr ""
+msgstr "Nom ou sujet du mail"
 
 #. module: yousign_connector
 #: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_search
 msgid "Name, Document Name or Mail Subject"
-msgstr ""
+msgstr "Nom, nom du document ou sujet du mail"
 
 #. module: yousign_connector
+#. odoo-python
 #: code:addons/yousign_connector/models/yousign_request.py:0
-#: code:addons/yousign_connector/models/yousign_request.py:0
-#: code:addons/yousign_connector/models/yousign_request.py:0
-#: code:addons/yousign_connector/models/yousign_request.py:0
-#, python-format
 msgid "New"
-msgstr ""
+msgstr "Nouveau"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "Échéance de la prochaine activité"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__activity_summary
 msgid "Next Activity Summary"
-msgstr ""
+msgstr "Résumé de la prochaine activité"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "Type de la prochaine activité"
 
 #. module: yousign_connector
+#: model:ir.model.fields.selection,name:yousign_connector.selection__yousign_request_signatory__auth_mode__no_otp
+msgid "No OTP"
+msgstr "Sans OTP"
+
+#. module: yousign_connector
+#. odoo-python
 #: code:addons/yousign_connector/models/yousign_request.py:0
-#, python-format
+msgid "No YS request identifier found"
+msgstr "Aucun identifiant de demande Yousign trouvé"
+
+#. module: yousign_connector
+#. odoo-python
+#: code:addons/yousign_connector/models/yousign_request.py:0
 msgid "No Yousign Request Template for model '%s'."
-msgstr ""
+msgstr "Aucun modèle de demande Yousign pour le modèle « %s »."
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_notification__notif_type
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_notification__notif_type
 msgid "Notification Type"
-msgstr ""
+msgstr "Type de notification"
 
 #. module: yousign_connector
 #: model:ir.model,name:yousign_connector.model_yousign_request_notification
@@ -631,60 +605,55 @@ msgstr "Signataires du modèle de requête Yousign"
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_notification__creator
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_notification__creator
 msgid "Notify Creator"
-msgstr ""
+msgstr "Notifier le créateur"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_notification__members
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_notification__members
 msgid "Notify Members"
-msgstr ""
+msgstr "Notifier les membres"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_notification__subscribers
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_notification__subscribers
 msgid "Notify Subscribers"
-msgstr ""
+msgstr "Notifier les abonnés"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Nombre d'actions"
 
 #. module: yousign_connector
 #: model:ir.model.fields,help:yousign_connector.field_yousign_request__remind_interval
 #: model:ir.model.fields,help:yousign_connector.field_yousign_request_template__remind_interval
 msgid "Number of days between 2 auto-reminders by email."
-msgstr ""
+msgstr "Nombre de jours entre 2 relances automatiques par e-mail."
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Nombre d'erreurs"
 
 #. module: yousign_connector
 #: model:ir.model.fields,help:yousign_connector.field_yousign_request__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr ""
+msgid "Number of messages requiring action"
+msgstr "Nombre de messages nécessitant une action"
 
 #. module: yousign_connector
 #: model:ir.model.fields,help:yousign_connector.field_yousign_request__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
-
-#. module: yousign_connector
-#: model:ir.model.fields,help:yousign_connector.field_yousign_request__message_unread_counter
-msgid "Number of unread messages"
-msgstr ""
+msgstr "Nombre de messages avec une erreur de distribution"
 
 #. module: yousign_connector
 #: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_search
 #: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_template_search
 msgid "Object"
-msgstr ""
+msgstr "Objet"
 
 #. module: yousign_connector
+#. odoo-python
 #: code:addons/yousign_connector/models/yousign_request.py:0
-#, python-format
 msgid ""
 "One of the Yousign config parameters is missing in the Odoo server config "
 "file."
@@ -699,48 +668,38 @@ msgid ""
 "Optional translation language (ISO code) to select when sending out an "
 "email. If not set, the english version will be used. This should usually be "
 "a placeholder expression that provides the appropriate language, e.g. "
-"${object.partner_id.lang}."
+"{{ object.partner_id.lang }}."
 msgstr ""
-
-#. module: yousign_connector
-#: model:ir.model.fields,help:yousign_connector.field_yousign_request__null_value
-#: model:ir.model.fields,help:yousign_connector.field_yousign_request_template_notification__null_value
-#: model:ir.model.fields,help:yousign_connector.field_yousign_request_template_signatory__null_value
-msgid "Optional value to use if the target field is empty"
-msgstr ""
+"Langue de traduction facultative (code ISO) à utiliser lors de l'envoi d'un "
+"e-mail. Si elle n'est pas définie, la version anglaise sera utilisée. Il "
+"s'agit généralement d'une expression qui fournit la langue appropriée, par "
+"ex. {{ object.partner_id.lang }}."
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_signatory__partner_id
 msgid "Partner"
-msgstr ""
+msgstr "Partenaire"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_signatory__partner_type
 msgid "Partner Type"
-msgstr ""
+msgstr "Type de partenaire"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_notification__partner_ids
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_notification__partner_ids
 msgid "Partners to Notify"
-msgstr ""
+msgstr "Partenaires à notifier"
 
 #. module: yousign_connector
 #: model:ir.model.fields.selection,name:yousign_connector.selection__yousign_request_signatory__state__pending
 msgid "Pending"
-msgstr ""
-
-#. module: yousign_connector
-#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__copyvalue
-#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_notification__copyvalue
-#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_signatory__copyvalue
-msgid "Placeholder Expression"
-msgstr ""
+msgstr "En attente"
 
 #. module: yousign_connector
 #: model:ir.model.fields.selection,name:yousign_connector.selection__yousign_request_signatory__state__refused
 msgid "Refused"
-msgstr ""
+msgstr "Refusé"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__res_id
@@ -789,18 +748,27 @@ msgstr "Sujet du mail de rappel"
 #. module: yousign_connector
 #: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_template_form
 msgid "Remove Action"
-msgstr ""
+msgstr "Supprimer l'action"
 
 #. module: yousign_connector
 #: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_template_form
 msgid "Remove the contextual action to use this template on related documents"
 msgstr ""
+"Supprimer l'action contextuelle permettant d'utiliser ce modèle sur les "
+"documents liés"
+
+#. module: yousign_connector
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__render_model
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_notification__render_model
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_signatory__render_model
+msgid "Rendering Model"
+msgstr "Modèle de rendu"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_notification__parent_id
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_signatory__parent_id
 msgid "Request"
-msgstr ""
+msgstr "Demande"
 
 #. module: yousign_connector
 #: model:ir.actions.act_window,name:yousign_connector.yousign_request_template_action
@@ -809,30 +777,21 @@ msgid "Request Templates"
 msgstr "Modèles de requêtes"
 
 #. module: yousign_connector
+#. odoo-python
 #: code:addons/yousign_connector/models/yousign_request.py:0
-#, python-format
 msgid "Request successfully cancelled via Yousign webservices."
-msgstr ""
+msgstr "Demande annulée avec succès via les webservices Yousign."
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__activity_user_id
 msgid "Responsible User"
-msgstr ""
+msgstr "Utilisateur responsable"
 
 #. module: yousign_connector
-#: model:ir.model.fields.selection,name:yousign_connector.selection__yousign_request_signatory__auth_mode__sms
-#: model:ir.model.fields.selection,name:yousign_connector.selection__yousign_request_template_signatory__auth_mode__sms
+#: model:ir.model.fields.selection,name:yousign_connector.selection__yousign_request_signatory__auth_mode__otp_sms
+#: model:ir.model.fields.selection,name:yousign_connector.selection__yousign_request_template_signatory__auth_mode__otp_sms
 msgid "SMS"
-msgstr ""
-
-#. module: yousign_connector
-#: model:ir.model.fields,help:yousign_connector.field_yousign_request__model_object_field
-#: model:ir.model.fields,help:yousign_connector.field_yousign_request_template_notification__model_object_field
-#: model:ir.model.fields,help:yousign_connector.field_yousign_request_template_signatory__model_object_field
-msgid ""
-"Select target field from the related document model.\n"
-"If it is a relationship field you will be able to select a target field at the destination of the relationship."
-msgstr ""
+msgstr "SMS"
 
 #. module: yousign_connector
 #: model:ir.actions.act_window,name:yousign_connector.yousign_request_remind_action
@@ -856,12 +815,12 @@ msgstr "Envoyé"
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_signatory__sequence
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_signatory__sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Séquence"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template__ir_act_window_id
 msgid "Sidebar Action"
-msgstr ""
+msgstr "Action de la barre latérale"
 
 #. module: yousign_connector
 #: model:ir.model.fields,help:yousign_connector.field_yousign_request_template__ir_act_window_id
@@ -869,6 +828,8 @@ msgid ""
 "Sidebar action to make this template available on records of the related "
 "document model"
 msgstr ""
+"Action de la barre latérale pour rendre ce modèle disponible sur les "
+"enregistrements du modèle de document lié"
 
 #. module: yousign_connector
 #: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_signatory_tree
@@ -876,21 +837,29 @@ msgid "Sign Date"
 msgstr "Date de Signature"
 
 #. module: yousign_connector
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__ordered
+msgid "Sign One after the Other"
+msgstr "Signer dans l'ordre des signataires"
+
+#. module: yousign_connector
+#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__sign_position
+msgid "Sign Position"
+msgstr "Emplacement de la signature"
+
+#. module: yousign_connector
 #: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_signatory_tree
 msgid "Sign Status"
 msgstr "Statut"
 
 #. module: yousign_connector
-#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__ordered
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template__ordered
 msgid "Sign one after the other"
 msgstr "Signer dans l'ordre des signataires"
 
 #. module: yousign_connector
-#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__sign_position
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template__sign_position
 msgid "Sign position"
-msgstr "Emplacement de a signature"
+msgstr "Emplacement de la signature"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__signatory_ids
@@ -909,7 +878,7 @@ msgstr "Signataires du modèle de requête Yousign"
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_signatory__signature_date
 msgid "Signature Date"
-msgstr ""
+msgstr "Date de signature"
 
 #. module: yousign_connector
 #: model:ir.actions.act_window,name:yousign_connector.new_yousign_request_action
@@ -925,30 +894,30 @@ msgstr "Requêtes de signature"
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_signatory__state
 msgid "Signature Status"
-msgstr ""
+msgstr "Statut de la signature"
 
 #. module: yousign_connector
 #: model:ir.model.fields.selection,name:yousign_connector.selection__yousign_request__state__signed
 #: model:ir.model.fields.selection,name:yousign_connector.selection__yousign_request_signatory__state__signed
 #: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_search
 msgid "Signed"
-msgstr "signé"
+msgstr "Signé"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__signed_attachment_ids
 msgid "Signed Documents"
-msgstr ""
+msgstr "Documents signés"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__state
 #: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_search
 msgid "State"
-msgstr ""
+msgstr "État"
 
 #. module: yousign_connector
 #: model:ir.model.fields.selection,name:yousign_connector.selection__yousign_request_template_signatory__partner_type__static
 msgid "Static"
-msgstr ""
+msgstr "Statique"
 
 #. module: yousign_connector
 #: model:ir.model.fields,help:yousign_connector.field_yousign_request__activity_state
@@ -958,20 +927,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
-
-#. module: yousign_connector
-#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__sub_model_object_field
-#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_notification__sub_model_object_field
-#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_signatory__sub_model_object_field
-msgid "Sub-field"
-msgstr ""
-
-#. module: yousign_connector
-#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__sub_object
-#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_notification__sub_object
-#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_signatory__sub_object
-msgid "Sub-model"
-msgstr ""
+"Statut basé sur les activités\n"
+"En retard : la date d'échéance est déjà dépassée\n"
+"Aujourd'hui : la date de l'activité est aujourd'hui\n"
+"Planifiée : activités futures."
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_notification__subject
@@ -982,49 +941,56 @@ msgid "Subject"
 msgstr "Sujet"
 
 #. module: yousign_connector
+#. odoo-python
 #: code:addons/yousign_connector/models/yousign_request.py:0
-#, python-format
 msgid ""
 "Technical failure when trying to connect to Yousign.\n"
 "\n"
-"Error details: URL %s method %s. Error: %s"
+"Error details: URL %(url)s method %(method)s. Error: %(error)s"
 msgstr ""
+"Échec technique lors de la connexion à Yousign.\n"
+"\n"
+"Détails de l'erreur : URL %(url)s, méthode %(method)s. Erreur : %(error)s"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_notification__parent_id
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_template_signatory__parent_id
 msgid "Template"
-msgstr ""
+msgstr "Modèle"
 
 #. module: yousign_connector
+#. odoo-python
 #: code:addons/yousign_connector/models/yousign_request.py:0
-#, python-format
 msgid ""
-"The HTTP %s request on Yousign webservice %s returned status code %d whereas"
-" %d was expected. Error message: %s (%s)."
+"The HTTP %(method)s request on Yousign webservice %(url)s returned status "
+"code %(status)s whereas %(expected)s was expected. Error message: %(error)s "
+"(%(detail)s)."
 msgstr ""
+"La requête HTTP %(method)s sur le webservice Yousign %(url)s a renvoyé le "
+"code %(status)s alors que %(expected)s était attendu. Message d'erreur : "
+"%(error)s (%(detail)s)."
 
 #. module: yousign_connector
 #: model:ir.model.constraint,message:yousign_connector.constraint_yousign_request_remind_interval_positive
 #: model:ir.model.constraint,message:yousign_connector.constraint_yousign_request_template_remind_interval_positive
 msgid "The Remind Interval must be positive or null."
-msgstr ""
+msgstr "L'intervalle de relance doit être positif ou nul."
 
 #. module: yousign_connector
 #: model:ir.model.constraint,message:yousign_connector.constraint_yousign_request_remind_limit_positive
 #: model:ir.model.constraint,message:yousign_connector.constraint_yousign_request_template_remind_limit_positive
 msgid "The Remind Limit must be positive or null."
-msgstr ""
+msgstr "Le nombre maximal de relances doit être positif ou nul."
 
 #. module: yousign_connector
+#. odoo-python
 #: code:addons/yousign_connector/models/yousign_request.py:0
-#, python-format
 msgid "There are no documents to sign on request %s!"
 msgstr "Il n'y a aucun document à signer sur la requête %s !"
 
 #. module: yousign_connector
+#. odoo-python
 #: code:addons/yousign_connector/models/yousign_request.py:0
-#, python-format
 msgid "There are no signatories on request %s!"
 msgstr "Il n'y a aucun signataire sur la requête %s !"
 
@@ -1033,18 +999,20 @@ msgstr "Il n'y a aucun signataire sur la requête %s !"
 msgid ""
 "This notification type already exists for this Yousign request template!"
 msgstr ""
+"Ce type de notification existe déjà pour ce modèle de demande Yousign !"
 
 #. module: yousign_connector
 #: model:ir.model.constraint,message:yousign_connector.constraint_yousign_request_notification_parent_type_uniq
 msgid "This notification type already exists for this Yousign request!"
-msgstr ""
+msgstr "Ce type de notification existe déjà pour cette demande Yousign !"
 
 #. module: yousign_connector
 #: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_remind_form
 msgid ""
-"This wizard will ask Yousign to send a reminder to all the selected "
-"requests."
+"This wizard will ask Yousign to send a reminder to all the selected requests."
 msgstr ""
+"Cet assistant va demander à Yousign d'envoyer une relance pour toutes les "
+"demandes sélectionnées."
 
 #. module: yousign_connector
 #: model:ir.model.fields.selection,name:yousign_connector.selection__yousign_request__sign_position__top
@@ -1061,66 +1029,38 @@ msgstr "Mention haut de page"
 #. module: yousign_connector
 #: model:ir.model.fields,help:yousign_connector.field_yousign_request__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Type de l'activité d'exception sur l'enregistrement."
 
 #. module: yousign_connector
-#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__message_unread
-msgid "Unread Messages"
-msgstr ""
-
-#. module: yousign_connector
-#: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__message_unread_counter
-msgid "Unread Messages Counter"
-msgstr ""
-
-#. module: yousign_connector
+#. odoo-python
 #: code:addons/yousign_connector/models/yousign_request_template.py:0
-#, python-format
 msgid "Unsupported partner type '%s'."
-msgstr ""
+msgstr "Type de partenaire « %s » non pris en charge."
 
 #. module: yousign_connector
 #: model_terms:ir.ui.view,arch_db:yousign_connector.yousign_request_form
 msgid "Update"
-msgstr ""
+msgstr "Mettre à jour"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Messages du site web"
 
 #. module: yousign_connector
 #: model:ir.model.fields,help:yousign_connector.field_yousign_request__website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Historique des échanges sur le site web"
 
 #. module: yousign_connector
-#: model:ir.model.fields,help:yousign_connector.field_yousign_request__sub_model_object_field
-#: model:ir.model.fields,help:yousign_connector.field_yousign_request_template_notification__sub_model_object_field
-#: model:ir.model.fields,help:yousign_connector.field_yousign_request_template_signatory__sub_model_object_field
-msgid ""
-"When a relationship field is selected as first field, this field lets you "
-"select the target field within the destination document model (sub-model)."
-msgstr ""
-
-#. module: yousign_connector
-#: model:ir.model.fields,help:yousign_connector.field_yousign_request__sub_object
-#: model:ir.model.fields,help:yousign_connector.field_yousign_request_template_notification__sub_object
-#: model:ir.model.fields,help:yousign_connector.field_yousign_request_template_signatory__sub_object
-msgid ""
-"When a relationship field is selected as first field, this field shows the "
-"document model the relationship goes to."
-msgstr ""
-
-#. module: yousign_connector
+#. odoo-python
 #: code:addons/yousign_connector/models/yousign_request.py:0
-#, python-format
 msgid "Wrong active_model (%(ctx_model)s should be %(template_model)s)"
-msgstr ""
+msgstr "active_model incorrect (%(ctx_model)s au lieu de %(template_model)s)"
 
 #. module: yousign_connector
+#. odoo-python
 #: code:addons/yousign_connector/models/yousign_request.py:0
-#, python-format
 msgid "Wrong status, should be draft"
 msgstr "Erreur de statut, il doit être en brouillon"
 
@@ -1129,25 +1069,27 @@ msgstr "Erreur de statut, il doit être en brouillon"
 msgid ""
 "You must insert '{yousignUrl}' in the body where you want to insert the URL "
 "to access Yousign."
-msgstr "Vous devez ajouter '{yousignUrl}' dans le corps du message pour afficher le lien vers la signature"
+msgstr ""
+"Vous devez ajouter '{yousignUrl}' dans le corps du message pour afficher le "
+"lien vers la signature"
 
 #. module: yousign_connector
+#. odoo-python
 #: code:addons/yousign_connector/models/yousign_request.py:0
 #: code:addons/yousign_connector/models/yousign_request_template.py:0
-#, python-format
 msgid "You must select who should be notified."
 msgstr "Vous devez choisir qui sera notifié"
 
 #. module: yousign_connector
 #: model:ir.ui.menu,name:yousign_connector.yousign_root_config
 msgid "Yousign"
-msgstr ""
+msgstr "Yousign"
 
 #. module: yousign_connector
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request__ys_identifier
 #: model:ir.model.fields,field_description:yousign_connector.field_yousign_request_signatory__ys_identifier
 msgid "Yousign ID"
-msgstr ""
+msgstr "ID Yousign"
 
 #. module: yousign_connector
 #: model:ir.model,name:yousign_connector.model_yousign_request
@@ -1155,8 +1097,8 @@ msgid "Yousign Request"
 msgstr "Requête Yousign"
 
 #. module: yousign_connector
+#. odoo-python
 #: code:addons/yousign_connector/models/yousign_request_template.py:0
-#, python-format
 msgid "Yousign Request (%s)"
 msgstr "Requête Yousign (%s)"
 
@@ -1167,32 +1109,30 @@ msgstr "Modèle de requête Yousign"
 
 #. module: yousign_connector
 #: model:ir.actions.server,name:yousign_connector.cron_yousign_update_ir_actions_server
-#: model:ir.cron,cron_name:yousign_connector.cron_yousign_update
-#: model:ir.cron,name:yousign_connector.cron_yousign_update
 msgid "Yousign Requests Update"
-msgstr ""
+msgstr "Mise à jour des demandes Yousign"
 
 #. module: yousign_connector
-#: code:addons/yousign_connector/models/yousign_request.py:0
-#, python-format
-msgid ""
-"Yousign request <a href=# data-oe-model=yousign.request data-oe-"
-"id=%(req_id)s>%(req_name)s</a> generated with %(signatory_count)s "
-"signatories"
-msgstr ""
-"Demande de signature Yousign <a href=# data-oe-model=yousign.request data-oe-"
-"id=%(req_id)s>%(req_name)s</a> envoyé avec %(signatory_count)s "
-"signataires"
+#: model:ir.model,name:yousign_connector.model_yousign_request_signatory
+msgid "Yousign Signatories"
+msgstr "Signataires Yousign"
 
 #. module: yousign_connector
+#. odoo-python
 #: code:addons/yousign_connector/models/yousign_request.py:0
-#, python-format
 msgid ""
-"Yousign request <a href=# data-oe-model=yousign.request data-oe-"
-"id=%(req_id)s>%(req_name)s</a> has been signed by all signatories."
+"Yousign request %(req_link)s generated with %(signatory_count)s signatories."
 msgstr ""
-"Demande de signature Yousign <a href=# data-oe-model=yousign.request data-oe-"
-"id=%(req_id)s>%(req_name)s</a> a été signé par tous les signataires."
+"Demande de signature Yousign %(req_link)s envoyée avec %(signatory_count)s "
+"signataires."
+
+#. module: yousign_connector
+#. odoo-python
+#: code:addons/yousign_connector/models/yousign_request.py:0
+msgid "Yousign request %(req_link)s has been signed by all signatories."
+msgstr ""
+"La demande de signature Yousign %(req_link)s a été signée par tous les "
+"signataires."
 
 #. module: yousign_connector
 #: model_terms:ir.ui.view,arch_db:yousign_connector.new_yousign_request_form
@@ -1202,12 +1142,7 @@ msgid "days"
 msgstr "jours"
 
 #. module: yousign_connector
+#. odoo-python
 #: code:addons/yousign_connector/models/yousign_request.py:0
-#, python-format
 msgid "no detail"
-msgstr ""
-
-#. module: yousign_connector
-#: model:ir.model,name:yousign_connector.model_yousign_request_signatory
-msgid "yousign.request.signatory"
-msgstr ""
+msgstr "aucun détail"

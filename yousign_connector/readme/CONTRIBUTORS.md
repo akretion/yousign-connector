@@ -1,0 +1,6 @@
+- [Akretion](https://www.akretion.com):
+  - Alexis de Lattre <alexis.delattre@akretion.com>
+  - Matthieu Saison <matthieu.saison@akretion.com>
+  - Mourad El Hadj Mimoune <mourad.elhadj.mimoune@akretion.com>
+- [Akuit](https://www.akuit.com):
+  - Didier Mondin <didiermondin@akuit.net>
