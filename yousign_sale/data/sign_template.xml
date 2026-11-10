@@ -35,7 +35,7 @@
         ><![CDATA[
     <p>Hello {{ object.partner_id.name }},</p>
 
-<p>We recently sent you a quotation a quotation {{ object.name }} for a total amount of {{ format_amount(object.amount_untaxed, object.currency_id) }} without taxes ({{ format_amount(object.amount_total, object.currency_id) }} with taxes).</p>
+<p>We recently sent you a quotation {{ object.name }} for a total amount of {{ format_amount(object.amount_untaxed, object.currency_id) }} without taxes ({{ format_amount(object.amount_total, object.currency_id) }} with taxes).</p>
 
 <p>We remind you that, in order to approve this quotation, you should sign it by following the signature process on Yousign: {yousignUrl|Access to quotation}.</p>
 
@@ -77,13 +77,13 @@
         <field name="partner_ids" eval="[(4, ref('base.partner_admin'))]" />
         <field
             name="subject"
-        >{{ object.company_id.name }} - Quotation {{ object.name }} signed by all RAEDL</field>
+        >{{ object.company_id.name }} - Quotation {{ object.name }} signed by all parties</field>
         <field
             name="body"
         ><![CDATA[
     <p>Hello {{ object.partner_id.name }},</p>
 
-<p>The quotation {{ object.name }} for a total amount of {{ format_amount(object.amount_untaxed, object.currency_id) }} without taxes ({{ format_amount(object.amount_total, object.currency_id) }} with taxes) has been signed by all parties. Therefore, this quotation has been automatically confirmed and converted to a sale order.</p>
+<p>The quotation {{ object.name }} for a total amount of {{ format_amount(object.amount_untaxed, object.currency_id) }} without taxes ({{ format_amount(object.amount_total, object.currency_id) }} with taxes) has been signed by all parties.</p>
 
 <p>You can now download the signed document: {yousignUrl|Access to signed document}.</p>
 
