@@ -1,8 +1,9 @@
 [project]
 name = "odoo-addons-akretion-yousign-connector"
-version = "18.0.20261109.0"
+version = "18.0.20261110.0"
 dependencies = [
     "odoo-addon-yousign_connector==18.0.*",
+    "odoo-addon-yousign_sale==18.0.*",
 ]
 classifiers=[
     "Programming Language :: Python",
