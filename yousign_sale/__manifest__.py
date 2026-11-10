@@ -4,7 +4,7 @@
 
 {
     "name": "YouSign Sale",
-    "version": "14.0.1.0.0",
+    "version": "18.0.1.0.0",
     "category": "Sales Management",
     "license": "AGPL-3",
     "summary": "Create Yousign signature requests from quotations",

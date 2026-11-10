@@ -14,7 +14,7 @@
                 <button
                     name="%(yousign_connector.new_yousign_request_action)d"
                     type="action"
-                    states="draft,sent"
+                    invisible="state not in ('draft', 'sent')"
                     string="Send Yousign Request"
                     context="{'yousign_template_xmlid': 'yousign_sale.sale_sign_template'}"
                 />
