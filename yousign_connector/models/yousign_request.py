@@ -240,6 +240,9 @@ class YousignRequest(models.Model):
                 signatory_vals["firstname"] = firstname.strip()
                 signatory_vals["lastname"] = lastname.strip()
             signatory_ids.append((0, 0, signatory_vals))
+        lang = self._render_template(template.lang, model, [res_id])[res_id]
+        if lang:
+            template = template.with_context(lang=lang)
         notification_ids = []
         for notif in template.notification_ids:
             notif_vals = notif._prepare_template2request(model, res_id)
@@ -269,17 +272,15 @@ class YousignRequest(models.Model):
             }
             attach = iao.create(attach_vals)
             attachment_ids.append((6, 0, [attach.id]))
-        lang = self._render_template(template.lang, model, [res_id])[res_id]
-        if lang:
-            template = template.with_context(lang=lang)
         dyn_fields = {
             "init_mail_subject": template.init_mail_subject,
             "init_mail_body": template.init_mail_body,
             "remind_mail_subject": template.remind_mail_subject,
             "remind_mail_body": template.remind_mail_body,
         }
+        renderer = self.with_context(lang=lang) if lang else self
         for field_name, _field_content in dyn_fields.items():
-            dyn_fields[field_name] = self._render_template(
+            dyn_fields[field_name] = renderer._render_template(
                 dyn_fields[field_name], model, [res_id]
             )[res_id]
         res.update(dyn_fields)
@@ -514,6 +515,22 @@ class YousignRequest(models.Model):
             return_raw=True,
         )
 
+    def _delete_ys_draft(self, ys_identifier):
+        """Best effort deletion of a draft signature request on Yousign"""
+        try:
+            self.yousign_request(
+                "DELETE",
+                f"/signature_requests/{ys_identifier}",
+                204,
+                return_raw=True,
+                raise_if_ko=False,
+            )
+            logger.info("Draft YS request %s deleted on Yousign", ys_identifier)
+        except Exception as e:
+            logger.warning(
+                "Could not delete draft YS request %s on Yousign: %s", ys_identifier, e
+            )
+
     def api_activate_signature_requests(self):
         self.check_has_ys_identidifier()
         return self.yousign_request(
@@ -586,13 +603,14 @@ class YousignRequest(models.Model):
                 "first_name": signer.firstname and signer.firstname.strip() or "",
                 "last_name": signer.lastname and signer.lastname.strip(),
                 "email": signer.email.strip(),
-                "phone_number": signer.mobile and signer.mobile.replace(" ", "") or "",
-                # API Sandbox: phone_number is mandatory regardless of the auth_mode
             },
             "signature_level": "electronic_signature",
             "fields": [],
             "signature_authentication_mode": signer.auth_mode,
         }
+        # Yousign rejects an empty phone_number: only send it when known
+        if signer.mobile:
+            json["info"]["phone_number"] = signer.mobile.replace(" ", "")
         if self.remind_mail_subject:
             json["custom_text"]["reminder_subject"] = self.remind_mail_subject
 
@@ -959,28 +977,36 @@ class YousignRequest(models.Model):
 
         self.ys_identifier = sign_request["id"]
 
-        documents = []
-        for attachment in self.attachment_ids:
-            documents.append(self.api_post_document(attachment))
-
-        for signat in self.signatory_ids:
-            rank += 1
-            self.api_post_signer(signat, rank, documents)
-
         try:
-            logger.debug("Start YS initSign on req ID %d", self.id)
-            self.api_activate_signature_requests()
-        except Exception as err:
-            logger.error("YS initSign failed on req ID %d with error %s", self.id, err)
-            raise UserError(
-                _(
-                    "Failure when sending the signing request %(req_name)s to "
-                    "Yousign.\n\n"
-                    "Error: %(error)s",
-                    req_name=self.display_name,
-                    error=err,
+            documents = []
+            for attachment in self.attachment_ids:
+                documents.append(self.api_post_document(attachment))
+
+            for signat in self.signatory_ids:
+                rank += 1
+                self.api_post_signer(signat, rank, documents)
+
+            try:
+                logger.debug("Start YS initSign on req ID %d", self.id)
+                self.api_activate_signature_requests()
+            except Exception as err:
+                logger.error(
+                    "YS initSign failed on req ID %d with error %s", self.id, err
                 )
-            ) from err
+                raise UserError(
+                    _(
+                        "Failure when sending the signing request %(req_name)s to "
+                        "Yousign.\n\n"
+                        "Error: %(error)s",
+                        req_name=self.display_name,
+                        error=err,
+                    )
+                ) from err
+        except Exception:
+            # The Odoo transaction is rolled back, so the draft created on
+            # Yousign would be orphaned: delete it before re-raising.
+            self._delete_ys_draft(sign_request["id"])
+            raise
 
         self.state = "sent"
 

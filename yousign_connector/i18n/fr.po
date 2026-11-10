@@ -473,19 +473,19 @@ msgstr "E-mail manquant pour le signataire '%s'"
 #. odoo-python
 #: code:addons/yousign_connector/models/yousign_request.py:0
 msgid "Missing firstname on signatory '%s'"
-msgstr "E-mail manquant pour le signataire '%s'"
+msgstr "Prénom manquant pour le signataire '%s'"
 
 #. module: yousign_connector
 #. odoo-python
 #: code:addons/yousign_connector/models/yousign_request.py:0
 msgid "Missing init mail body on request %s."
-msgstr "Titre manquant sur la requête %s."
+msgstr "Corps du premier e-mail manquant sur la demande %s."
 
 #. module: yousign_connector
 #. odoo-python
 #: code:addons/yousign_connector/models/yousign_request.py:0
 msgid "Missing init mail subject on request %s."
-msgstr "Titre manquant sur la requête %s."
+msgstr "Sujet du premier e-mail manquant sur la demande %s."
 
 #. module: yousign_connector
 #. odoo-python
@@ -497,7 +497,7 @@ msgstr "Nom de famille manquant sur l'un des signataires de la requête %s"
 #. odoo-python
 #: code:addons/yousign_connector/models/yousign_request.py:0
 msgid "Missing mobile phone number on signatory '%s'."
-msgstr "E-mail manquant pour le signataire '%s'"
+msgstr "Numéro de mobile manquant pour le signataire '%s'."
 
 #. module: yousign_connector
 #. odoo-python

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+    <record id="sale_sign_template" model="yousign.request.template">
+        <field name="name">Quotation</field>
+        <field name="model_id" ref="sale.model_sale_order" />
+        <field name="lang">{{ object.partner_id.lang }}</field>
+        <field
+            name="init_mail_subject"
+        >{{ object.company_id.name }} - Sign request for quotation {{ object.name }}</field>
+        <field
+            name="init_mail_body"
+        ><![CDATA[
+    <p>Hello {{ object.partner_id.name }},</p>
+
+<p>We have prepared a quotation {{ object.name }} for a total amount of {{ format_amount(object.amount_untaxed, object.currency_id) }} without taxes ({{ format_amount(object.amount_total, object.currency_id) }} with taxes).</p>
+
+<p>To approve this quotation, you should sign it by following the signature process on Yousign: {yousignUrl|Access to quotation}.</p>
+
+<p>Regards,</p>
+
+<code>
+-- <br/>
+{{ object.company_id.name }}
+</code>
+]]></field>
+        <field name="report_id" ref="sale.action_report_saleorder" />
+        <field name="remind_auto">1</field>
+        <field name="remind_interval">1</field>
+        <field name="remind_limit">10</field>
+        <field
+            name="remind_mail_subject"
+        >Reminder - Sign request for quotation {{ object.name }}</field>
+        <field
+            name="remind_mail_body"
+        ><![CDATA[
+    <p>Hello {{ object.partner_id.name }},</p>
+
+<p>We recently sent you a quotation {{ object.name }} for a total amount of {{ format_amount(object.amount_untaxed, object.currency_id) }} without taxes ({{ format_amount(object.amount_total, object.currency_id) }} with taxes).</p>
+
+<p>We remind you that, in order to approve this quotation, you should sign it by following the signature process on Yousign: {yousignUrl|Access to quotation}.</p>
+
+<p>Regards,</p>
+
+<code>
+-- <br/>
+{{ object.company_id.name }}
+</code>
+]]></field>
+    </record>
+
+    <record
+        id="sale_sign_template_signatory_customer"
+        model="yousign.request.template.signatory"
+    >
+        <field name="parent_id" ref="sale_sign_template" />
+        <field name="partner_type">dynamic</field>
+        <field name="partner_tmpl">{{ object.partner_id.id }}</field>
+    </record>
+
+    <record
+        id="sale_sign_template_signatory_admin"
+        model="yousign.request.template.signatory"
+    >
+        <field name="parent_id" ref="sale_sign_template" />
+        <field name="partner_type">static</field>
+        <field name="partner_id" ref="base.partner_admin" />
+    </record>
+
+    <record
+        id="sale_sign_template_notification_finished"
+        model="yousign.request.template.notification"
+    >
+        <field name="parent_id" ref="sale_sign_template" />
+        <field name="notif_type">procedure.finished</field>
+        <field name="creator" eval="True" />
+        <field name="members" eval="True" />
+        <field name="partner_ids" eval="[(4, ref('base.partner_admin'))]" />
+        <field
+            name="subject"
+        >{{ object.company_id.name }} - Quotation {{ object.name }} signed by all parties</field>
+        <field
+            name="body"
+        ><![CDATA[
+    <p>Hello {{ object.partner_id.name }},</p>
+
+<p>The quotation {{ object.name }} for a total amount of {{ format_amount(object.amount_untaxed, object.currency_id) }} without taxes ({{ format_amount(object.amount_total, object.currency_id) }} with taxes) has been signed by all parties.</p>
+
+<p>You can now download the signed document: {yousignUrl|Access to signed document}.</p>
+
+<p>Thanks for your cooperation in this online signature process!</p>
+
+<p>Regards,</p>
+
+<code>
+-- <br/>
+{{ object.company_id.name }}
+</code>
+]]></field>
+    </record>
+</odoo>
